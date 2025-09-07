@@ -20,87 +20,96 @@ BrightPath is a complete educational management system built with Django and Dja
 
 ```
 brightpath/
-├── config/                    # Django project settings
-│   ├── __init__.py
-│   ├── asgi.py
-│   ├── settings.py           # Main configuration
-│   ├── urls.py               # Root URL routing
-│   └── wsgi.py
-├── apps/                     # Django applications
-│   ├── users/               # User authentication & management
-│   │   ├── models.py        # Custom User model
-│   │   ├── views.py         # JWT auth views
-│   │   ├── serializers.py   # API serializers
-│   │   └── urls.py          # User endpoints
-│   ├── students/            # Student profiles & management
-│   │   ├── models.py        # Student, Parent, Emergency contacts
-│   │   ├── views.py         # Student CRUD operations
-│   │   └── dashboard.py     # Student dashboard logic
-│   ├── courses/             # Course & enrollment management
-│   │   ├── models.py        # Course, Enrollment, Schedule
-│   │   ├── views.py         # Course operations
-│   │   └── enrollment.py    # Enrollment logic
-│   ├── performance/         # Grade & performance tracking
-│   │   ├── models.py        # Assessment, Grade, Predictions
-│   │   ├── views.py         # Grade management
-│   │   └── ml_utils.py      # ML performance predictions
-│   ├── attendance/          # Attendance management
-│   │   ├── models.py        # Attendance records & sessions
-│   │   ├── views.py         # Attendance operations
-│   │   └── analytics.py     # Attendance analytics
-│   └── api_gateway/         # API routing & management
-│       ├── views.py         # Gateway endpoints
-│       └── urls.py          # API routing
-├── ml_module/               # Machine learning components
-│   ├── models/             # ML model storage
-│   ├── performance_predictor.py  # Performance prediction logic
-│   └── data_preprocessing.py     # Data preparation utilities
-└── static/                 # Static files
+├── backend/                   # Backend Django application
+│   ├── config/               # Django project settings
+│   │   ├── __init__.py
+│   │   ├── asgi.py
+│   │   ├── settings.py       # Main configuration
+│   │   ├── urls.py           # Root URL routing
+│   │   └── wsgi.py
+│   ├── apps/                 # Django applications
+│   │   ├── users/           # User authentication & management
+│   │   │   ├── models.py    # Custom User model
+│   │   │   ├── views.py     # JWT auth views
+│   │   │   ├── serializers.py # API serializers
+│   │   │   └── urls.py      # User endpoints
+│   │   ├── students/        # Student profiles & management
+│   │   │   ├── models.py    # Student, Parent, Emergency contacts
+│   │   │   ├── views.py     # Student CRUD operations
+│   │   │   └── dashboard.py # Student dashboard logic
+│   │   ├── courses/         # Course & enrollment management
+│   │   │   ├── models.py    # Course, Enrollment, Schedule
+│   │   │   ├── views.py     # Course operations
+│   │   │   └── enrollment.py # Enrollment logic
+│   │   ├── performance/     # Grade & performance tracking
+│   │   │   ├── models.py    # Assessment, Grade, Predictions
+│   │   │   ├── views.py     # Grade management
+│   │   │   └── ml_utils.py  # ML performance predictions
+│   │   ├── attendance/      # Attendance management
+│   │   │   ├── models.py    # Attendance records & sessions
+│   │   │   ├── views.py     # Attendance operations
+│   │   │   └── analytics.py # Attendance analytics
+│   │   └── api/             # API routing & management
+│   │       ├── views.py     # Gateway endpoints
+│   │       └── urls.py      # API routing
+│   ├── ml/                  # Machine learning components
+│   │   ├── models/          # ML model storage
+│   │   ├── predict.py       # Performance prediction logic
+│   │   ├── train.py         # Model training utilities
+│   │   └── utils.py         # Data preparation utilities
+│   ├── static/              # Static files
+│   ├── venv/                # Python virtual environment
+│   ├── manage.py            # Django management script
+│   ├── db.sqlite3           # Database file
+│   └── requirements.txt     # Python dependencies
+├── frontend/                # Frontend application (future)
+├── .gitignore              # Git ignore rules
+└── README.md               # Project documentation
 ```
 
 ## Features
 
-### 🔐 Authentication & Authorization
+### Authentication & Authorization
 - **JWT-based authentication** with access and refresh tokens
 - **Multi-role system**: Students, Teachers, Admins
 - **Secure password handling** with Django's built-in authentication
 - **Permission-based access control** for API endpoints
 
-### 👥 User Management
+### User Management
 - **Custom User model** with role-based permissions
 - **User registration and login** with JWT token generation
 - **Profile management** with role-specific fields
 - **Password reset functionality**
 
-### 📚 Course Management
+### Course Management
 - **Course creation and management** with detailed information
 - **Prerequisites system** for course dependencies
 - **Course scheduling** with time slot management
 - **Enrollment system** with capacity controls
 - **Course analytics** and reporting
 
-### 👨‍🎓 Student Profiles
+### Student Profiles
 - **Comprehensive student information** (academic, personal)
 - **Parent/Guardian management** with multiple contacts
 - **Emergency contact system**
 - **Academic history tracking**
 - **Student dashboard** with personalized insights
 
-### 📊 Performance Tracking
+### Performance Tracking
 - **Assessment management** (quizzes, assignments, exams)
 - **Grade recording and calculation** with weighted averages
 - **Letter grade conversion** (A+, A, B+, etc.)
 - **Performance analytics** with trend analysis
 - **ML-powered predictions** for academic outcomes
 
-### 📋 Attendance Management
+### Attendance Management
 - **Real-time attendance marking** with multiple status types
 - **Attendance sessions** for organized class tracking
 - **Automated alerts** for poor attendance
 - **Attendance analytics** with summaries and reports
 - **Bulk attendance operations**
 
-### 🤖 Machine Learning Integration
+### Machine Learning Integration
 - **Performance prediction model** using historical data
 - **Academic risk assessment** for early intervention
 - **Data preprocessing** for ML model training
@@ -121,43 +130,48 @@ git clone <repository-url>
 cd brightpath
 ```
 
-2. **Create virtual environment**
+2. **Navigate to backend directory**
+```bash
+cd backend
+```
+
+3. **Create virtual environment**
 ```bash
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
 # venv\Scripts\activate   # Windows
 ```
 
-3. **Install dependencies**
+4. **Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-4. **Configure environment**
+5. **Configure environment**
 ```bash
 # Create .env file with your settings
 cp .env.example .env
 # Edit .env with your configuration
 ```
 
-5. **Run migrations**
+6. **Run migrations**
 ```bash
 python manage.py migrate
 ```
 
-6. **Create superuser**
+7. **Create superuser**
 ```bash
 python manage.py createsuperuser
 ```
 
-7. **Start development server**
+8. **Start development server**
 ```bash
 python manage.py runserver
 ```
 
 The application will be available at `http://localhost:8000`
 
-### 📚 API Documentation
+### API Documentation
 
 **Interactive API Documentation with Swagger UI:**
 - **Swagger UI**: `http://localhost:8000/api/docs/` - Interactive API documentation
@@ -172,7 +186,7 @@ The Swagger documentation includes:
 - **Schema validation** - automatic request/response validation
 - **Organized by tags**: Authentication, Users, Students, Courses, Performance, Attendance
 
-### 🔐 Authentication in API Docs
+### Authentication in API Docs
 
 To use protected endpoints in Swagger UI:
 1. Go to `http://localhost:8000/api/docs/`
@@ -183,7 +197,7 @@ To use protected endpoints in Swagger UI:
 
 ## API Endpoints
 
-> **💡 Interactive Documentation**: Visit `http://localhost:8000/api/docs/` for complete interactive API documentation with Swagger UI
+> **Interactive Documentation**: Visit `http://localhost:8000/api/docs/` for complete interactive API documentation with Swagger UI
 
 ### Authentication
 - `POST /api/users/register/` - User registration
@@ -264,11 +278,13 @@ DATABASES = {
 
 ### Running Tests
 ```bash
+cd backend
 python manage.py test
 ```
 
 ### Code Quality
 ```bash
+cd backend
 # Format code
 black .
 
@@ -281,6 +297,7 @@ mypy .
 
 ### Database Operations
 ```bash
+cd backend
 # Create new migration
 python manage.py makemigrations
 
@@ -306,10 +323,10 @@ python manage.py flush
 FROM python:3.11-slim
 
 WORKDIR /app
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY . .
+COPY backend/ .
 RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
@@ -354,33 +371,40 @@ A Django-based educational platform that uses machine learning to predict studen
 
 ```
 brightpath/
-├── manage.py
-├── requirements.txt
-├── README.md
-├── config/                      # Main project configuration
-├── apps/                        # Feature-based Django apps
-│   ├── users/                   # Authentication & user management
-│   ├── students/                # Student profiles & details
-│   ├── courses/                 # Course management & enrollments
-│   ├── performance/             # Grades & performance tracking
-│   └── attendance/              # Attendance tracking
-├── api/                         # API gateway
-└── ml/                          # Machine learning module
+├── backend/
+│   ├── manage.py
+│   ├── requirements.txt
+│   ├── db.sqlite3
+│   ├── venv/                    # Virtual environment
+│   ├── config/                  # Main project configuration
+│   ├── apps/                    # Feature-based Django apps
+│   │   ├── users/               # Authentication & user management
+│   │   ├── students/            # Student profiles & details
+│   │   ├── courses/             # Course management & enrollments
+│   │   ├── performance/         # Grades & performance tracking
+│   │   └── attendance/          # Attendance tracking
+│   ├── api/                     # API gateway
+│   ├── ml/                      # Machine learning module
+│   └── static/                  # Static files
+├── frontend/                    # Frontend application (future)
+├── .gitignore
+└── README.md
 ```
 
 ## Setup Instructions
 
 1. Clone the repository
-2. Create a virtual environment: `python -m venv venv`
-3. Activate the virtual environment: `source venv/bin/activate`
-4. Install dependencies: `pip install -r requirements.txt`
-5. Run migrations: `python manage.py migrate`
-6. Create superuser: `python manage.py createsuperuser`
-7. Run the server: `python manage.py runserver`
+2. Navigate to backend: `cd backend`
+3. Create a virtual environment: `python -m venv venv`
+4. Activate the virtual environment: `source venv/bin/activate`
+5. Install dependencies: `pip install -r requirements.txt`
+6. Run migrations: `python manage.py migrate`
+7. Create superuser: `python manage.py createsuperuser`
+8. Run the server: `python manage.py runserver`
 
 ## API Endpoints
 
-The API endpoints are organized under `/api/v1/` and include:
+The API endpoints are organized under `/api/` and include:
 - `/api/v1/users/` - User management
 - `/api/v1/students/` - Student profiles
 - `/api/v1/courses/` - Course management
