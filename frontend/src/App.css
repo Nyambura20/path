@@ -1,0 +1,55 @@
+/* Custom styles for the BrightPath application */
+
+/* Ensure full height layout */
+#root {
+  min-height: 100vh;
+}
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-secondary-50;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-secondary-300 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-secondary-400;
+}
+
+/* Focus styles for better accessibility */
+.form-input:focus,
+.btn:focus {
+  @apply outline-none ring-2 ring-offset-2;
+}
+
+/* Custom animation for loading states */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Smooth transitions for interactive elements */
+.transition-all {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
