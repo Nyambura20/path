@@ -1,20 +1,30 @@
 # BrightPath - Educational Management System
 
-A comprehensive Django-based educational platform with ML-powered performance predictions and modern API architecture.
+A comprehensive full-stack educational platform with Django REST API backend and modern React frontend, featuring ML-powered performance predictions and a sleek dark theme interface.
 
 ## Project Overview
 
-BrightPath is a complete educational management system built with Django and Django REST Framework, featuring:
+BrightPath is a complete educational management system built with Django REST Framework backend and React frontend, featuring:
 
+### Backend Features
 - **User Management**: Multi-role authentication (Student, Teacher, Admin)
 - **Course Management**: Full course creation, enrollment, and scheduling
 - **Attendance Tracking**: Real-time attendance with alerts and analytics
 - **Performance Analytics**: Grade management with ML-based performance predictions
 - **Student Profiles**: Comprehensive student information with parent/guardian details
-- **JWT Authentication**: Secure token-based authentication
+- **JWT Authentication**: Secure token-based authentication with refresh tokens
 - **API Gateway**: Centralized API routing and management
 - **ML Integration**: Scikit-learn powered academic performance predictions
 - **Interactive API Documentation**: Swagger UI with complete API reference and testing interface
+
+### Frontend Features
+- **Modern React Interface**: Built with React 19 and Tailwind CSS
+- **Dark Theme**: Professional dark theme with green accents for comfortable viewing
+- **Responsive Design**: Mobile-friendly interface that works on all devices
+- **Role-Based UI**: Different interfaces for students, teachers, and administrators
+- **Collapsible Sidebar**: Organized navigation that pushes content instead of overlaying
+- **Real-time Authentication**: JWT-based auth with automatic token refresh
+- **Interactive Components**: Loading spinners, notifications, and smooth transitions
 
 ## Architecture
 
@@ -48,6 +58,31 @@ brightpath/
 │   │   ├── attendance/      # Attendance management
 │   │   │   ├── models.py    # Attendance records & sessions
 │   │   │   ├── views.py     # Attendance operations
+├── frontend-new/             # React frontend application
+│   ├── src/
+│   │   ├── components/      # Reusable UI components
+│   │   │   ├── Navbar.js    # Navigation with role-based menus
+│   │   │   ├── Sidebar.js   # Collapsible sidebar navigation
+│   │   │   ├── Footer.js    # Site footer
+│   │   │   └── LoadingSpinner.js # Loading indicators
+│   │   ├── pages/           # Main application pages
+│   │   │   ├── Login.js     # Authentication
+│   │   │   ├── Register.js  # User registration
+│   │   │   ├── Dashboard.js # User dashboard
+│   │   │   ├── Courses.js   # Course listing and management
+│   │   │   ├── Students.js  # Student management
+│   │   │   └── Teachers.js  # Teacher management
+│   │   ├── services/        # API and external services
+│   │   │   └── api.js      # Centralized API client with JWT
+│   │   ├── utils/          # Utility functions and contexts
+│   │   │   ├── AuthContext.js # Authentication state management
+│   │   │   ├── SidebarContext.js # Sidebar state management
+│   │   │   └── NotificationContext.js # Notification system
+│   │   ├── App.js          # Main app component with routing
+│   │   └── index.js        # Application entry point
+│   ├── public/             # Static assets
+│   ├── package.json        # NPM dependencies
+│   └── tailwind.config.js  # Tailwind CSS configuration
 │   │   │   └── analytics.py # Attendance analytics
 │   │   └── api/             # API routing & management
 │   │       ├── views.py     # Gateway endpoints
@@ -62,10 +97,34 @@ brightpath/
 │   ├── manage.py            # Django management script
 │   ├── db.sqlite3           # Database file
 │   └── requirements.txt     # Python dependencies
-├── frontend/                # Frontend application (future)
 ├── .gitignore              # Git ignore rules
 └── README.md               # Project documentation
 ```
+
+## Technology Stack
+
+### Backend
+- **Python 3.11+** - Core programming language
+- **Django 5.0** - Web framework with ORM
+- **Django REST Framework** - API development
+- **JWT Authentication** - Secure token-based auth
+- **SQLite/PostgreSQL** - Database options
+- **Scikit-learn** - Machine learning predictions
+- **Swagger/OpenAPI** - API documentation
+
+### Frontend
+- **React 19** - Modern JavaScript library
+- **React Router v7** - Client-side routing
+- **Tailwind CSS v4** - Utility-first CSS framework with dark theme
+- **Axios** - HTTP client for API calls
+- **Context API** - State management for auth and UI
+- **JWT Tokens** - Authentication handling
+
+### Development Tools
+- **VS Code** - Recommended IDE
+- **npm/pip** - Package managers
+- **Git** - Version control
+- **Virtual Environment** - Python isolation
 
 ## Features
 
@@ -119,10 +178,11 @@ brightpath/
 
 ### Prerequisites
 - Python 3.11+
+- Node.js 18+ and npm
 - SQLite (default) or PostgreSQL
 - Virtual environment (recommended)
 
-### Quick Start
+### Full Stack Setup
 
 1. **Clone the repository**
 ```bash
@@ -130,7 +190,7 @@ git clone <repository-url>
 cd brightpath
 ```
 
-2. **Navigate to backend directory**
+2. **Backend Setup**
 ```bash
 cd backend
 ```
@@ -142,12 +202,12 @@ source venv/bin/activate  # Linux/Mac
 # venv\Scripts\activate   # Windows
 ```
 
-4. **Install dependencies**
+4. **Install Python dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-5. **Configure environment**
+5. **Configure backend environment**
 ```bash
 # Create .env file with your settings
 cp .env.example .env
@@ -164,12 +224,38 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
-8. **Start development server**
+8. **Start Django development server**
 ```bash
 python manage.py runserver
 ```
 
-The application will be available at `http://localhost:8000`
+9. **Frontend Setup (new terminal)**
+```bash
+cd ../frontend-new
+```
+
+10. **Install Node.js dependencies**
+```bash
+npm install
+```
+
+11. **Configure frontend environment**
+```bash
+# Create .env file for frontend (if needed)
+# REACT_APP_API_URL=http://localhost:8000/api
+```
+
+12. **Start React development server**
+```bash
+npm start
+```
+
+### Application URLs
+
+- **Frontend**: `http://localhost:3000` - React application with dark theme
+- **Backend API**: `http://localhost:8000` - Django REST API
+- **API Documentation**: `http://localhost:8000/api/docs/` - Interactive Swagger UI
+- **Admin Panel**: `http://localhost:8000/admin/` - Django admin interface
 
 ### API Documentation
 

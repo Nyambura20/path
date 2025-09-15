@@ -1,0 +1,4 @@
+# BrightPath
+# This simple robots.txt file allows all crawlers
+User-agent: *
+Allow: /

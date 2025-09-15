@@ -5,12 +5,15 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import login, logout
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from drf_spectacular.utils import extend_schema, OpenApiExample
 from drf_spectacular.openapi import OpenApiParameter
 from .models import User
 from .serializers import UserRegistrationSerializer, UserSerializer, LoginSerializer
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class RegisterView(generics.CreateAPIView):
     """
     Register a new user account
@@ -133,6 +136,7 @@ class RegisterView(generics.CreateAPIView):
         }
     }
 )
+@csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
@@ -176,6 +180,7 @@ def login_view(request):
         }
     }
 )
+@csrf_exempt
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def logout_view(request):
@@ -191,6 +196,7 @@ def logout_view(request):
     return Response({'message': 'Logged out successfully'})
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class ProfileView(generics.RetrieveUpdateAPIView):
     """
     User profile management
@@ -246,3 +252,83 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class TeacherListCreateView(generics.ListCreateAPIView):
+    """
+    List all teachers or create a new teacher account
+    """
+    serializer_class = UserRegistrationSerializer
+    permission_classes = [AllowAny]  # You might want to restrict this to admin users
+    
+    def get_queryset(self):
+        return User.objects.filter(role='teacher', is_active=True)
+    
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return UserSerializer
+        return UserRegistrationSerializer
+
+    @extend_schema(
+        tags=['Teachers'],
+        summary='List all teachers',
+        description='Get a list of all active teachers/instructors'
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    @extend_schema(
+        tags=['Teachers'],
+        summary='Create new teacher',
+        description='Create a new teacher/instructor account',
+        examples=[
+            OpenApiExample(
+                'Teacher Registration',
+                value={
+                    'email': 'teacher@example.com',
+                    'username': 'teacher123',
+                    'password': 'securepassword123',
+                    'first_name': 'Jane',
+                    'last_name': 'Smith',
+                    'role': 'teacher'
+                }
+            )
+        ]
+    )
+    def create(self, request, *args, **kwargs):
+        # Force role to be teacher
+        request.data['role'] = 'teacher'
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        
+        # Generate JWT tokens
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+        refresh_token = str(refresh)
+        
+        return Response({
+            'user': UserSerializer(user).data,
+            'access_token': access_token,
+            'refresh_token': refresh_token
+        }, status=status.HTTP_201_CREATED)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class TeacherDetailView(generics.RetrieveAPIView):
+    """
+    Get details of a specific teacher
+    """
+    queryset = User.objects.filter(role='teacher', is_active=True)
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+    lookup_field = 'id'
+
+    @extend_schema(
+        tags=['Teachers'],
+        summary='Get teacher details',
+        description='Get detailed information about a specific teacher/instructor'
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
