@@ -22,6 +22,7 @@ export function AuthProvider({ children }) {
       try {
         if (apiClient.isAuthenticated()) {
           const userData = await apiClient.getProfile();
+          console.log('Fetched user data:', userData); // Debug log
           setUser(userData);
           setIsAuthenticated(true);
           // Store user data in localStorage for quick access
@@ -44,6 +45,7 @@ export function AuthProvider({ children }) {
   const login = async (credentials) => {
     try {
       const response = await apiClient.login(credentials);
+      console.log('Login response:', response); // Debug log
       setUser(response.user);
       setIsAuthenticated(true);
       localStorage.setItem('user', JSON.stringify(response.user));
@@ -74,6 +76,8 @@ export function AuthProvider({ children }) {
       setUser(null);
       setIsAuthenticated(false);
       localStorage.removeItem('user');
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
     }
   };
 

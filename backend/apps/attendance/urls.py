@@ -22,4 +22,10 @@ urlpatterns = [
     # Reports
     path('reports/student/', views.student_attendance_report, name='student-attendance-report'),
     path('reports/student/<int:student_id>/', views.student_attendance_report, name='student-attendance-report-detail'),
+    
+    # Teacher attendance management
+    path('teacher/dashboard/', views.teacher_attendance_dashboard, name='teacher-attendance-dashboard'),
+    path('teacher/mark-class/', views.mark_class_attendance, name='mark-class-attendance'),
+    path('teacher/mark-assignment/', views.mark_assignment_submission_attendance, name='mark-assignment-attendance'),
+    path('teacher/records/', views.teacher_attendance_records, name='teacher-attendance-records'),
 ]

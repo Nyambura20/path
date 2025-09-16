@@ -19,11 +19,15 @@ function Attendance() {
       
       let data = [];
       if (user?.role === 'student') {
-        data = await apiClient.getStudentAttendance();
+        // Get attendance records instead of summary
+        const response = await apiClient.getStudentAttendance();
+        data = response.results || [];
       } else if (user?.role === 'teacher') {
-        data = await apiClient.getTeacherAttendanceData();
+        const response = await apiClient.getTeacherAttendanceDashboard();
+        data = response.results || [];
       } else {
-        data = await apiClient.getAllAttendanceData();
+        const response = await apiClient.getAllAttendanceData();
+        data = response.results || [];
       }
       
       setAttendanceData(data);
@@ -54,7 +58,7 @@ function Attendance() {
     let filtered = attendanceData;
     
     if (selectedCourse !== 'all') {
-      filtered = filtered.filter(item => item.course_id === parseInt(selectedCourse));
+      filtered = filtered.filter(item => item.course === parseInt(selectedCourse));
     }
     
     if (selectedMonth !== 'all') {

@@ -54,14 +54,14 @@ function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-50 via-white to-secondary-50 py-20">
+      <section className="bg-gradient-to-br from-softbg-100 via-white to-softbg-200 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold text-darkbg-800 mb-6">
               Welcome to{' '}
-              <span className="text-gradient">BrightPath</span>
+              <span className="text-gradient bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">BrightPath</span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-darkbg-600 max-w-3xl mx-auto mb-8">
               A comprehensive educational management platform that empowers students, 
               teachers, and administrators with intelligent tools for academic success.
             </p>
@@ -98,7 +98,7 @@ function Home() {
                 <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">
                   {stat.value}
                 </div>
-                <div className="text-gray-600 font-medium">{stat.label}</div>
+                <div className="text-darkbg-600 font-medium">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -106,13 +106,13 @@ function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-softbg-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-darkbg-800 mb-4">
               Powerful Features for Modern Education
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-darkbg-600 max-w-2xl mx-auto">
               Everything you need to manage, track, and enhance educational experiences 
               in one integrated platform.
             </p>
@@ -184,7 +184,7 @@ function Home() {
 
       {/* CTA Section */}
       {!isAuthenticated && (
-        <section className="py-20 bg-gradient-primary">
+        <section className="py-20 bg-gradient-to-r from-primary-600 to-secondary-600">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Ready to Start Your Educational Journey?
@@ -194,7 +194,7 @@ function Home() {
               to achieve their academic goals.
             </p>
             <div className="space-y-4 sm:space-y-0 sm:space-x-4 sm:flex sm:justify-center">
-              <Link to="/register" className="bg-white text-primary-600 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-colors duration-200 inline-block">
+              <Link to="/register" className="bg-white text-primary-600 hover:bg-softbg-100 font-medium py-3 px-8 rounded-lg transition-colors duration-200 inline-block shadow-lg">
                 Get Started Free
               </Link>
               <Link to="/about" className="border border-white text-white hover:bg-white hover:text-primary-600 font-medium py-3 px-8 rounded-lg transition-colors duration-200 inline-block">

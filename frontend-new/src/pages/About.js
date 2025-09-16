@@ -77,13 +77,13 @@ function About() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-50 via-white to-secondary-50 py-20">
+      <section className="bg-gradient-to-br from-softbg-100 via-white to-softbg-200 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              About <span className="text-gradient">BrightPath</span>
+          <div className="text-center max-w-4xl mx-auto">
+            <h1 className="text-4xl md:text-6xl font-bold text-darkbg-800 mb-6">
+              About <span className="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">BrightPath</span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-darkbg-600 mb-8">
               BrightPath is a comprehensive educational management platform designed to 
               streamline academic operations, enhance learning outcomes, and provide 
               data-driven insights for educational institutions.
@@ -156,13 +156,13 @@ function About() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-softbg-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-darkbg-800 mb-4">
               Cutting-Edge Features
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-darkbg-600 max-w-2xl mx-auto">
               Discover the powerful capabilities that make BrightPath the ideal 
               choice for modern educational institutions.
             </p>
@@ -285,7 +285,7 @@ function About() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-primary">
+      <section className="py-20 bg-gradient-to-r from-primary-600 to-secondary-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Ready to Transform Your Educational Experience?
@@ -295,7 +295,7 @@ function About() {
             experiencing the benefits of BrightPath.
           </p>
           <div className="space-y-4 sm:space-y-0 sm:space-x-4 sm:flex sm:justify-center">
-            <Link to="/register" className="bg-white text-primary-600 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-colors duration-200 inline-block">
+            <Link to="/register" className="bg-white text-primary-600 hover:bg-softbg-100 font-medium py-3 px-8 rounded-lg transition-colors duration-200 inline-block shadow-lg">
               Get Started Today
             </Link>
             <Link to="/courses" className="border border-white text-white hover:bg-white hover:text-primary-600 font-medium py-3 px-8 rounded-lg transition-colors duration-200 inline-block">

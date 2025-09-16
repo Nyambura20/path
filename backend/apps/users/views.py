@@ -140,8 +140,12 @@ class RegisterView(generics.CreateAPIView):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
+    print(f"Login request data: {request.data}")
     serializer = LoginSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
+    if not serializer.is_valid():
+        print(f"Serializer errors: {serializer.errors}")
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
     user = serializer.validated_data['user']
     login(request, user)
     
@@ -332,3 +336,152 @@ class TeacherDetailView(generics.RetrieveAPIView):
     )
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
+
+
+# Teacher Course Management Views
+
+@extend_schema(
+    tags=['Teachers'],
+    summary='Get teacher courses with enrolled students',
+    description='Get all courses taught by the teacher with enrolled student information'
+)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def teacher_courses_with_students(request):
+    """Get teacher's courses with enrolled students"""
+    if not request.user.is_teacher:
+        return Response({'error': 'Access denied. Teacher role required.'}, 
+                       status=status.HTTP_403_FORBIDDEN)
+    
+    from apps.courses.models import Course, Enrollment
+    from apps.courses.serializers import CourseSerializer
+    
+    # Get courses taught by this teacher
+    courses = Course.objects.filter(instructor=request.user, is_active=True)
+    
+    course_data = []
+    for course in courses:
+        # Get enrolled students for this course
+        enrollments = Enrollment.objects.filter(
+            course=course, 
+            is_active=True
+        ).select_related('student__user')
+        
+        students = []
+        for enrollment in enrollments:
+            student_info = {
+                'id': enrollment.student.id,
+                'user_id': enrollment.student.user.id,
+                'name': enrollment.student.user.get_full_name(),
+                'email': enrollment.student.user.email,
+                'enrollment_date': enrollment.enrolled_at,
+                'student_id': enrollment.student.student_id
+            }
+            students.append(student_info)
+        
+        course_info = {
+            'id': course.id,
+            'name': course.name,
+            'code': course.code,
+            'description': course.description,
+            'start_date': course.start_date,
+            'end_date': course.end_date,
+            'enrolled_students_count': len(students),
+            'enrolled_students': students
+        }
+        course_data.append(course_info)
+    
+    return Response({
+        'courses': course_data,
+        'total_courses': len(course_data),
+        'total_students': sum(len(course['enrolled_students']) for course in course_data)
+    })
+
+@extend_schema(
+    tags=['Teachers'],
+    summary='Get students in a specific course',
+    description='Get detailed information about students enrolled in a specific course'
+)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def course_students_detail(request, course_id):
+    """Get detailed information about students in a specific course"""
+    if not request.user.is_teacher:
+        return Response({'error': 'Access denied. Teacher role required.'}, 
+                       status=status.HTTP_403_FORBIDDEN)
+    
+    from apps.courses.models import Course, Enrollment
+    from apps.performance.models import Grade, Assessment
+    from apps.attendance.models import AttendanceRecord
+    
+    try:
+        # Verify the teacher owns this course
+        course = Course.objects.get(id=course_id, instructor=request.user)
+    except Course.DoesNotExist:
+        return Response({'error': 'Course not found or access denied'}, 
+                       status=status.HTTP_404_NOT_FOUND)
+    
+    # Get enrolled students with additional data
+    enrollments = Enrollment.objects.filter(
+        course=course, 
+        is_active=True
+    ).select_related('student__user')
+    
+    students_data = []
+    for enrollment in enrollments:
+        student = enrollment.student
+        
+        # Get student's grades for this course
+        grades = Grade.objects.filter(
+            student=student,
+            assessment__course=course,
+            is_published=True
+        )
+        
+        # Calculate average grade
+        if grades.exists():
+            avg_grade = sum(g.marks_obtained for g in grades) / len(grades)
+            total_assessments = grades.count()
+        else:
+            avg_grade = 0
+            total_assessments = 0
+        
+        # Get attendance records
+        attendance_records = AttendanceRecord.objects.filter(
+            student=student,
+            course=course
+        )
+        
+        # Calculate attendance rate
+        if attendance_records.exists():
+            present_count = attendance_records.filter(status='present').count()
+            attendance_rate = (present_count / attendance_records.count()) * 100
+        else:
+            attendance_rate = 0
+        
+        student_info = {
+            'id': student.id,
+            'user_id': student.user.id,
+            'name': student.user.get_full_name(),
+            'email': student.user.email,
+            'student_id': student.student_id,
+            'enrollment_date': enrollment.enrolled_at,
+            'performance': {
+                'average_grade': round(avg_grade, 2),
+                'total_assessments': total_assessments,
+                'attendance_rate': round(attendance_rate, 1),
+                'total_attendance_records': attendance_records.count()
+            }
+        }
+        students_data.append(student_info)
+    
+    return Response({
+        'course': {
+            'id': course.id,
+            'name': course.name,
+            'code': course.code,
+            'description': course.description
+        },
+        'students': students_data,
+        'total_students': len(students_data)
+    })

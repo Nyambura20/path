@@ -5,7 +5,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 
 function Performance() {
   const { user } = useAuth();
-  const [performanceData, setPerformanceData] = useState([]);
+  const [performanceData, setPerformanceData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedCourse, setSelectedCourse] = useState('all');
@@ -16,7 +16,7 @@ function Performance() {
       setLoading(true);
       setError(null);
       
-      let data = [];
+      let data = null;
       if (user?.role === 'student') {
         data = await apiClient.getStudentPerformance();
       } else if (user?.role === 'teacher') {
@@ -50,16 +50,14 @@ function Performance() {
   }, [fetchPerformanceData, fetchStudentCourses, user]);
 
   const getFilteredData = () => {
-    if (selectedCourse === 'all') {
-      return performanceData;
+    if (!performanceData || !performanceData.recent_grades) {
+      return [];
     }
-    return performanceData.filter(item => item.course_id === parseInt(selectedCourse));
-  };
-
-  const calculateGPA = (grades) => {
-    if (!grades || grades.length === 0) return 'N/A';
-    const total = grades.reduce((sum, grade) => sum + grade.grade, 0);
-    return (total / grades.length).toFixed(2);
+    
+    if (selectedCourse === 'all') {
+      return performanceData.recent_grades;
+    }
+    return performanceData.recent_grades.filter(item => item.course === selectedCourse);
   };
 
   const getGradeColor = (grade) => {
@@ -143,7 +141,7 @@ function Performance() {
         )}
 
         {/* Performance Summary */}
-        {user?.role === 'student' && filteredData.length > 0 && (
+        {user?.role === 'student' && performanceData && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex items-center">
@@ -156,9 +154,9 @@ function Performance() {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Overall GPA</dt>
+                    <dt className="text-sm font-medium text-gray-500 truncate">Average Grade</dt>
                     <dd className="text-lg font-medium text-gray-900">
-                      {calculateGPA(filteredData)}
+                      {performanceData.average_grade ? performanceData.average_grade.toFixed(1) + '%' : 'N/A'}
                     </dd>
                   </dl>
                 </div>
@@ -176,9 +174,9 @@ function Performance() {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Completed Assignments</dt>
+                    <dt className="text-sm font-medium text-gray-500 truncate">Completed Assessments</dt>
                     <dd className="text-lg font-medium text-gray-900">
-                      {filteredData.filter(item => item.status === 'completed').length}
+                      {performanceData.completed_assessments || 0}
                     </dd>
                   </dl>
                 </div>
@@ -196,12 +194,9 @@ function Performance() {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Average Score</dt>
+                    <dt className="text-sm font-medium text-gray-500 truncate">Total Courses</dt>
                     <dd className="text-lg font-medium text-gray-900">
-                      {filteredData.length > 0 
-                        ? (filteredData.reduce((sum, item) => sum + (item.grade || 0), 0) / filteredData.length).toFixed(1) + '%'
-                        : 'N/A'
-                      }
+                      {performanceData.total_courses || 0}
                     </dd>
                   </dl>
                 </div>
@@ -261,32 +256,28 @@ function Performance() {
                     <tr key={index} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">
-                          {item.course_title || item.course || 'Unknown Course'}
+                          {item.course || 'Unknown Course'}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          {item.assignment_title || item.title || 'Assignment'}
+                          {item.assessment || 'Assessment'}
                         </div>
                         <div className="text-sm text-gray-500">
-                          {item.type || 'Assignment'}
+                          Assessment
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getGradeColor(item.grade || 0)}`}>
-                          {item.grade ? `${item.grade}%` : 'N/A'}
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getGradeColor(item.percentage || 0)}`}>
+                          {item.percentage ? `${item.percentage.toFixed(1)}%` : 'N/A'}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {item.date ? new Date(item.date).toLocaleDateString() : 'N/A'}
+                        {item.graded_at ? new Date(item.graded_at).toLocaleDateString() : 'N/A'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          item.status === 'completed' ? 'text-green-800 bg-green-100' :
-                          item.status === 'pending' ? 'text-yellow-800 bg-yellow-100' :
-                          'text-gray-800 bg-gray-100'
-                        }`}>
-                          {item.status || 'Pending'}
+                        <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full text-green-800 bg-green-100">
+                          {item.status || 'Completed'}
                         </span>
                       </td>
                     </tr>

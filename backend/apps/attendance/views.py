@@ -317,3 +317,302 @@ def resolve_alert(request, alert_id):
     alert.save()
     
     return Response({'message': 'Alert resolved successfully'})
+
+
+# Teacher Attendance Management Views
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def teacher_attendance_dashboard(request):
+    """Get attendance dashboard data for teachers"""
+    if not request.user.is_teacher:
+        return Response({'error': 'Access denied. Teacher role required.'}, 
+                       status=status.HTTP_403_FORBIDDEN)
+    
+    from apps.courses.models import Course, Enrollment
+    
+    # Get teacher's courses
+    courses = Course.objects.filter(instructor=request.user, is_active=True)
+    
+    dashboard_data = {
+        'courses': [],
+        'summary': {
+            'total_courses': courses.count(),
+            'total_students': 0,
+            'today_sessions': 0,
+            'pending_marks': 0
+        }
+    }
+    
+    for course in courses:
+        # Get enrolled students
+        enrollments = Enrollment.objects.filter(course=course, is_active=True)
+        student_count = enrollments.count()
+        
+        # Get today's attendance records
+        today_records = AttendanceRecord.objects.filter(
+            course=course,
+            date=timezone.now().date()
+        )
+        
+        # Get attendance sessions for this course
+        sessions = AttendanceSession.objects.filter(course=course)
+        last_session = sessions.order_by('-created_at').first()
+        
+        course_data = {
+            'id': course.id,
+            'name': course.name,
+            'code': course.code,
+            'student_count': student_count,
+            'todays_attendance_marked': today_records.count(),
+            'total_sessions': sessions.count(),
+            'last_session': AttendanceSessionSerializer(last_session).data if last_session else None
+        }
+        
+        dashboard_data['courses'].append(course_data)
+        dashboard_data['summary']['total_students'] += student_count
+        
+        if today_records.exists():
+            dashboard_data['summary']['today_sessions'] += 1
+    
+    return Response(dashboard_data)
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def mark_class_attendance(request):
+    """Mark attendance for multiple students in a class session"""
+    if not request.user.is_teacher:
+        return Response({'error': 'Access denied. Teacher role required.'}, 
+                       status=status.HTTP_403_FORBIDDEN)
+    
+    course_id = request.data.get('course_id')
+    date = request.data.get('date', timezone.now().date())
+    attendance_data = request.data.get('attendance', [])
+    session_name = request.data.get('session_name', f"Class Session - {date}")
+    
+    try:
+        # Verify teacher owns the course
+        course = Course.objects.get(id=course_id, instructor=request.user)
+    except Course.DoesNotExist:
+        return Response({'error': 'Course not found or access denied'}, 
+                       status=status.HTTP_404_NOT_FOUND)
+    
+    # Create attendance session
+    session = AttendanceSession.objects.create(
+        course=course,
+        name=session_name,
+        date=date,
+        created_by=request.user
+    )
+    
+    created_records = []
+    updated_records = []
+    
+    for item in attendance_data:
+        student_id = item.get('student_id')
+        status_value = item.get('status', 'present')
+        notes = item.get('notes', '')
+        
+        try:
+            student = StudentProfile.objects.get(id=student_id)
+            
+            # Check if attendance already exists for this date
+            record, created = AttendanceRecord.objects.get_or_create(
+                student=student,
+                course=course,
+                date=date,
+                defaults={
+                    'status': status_value,
+                    'notes': notes,
+                    'marked_by': request.user,
+                    'session': session
+                }
+            )
+            
+            if created:
+                created_records.append(record)
+            else:
+                # Update existing record
+                record.status = status_value
+                record.notes = notes
+                record.marked_by = request.user
+                record.session = session
+                record.save()
+                updated_records.append(record)
+                
+        except StudentProfile.DoesNotExist:
+            continue
+    
+    return Response({
+        'message': 'Attendance marked successfully',
+        'session_id': session.id,
+        'created_records': len(created_records),
+        'updated_records': len(updated_records),
+        'total_processed': len(created_records) + len(updated_records)
+    })
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def mark_assignment_submission_attendance(request):
+    """Mark attendance based on assignment submissions"""
+    if not request.user.is_teacher:
+        return Response({'error': 'Access denied. Teacher role required.'}, 
+                       status=status.HTTP_403_FORBIDDEN)
+    
+    course_id = request.data.get('course_id')
+    assignment_name = request.data.get('assignment_name')
+    submitted_students = request.data.get('submitted_students', [])
+    date = request.data.get('date', timezone.now().date())
+    
+    try:
+        course = Course.objects.get(id=course_id, instructor=request.user)
+    except Course.DoesNotExist:
+        return Response({'error': 'Course not found or access denied'}, 
+                       status=status.HTTP_404_NOT_FOUND)
+    
+    # Create attendance session for assignment submission
+    session = AttendanceSession.objects.create(
+        course=course,
+        name=f"Assignment Submission - {assignment_name}",
+        date=date,
+        created_by=request.user
+    )
+    
+    # Get all enrolled students
+    from apps.courses.models import Enrollment
+    enrollments = Enrollment.objects.filter(course=course, is_active=True)
+    
+    created_records = []
+    
+    for enrollment in enrollments:
+        student = enrollment.student
+        # Check if student submitted the assignment
+        status_value = 'present' if student.id in submitted_students else 'absent'
+        notes = f"Assignment: {assignment_name}"
+        
+        # Create or update attendance record
+        record, created = AttendanceRecord.objects.get_or_create(
+            student=student,
+            course=course,
+            date=date,
+            defaults={
+                'status': status_value,
+                'notes': notes,
+                'marked_by': request.user,
+                'session': session
+            }
+        )
+        
+        if created:
+            created_records.append(record)
+        else:
+            # Update if needed
+            record.status = status_value
+            record.notes = notes
+            record.save()
+    
+    return Response({
+        'message': 'Assignment submission attendance marked successfully',
+        'session_id': session.id,
+        'total_students': enrollments.count(),
+        'submitted_count': len(submitted_students),
+        'records_created': len(created_records)
+    })
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def teacher_attendance_records(request):
+    """Get attendance records for teacher's courses with filtering and export options"""
+    if not request.user.is_teacher:
+        return Response({'error': 'Access denied. Teacher role required.'}, 
+                       status=status.HTTP_403_FORBIDDEN)
+    
+    # Get query parameters
+    course_id = request.query_params.get('course_id')
+    date_from = request.query_params.get('date_from')
+    date_to = request.query_params.get('date_to')
+    status_filter = request.query_params.get('status')
+    export_format = request.query_params.get('export', '')  # 'csv' or 'excel'
+    
+    # Base queryset - only teacher's courses
+    queryset = AttendanceRecord.objects.filter(course__instructor=request.user)
+    
+    # Apply filters
+    if course_id:
+        queryset = queryset.filter(course_id=course_id)
+    if date_from:
+        queryset = queryset.filter(date__gte=date_from)
+    if date_to:
+        queryset = queryset.filter(date__lte=date_to)
+    if status_filter:
+        queryset = queryset.filter(status=status_filter)
+    
+    queryset = queryset.select_related('student__user', 'course').order_by('-date', 'course__name', 'student__user__last_name')
+    
+    # If export is requested, return CSV data
+    if export_format == 'csv':
+        import csv
+        from django.http import HttpResponse
+        
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="attendance_records.csv"'
+        
+        writer = csv.writer(response)
+        writer.writerow(['Date', 'Course', 'Student Name', 'Student ID', 'Status', 'Notes', 'Marked By'])
+        
+        for record in queryset:
+            writer.writerow([
+                record.date,
+                record.course.name,
+                record.student.user.get_full_name(),
+                record.student.student_id,
+                record.status.title(),
+                record.notes,
+                record.marked_by.get_full_name() if record.marked_by else ''
+            ])
+        
+        return response
+    
+    # Regular JSON response
+    page_size = int(request.query_params.get('page_size', 50))
+    page = int(request.query_params.get('page', 1))
+    
+    start = (page - 1) * page_size
+    end = start + page_size
+    
+    records = queryset[start:end]
+    total_count = queryset.count()
+    
+    data = []
+    for record in records:
+        data.append({
+            'id': record.id,
+            'date': record.date,
+            'course': {
+                'id': record.course.id,
+                'name': record.course.name,
+                'code': record.course.code
+            },
+            'student': {
+                'id': record.student.id,
+                'name': record.student.user.get_full_name(),
+                'student_id': record.student.student_id,
+                'email': record.student.user.email
+            },
+            'status': record.status,
+            'notes': record.notes,
+            'marked_by': record.marked_by.get_full_name() if record.marked_by else None,
+            'created_at': record.created_at
+        })
+    
+    return Response({
+        'records': data,
+        'pagination': {
+            'current_page': page,
+            'page_size': page_size,
+            'total_records': total_count,
+            'total_pages': (total_count + page_size - 1) // page_size,
+            'has_next': end < total_count,
+            'has_previous': page > 1
+        }
+    })

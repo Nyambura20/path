@@ -87,6 +87,7 @@ class ApiClient {
       if (response.data.access_token) {
         localStorage.setItem('access_token', response.data.access_token);
         localStorage.setItem('refresh_token', response.data.refresh_token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
         authToken = response.data.access_token;
       }
       return response.data;
@@ -281,6 +282,112 @@ class ApiClient {
   async getAttendanceSummary() {
     try {
       const response = await api.get('/attendance/summaries/');
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  // Alias functions for compatibility
+  async getStudentPerformance() {
+    return this.getPerformanceSummary();
+  }
+
+  async getStudentAttendance() {
+    return this.getAttendanceRecords();
+  }
+
+  async getTeacherPerformanceData() {
+    return this.getTeacherPerformanceDashboard();
+  }
+
+  async getAllPerformanceData() {
+    try {
+      const response = await api.get('/performance/grades/');
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  // Teacher-specific endpoints
+  async getTeacherCourses() {
+    try {
+      const response = await api.get('/users/teachers/my-courses/');
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async getTeacherAttendanceDashboard() {
+    try {
+      const response = await api.get('/attendance/teacher/dashboard/');
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async getTeacherPerformanceDashboard() {
+    try {
+      const response = await api.get('/performance/teacher/dashboard/');
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async markClassAttendance(attendanceData) {
+    try {
+      const response = await api.post('/attendance/teacher/mark-class/', attendanceData);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async recordStudentGrades(gradesData) {
+    try {
+      const response = await api.post('/performance/teacher/record-grades/', gradesData);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async getTeacherAttendanceRecords(filters = {}) {
+    try {
+      const params = new URLSearchParams(filters);
+      const response = await api.get(`/attendance/teacher/records/?${params}`);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async getTeacherPerformanceRecords(filters = {}) {
+    try {
+      const params = new URLSearchParams(filters);
+      const response = await api.get(`/performance/teacher/records/?${params}`);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async getNotifications() {
+    try {
+      const response = await api.get('/notifications/');
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async markNotificationAsRead(notificationId) {
+    try {
+      const response = await api.patch(`/notifications/${notificationId}/`, { is_read: true });
       return response.data;
     } catch (error) {
       throw this.handleError(error);

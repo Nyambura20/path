@@ -27,10 +27,15 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    is_teacher = serializers.ReadOnlyField()
+    is_student = serializers.ReadOnlyField()
+    is_admin = serializers.ReadOnlyField()
+    
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role',
                  'phone_number', 'date_of_birth', 'profile_picture', 'is_active',
+                 'is_teacher', 'is_student', 'is_admin',
                  'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
 

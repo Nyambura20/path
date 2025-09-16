@@ -9,7 +9,7 @@
     font-family: 'Inter', system-ui, sans-serif;
   }
   body {
-    @apply bg-darkbg-900 text-gray-100;
+    @apply bg-softbg-50 text-darkbg-800;
   }
   .dark body {
     @apply bg-darkbg-900 text-gray-100;
@@ -18,35 +18,35 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-sm;
   }
   .dark .btn-primary {
     @apply bg-primary-700 hover:bg-primary-600 text-white;
   }
 
   .btn-secondary {
-    @apply bg-gray-200 hover:bg-gray-300 text-gray-900 font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+    @apply bg-softbg-200 hover:bg-softbg-300 text-darkbg-700 font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-sm;
   }
   .dark .btn-secondary {
-    @apply bg-darkbg-700 hover:bg-darkbg-800 text-gray-100;
+    @apply bg-darkbg-700 hover:bg-darkbg-600 text-gray-100;
   }
 
   .btn-outline {
-    @apply border border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply border border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 bg-white shadow-sm;
   }
   .dark .btn-outline {
-    @apply border-primary-400 text-primary-300 hover:bg-primary-700 hover:text-white;
+    @apply border-primary-400 text-primary-300 hover:bg-primary-700 hover:text-white bg-darkbg-800;
   }
 
   .input-field {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200 bg-white text-gray-900;
+    @apply w-full px-3 py-2 border border-softbg-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200 bg-white text-darkbg-800 shadow-sm;
   }
   .dark .input-field {
-    @apply bg-darkbg-800 border-darkbg-700 text-gray-100 placeholder-gray-400;
+    @apply bg-darkbg-800 border-darkbg-600 text-gray-100 placeholder-gray-400;
   }
 
   .card {
-    @apply bg-white rounded-lg shadow-md p-6 border border-gray-200;
+    @apply bg-white rounded-lg shadow-md p-6 border border-softbg-300;
   }
   .dark .card {
     @apply bg-darkbg-800 border-darkbg-700 text-gray-100;

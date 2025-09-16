@@ -12,4 +12,8 @@ urlpatterns = [
     # Teacher/Instructor endpoints
     path('teachers/', views.TeacherListCreateView.as_view(), name='teachers'),
     path('teachers/<int:id>/', views.TeacherDetailView.as_view(), name='teacher-detail'),
+    
+    # Teacher course management
+    path('teachers/my-courses/', views.teacher_courses_with_students, name='teacher-courses'),
+    path('teachers/courses/<int:course_id>/students/', views.course_students_detail, name='course-students-detail'),
 ]

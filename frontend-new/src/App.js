@@ -22,6 +22,7 @@ import Teachers from './pages/Teachers';
 import Performance from './pages/Performance';
 import Attendance from './pages/Attendance';
 import Profile from './pages/Profile';
+import Notifications from './pages/Notifications';
 import NotFound from './pages/NotFound';
 
 // Context
@@ -126,6 +127,14 @@ function MainContent() {
           element={
             <ProtectedRoute>
               <Attendance />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute>
+              <Notifications />
             </ProtectedRoute>
           }
         />

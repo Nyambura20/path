@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'apps.courses',
     'apps.performance',
     'apps.attendance',
+    'apps.notifications',
 ]
 
 MIDDLEWARE = [

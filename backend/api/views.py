@@ -165,12 +165,21 @@ def dashboard_stats(request):
                 at_risk=True
             ).count()
             
+            # Calculate attendance rate
+            attendance_records = AttendanceRecord.objects.filter(student=student_profile)
+            if attendance_records.exists():
+                present_count = attendance_records.filter(status='present').count()
+                attendance_rate = (present_count / attendance_records.count()) * 100
+            else:
+                attendance_rate = 0
+            
             stats = {
                 'enrolled_courses': active_enrollments.count(),
                 'completed_assessments': grades.count(),
                 'average_grade': round(avg_grade, 2),
                 'current_gpa': float(student_profile.gpa or 0),
                 'at_risk_courses': at_risk_courses,
+                'attendance_rate': round(attendance_rate, 1),
             }
             
         except Exception as e:
