@@ -11,6 +11,7 @@ from .serializers import (
     CourseScheduleSerializer,
     PrerequisiteSerializer
 )
+from apps.students.serializers import StudentProfileSerializer
 
 
 class CourseListCreateView(generics.ListCreateAPIView):
@@ -76,6 +77,60 @@ class CourseEnrollmentsView(generics.ListAPIView):
     def get_queryset(self):
         course_id = self.kwargs.get('course_id')
         return Enrollment.objects.filter(course_id=course_id, is_active=True)
+
+
+class CourseEnrolledStudentsView(generics.ListAPIView):
+    """Returns the students enrolled in a specific course"""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, course_id):
+        try:
+            # Check if user is the instructor of this course
+            course = get_object_or_404(Course, id=course_id, is_active=True)
+            
+            if not request.user.is_teacher or course.instructor != request.user:
+                return Response(
+                    {'error': 'You do not have permission to view students for this course'}, 
+                    status=status.HTTP_403_FORBIDDEN
+                )
+
+            # Get active enrollments for this course
+            enrollments = Enrollment.objects.filter(
+                course=course, 
+                is_active=True
+            ).select_related('student__user')
+
+            students_data = []
+            for enrollment in enrollments:
+                student = enrollment.student
+                student_info = {
+                    'id': student.id,
+                    'student_id': student.student_id,
+                    'name': student.user.get_full_name(),
+                    'email': student.user.email,
+                    'phone_number': student.user.phone_number,
+                    'year_of_study': student.year_of_study,
+                    'major': student.major,
+                    'gpa': float(student.gpa) if student.gpa else None,
+                    'enrollment_date': enrollment.enrollment_date,
+                    'status': enrollment.status,
+                }
+                students_data.append(student_info)
+
+            return Response({
+                'course': {
+                    'id': course.id,
+                    'name': course.name,
+                    'code': course.code
+                },
+                'students': students_data,
+                'total_enrolled': len(students_data)
+            })
+
+        except Course.DoesNotExist:
+            return Response({'error': 'Course not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])

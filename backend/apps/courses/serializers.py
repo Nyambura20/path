@@ -44,17 +44,36 @@ class CourseDetailSerializer(serializers.ModelSerializer):
     available_slots = serializers.ReadOnlyField()
     schedules = CourseScheduleSerializer(many=True, read_only=True)
     prerequisites = PrerequisiteSerializer(many=True, read_only=True)
-    
+    enrolled_students = serializers.SerializerMethodField()
+
     class Meta:
         model = Course
         fields = ['id', 'code', 'name', 'description', 'credits', 'difficulty_level',
                  'instructor', 'instructor_name', 'max_students', 'enrolled_count',
                  'available_slots', 'start_date', 'end_date', 'is_active',
-                 'schedules', 'prerequisites', 'created_at', 'updated_at']
+                 'schedules', 'prerequisites', 'enrolled_students', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
 
     def get_instructor_name(self, obj):
         return obj.instructor.get_full_name()
+
+    def get_enrolled_students(self, obj):
+        request = self.context.get('request')
+        if not request or not hasattr(request, 'user'):
+            return []
+        user = request.user
+        # Only show enrolled students if user is teacher and instructor for this course
+        if hasattr(user, 'is_teacher') and user.is_teacher and obj.instructor == user:
+            enrollments = obj.enrollments.filter(is_active=True).select_related('student__user')
+            return [
+                {
+                    'name': e.student.user.get_full_name(),
+                    'email': e.student.user.email,
+                    'student_id': e.student.student_id
+                }
+                for e in enrollments
+            ]
+        return []
 
 
 class EnrollmentSerializer(serializers.ModelSerializer):

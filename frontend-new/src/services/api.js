@@ -120,6 +120,24 @@ class ApiClient {
     }
   }
 
+  async updateProfile(formData) {
+    try {
+      // Check if formData contains a file (profile picture)
+      const isFormData = formData instanceof FormData;
+      
+      const config = {
+        headers: {
+          'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
+        }
+      };
+
+      const response = await api.patch('/users/profile/', formData, config);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
   // Dashboard
   async getDashboardStats() {
     try {
@@ -370,6 +388,51 @@ class ApiClient {
     try {
       const params = new URLSearchParams(filters);
       const response = await api.get(`/performance/teacher/records/?${params}`);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  // New methods for teacher workflow
+  async getCourseAttendance(courseId, dateRange = {}) {
+    try {
+      const params = new URLSearchParams({
+        course_id: courseId,
+        ...dateRange
+      });
+      const response = await api.get(`/attendance/course/${courseId}/?${params}`);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async recordPerformance(performanceData) {
+    try {
+      const response = await api.post('/performance/teacher/record/', performanceData);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async getCoursePerformance(courseId, filters = {}) {
+    try {
+      const params = new URLSearchParams({
+        course_id: courseId,
+        ...filters
+      });
+      const response = await api.get(`/performance/course/${courseId}/?${params}`);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async getEnrolledStudents(courseId) {
+    try {
+      const response = await api.get(`/courses/${courseId}/enrolled-students/`);
       return response.data;
     } catch (error) {
       throw this.handleError(error);

@@ -25,6 +25,14 @@ import Profile from './pages/Profile';
 import Notifications from './pages/Notifications';
 import NotFound from './pages/NotFound';
 
+// Teacher Pages
+import AttendanceMarking from './pages/teacher/AttendanceMarking';
+import AttendanceReports from './pages/teacher/AttendanceReports';
+import PerformanceRecording from './pages/teacher/PerformanceRecording';
+import PerformanceReports from './pages/teacher/PerformanceReports';
+import EnrolledStudents from './pages/teacher/EnrolledStudents';
+import MyCourses from './pages/teacher/MyCourses';
+
 // Context
 import { AuthProvider, useAuth } from './utils/AuthContext';
 import { NotificationProvider } from './utils/NotificationContext';
@@ -139,6 +147,56 @@ function MainContent() {
           }
         />
 
+        {/* Teacher Routes */}
+        <Route
+          path="/teacher/my-courses"
+          element={
+            <ProtectedRoute>
+              <MyCourses />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/teacher/attendance/mark"
+          element={
+            <ProtectedRoute>
+              <AttendanceMarking />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/teacher/attendance/reports"
+          element={
+            <ProtectedRoute>
+              <AttendanceReports />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/teacher/performance/record"
+          element={
+            <ProtectedRoute>
+              <PerformanceRecording />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/teacher/performance/reports"
+          element={
+            <ProtectedRoute>
+              <PerformanceReports />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/teacher/enrolled-students"
+          element={
+            <ProtectedRoute>
+              <EnrolledStudents />
+            </ProtectedRoute>
+          }
+        />
+
         {/* 404 Route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
@@ -174,101 +232,7 @@ function AppContent() {
       <div className="min-h-screen bg-darkbg-900 flex flex-col">
         <Navbar />
         <Sidebar />
-        <MainContent>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route
-              path="/login"
-              element={
-                <PublicRoute>
-                  <Login />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/register"
-              element={
-                <PublicRoute>
-                  <Register />
-                </PublicRoute>
-              }
-            />
-
-            {/* Logout Route - accessible to authenticated users */}
-            <Route path="/logout" element={<Logout />} />
-
-            {/* Protected Routes */}
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/courses"
-              element={
-                <ProtectedRoute>
-                  <Courses />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/courses/:id"
-              element={
-                <ProtectedRoute>
-                  <CourseDetail />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/students"
-              element={
-                <ProtectedRoute>
-                  <Students />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/teachers"
-              element={
-                <ProtectedRoute>
-                  <Teachers />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/performance"
-              element={
-                <ProtectedRoute>
-                  <Performance />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/attendance"
-              element={
-                <ProtectedRoute>
-                  <Attendance />
-                </ProtectedRoute>
-              }
-            />
-
-            {/* Catch all */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </MainContent>
+        <MainContent />
         <Footer />
         <NotificationContainer />
       </div>

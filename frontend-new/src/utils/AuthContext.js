@@ -83,8 +83,8 @@ export function AuthProvider({ children }) {
 
   const updateProfile = async (profileData) => {
     try {
-      // This would be implemented based on your backend profile update endpoint
-      const updatedUser = { ...user, ...profileData };
+      // Call the API to update the profile
+      const updatedUser = await apiClient.updateProfile(profileData);
       setUser(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
       return updatedUser;

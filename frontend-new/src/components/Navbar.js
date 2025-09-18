@@ -38,12 +38,6 @@ function Navbar() {
             <Link to="/about" className={navLinkClass('/about')}>
               About
             </Link>
-            
-            {isAuthenticated && (
-              <Link to="/logout" className={navLinkClass('/logout')}>
-                Sign Out
-              </Link>
-            )}
           </div>
 
           {/* Right side - Auth buttons for non-authenticated users */}
@@ -63,10 +57,18 @@ function Navbar() {
             <div className="flex items-center space-x-4">
               <div className="relative group">
                 <button className="flex items-center space-x-2 text-gray-100 hover:text-primary-400 transition-colors">
-                  <div className="h-8 w-8 bg-primary-600 rounded-full flex items-center justify-center">
-                    <span className="text-white font-medium text-sm">
-                      {user?.first_name?.charAt(0) || user?.username?.charAt(0) || 'U'}
-                    </span>
+                  <div className="h-8 w-8 bg-primary-600 rounded-full flex items-center justify-center overflow-hidden">
+                    {user?.profile_picture ? (
+                      <img
+                        src={user.profile_picture}
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-white font-medium text-sm">
+                        {user?.first_name?.charAt(0) || user?.username?.charAt(0) || 'U'}
+                      </span>
+                    )}
                   </div>
                   <span className="hidden md:block text-sm font-medium">
                     {user?.first_name || user?.username}
@@ -77,7 +79,7 @@ function Navbar() {
                   </svg>
                 </button>
                 
-                {/* Dropdown menu with profile link only */}
+                {/* Dropdown menu with profile and logout links */}
                 <div className="absolute right-0 mt-2 w-48 bg-darkbg-800 rounded-md shadow-xl border border-darkbg-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div className="py-1">
                     <Link
@@ -89,6 +91,18 @@ function Navbar() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                         <span>Profile</span>
+                      </div>
+                    </Link>
+                    <div className="border-t border-darkbg-700 my-1"></div>
+                    <Link
+                      to="/logout"
+                      className="block px-4 py-2 text-sm text-gray-100 hover:bg-darkbg-700 hover:text-red-400 transition-colors"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        <span>Sign Out</span>
                       </div>
                     </Link>
                   </div>

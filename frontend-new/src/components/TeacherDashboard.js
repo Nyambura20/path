@@ -83,8 +83,8 @@ function TeacherDashboard() {
 
   const unreadNotifications = notifications.filter(n => !n.is_read);
   const courses = dashboardData?.courses || [];
-  const totalStudents = courses.reduce((sum, course) => sum + course.student_count, 0);
-  const totalCourses = courses.length;
+  const totalStudents = Array.isArray(courses) ? courses.reduce((sum, course) => sum + (course.enrolled_students_count || 0), 0) : 0;
+  const totalCourses = Array.isArray(courses) ? courses.length : 0;
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -234,19 +234,19 @@ function TeacherDashboard() {
             <div className="card">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Recent Activity</h2>
               <div className="space-y-4">
-                {courses.slice(0, 3).map((course) => (
+                {Array.isArray(courses) && courses.slice(0, 3).map((course) => (
                   <div key={course.id} className="flex items-start">
                     <div className="flex-shrink-0 w-2 h-2 bg-primary-600 rounded-full mt-2 mr-3"></div>
                     <div>
                       <p className="text-sm font-medium text-gray-900">{course.name}</p>
-                      <p className="text-sm text-gray-600">{course.student_count} enrolled students</p>
+                      <p className="text-sm text-gray-600">{course.enrolled_students_count || 0} enrolled students</p>
                       <p className="text-xs text-gray-500 mt-1">
                         Avg. Performance: {course.performance_data?.average || 'N/A'}%
                       </p>
                     </div>
                   </div>
                 ))}
-                {courses.length === 0 && (
+                {(!Array.isArray(courses) || courses.length === 0) && (
                   <div className="text-center py-8">
                     <svg className="h-8 w-8 text-gray-400 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -261,7 +261,7 @@ function TeacherDashboard() {
 
         {activeTab === 'courses' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.map((course) => (
+            {Array.isArray(courses) && courses.map((course) => (
               <div key={course.id} className="card hover:shadow-lg transition-shadow">
                 <div className="flex items-start justify-between mb-4">
                   <div>
@@ -276,7 +276,7 @@ function TeacherDashboard() {
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Students:</span>
-                    <span className="font-medium">{course.student_count}</span>
+                    <span className="font-medium">{course.enrolled_students_count || 0}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Avg. Attendance:</span>
@@ -305,7 +305,7 @@ function TeacherDashboard() {
               </div>
             ))}
             
-            {courses.length === 0 && (
+            {(!Array.isArray(courses) || courses.length === 0) && (
               <div className="col-span-full text-center py-12">
                 <svg className="h-12 w-12 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />

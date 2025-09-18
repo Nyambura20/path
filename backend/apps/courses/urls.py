@@ -14,6 +14,7 @@ urlpatterns = [
     
     # Course-specific enrollments
     path('<int:course_id>/enrollments/', views.CourseEnrollmentsView.as_view(), name='course-enrollments'),
+    path('<int:course_id>/enrolled-students/', views.CourseEnrolledStudentsView.as_view(), name='course-enrolled-students'),
     
     # Student-specific enrollments
     path('students/<int:student_id>/enrollments/', views.StudentEnrollmentsView.as_view(), name='student-enrollments'),

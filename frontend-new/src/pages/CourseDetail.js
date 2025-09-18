@@ -237,6 +237,22 @@ function CourseDetail() {
               </div>
             </div>
 
+            {/* Enrolled Students for Teachers */}
+            {user?.is_teacher && course.enrolled_students && course.enrolled_students.length > 0 && (
+              <div className="card mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Enrolled Students</h3>
+                <ul className="divide-y divide-gray-200">
+                  {course.enrolled_students.map((student, idx) => (
+                    <li key={student.student_id || idx} className="py-2 flex flex-col">
+                      <span className="font-medium text-gray-900">{student.name}</span>
+                      <span className="text-sm text-gray-600">{student.email}</span>
+                      <span className="text-xs text-gray-400">ID: {student.student_id}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {/* Course Info */}
             <div className="card">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Course Information</h3>

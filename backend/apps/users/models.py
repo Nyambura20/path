@@ -15,6 +15,8 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
+    address = models.TextField(blank=True)
+    bio = models.TextField(blank=True)
     profile_picture = models.ImageField(upload_to='profiles/', null=True, blank=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)

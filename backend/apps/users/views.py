@@ -374,7 +374,7 @@ def teacher_courses_with_students(request):
                 'user_id': enrollment.student.user.id,
                 'name': enrollment.student.user.get_full_name(),
                 'email': enrollment.student.user.email,
-                'enrollment_date': enrollment.enrolled_at,
+                'enrollment_date': enrollment.enrollment_date,
                 'student_id': enrollment.student.student_id
             }
             students.append(student_info)
