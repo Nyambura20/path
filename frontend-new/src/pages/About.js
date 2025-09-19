@@ -11,9 +11,9 @@ function About() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
       ),
-      gradient: 'from-blue-500 to-indigo-500',
-      bgGradient: 'from-blue-50 to-indigo-50',
-      borderColor: 'border-blue-100'
+  gradient: 'from-green-500 to-emerald-500',
+  bgGradient: 'from-green-50 to-emerald-50',
+  borderColor: 'border-green-100'
     },
     {
       title: 'AI-Powered Performance Analytics',
@@ -63,8 +63,8 @@ function About() {
         'Monitor attendance and performance metrics',
         'Set and track study goals',
       ],
-      gradient: 'from-blue-500 to-indigo-500',
-      bgGradient: 'from-blue-50 to-indigo-50',
+  gradient: 'from-green-500 to-emerald-500',
+  bgGradient: 'from-green-50 to-emerald-50',
       emoji: '👨‍🎓'
     },
     {
@@ -100,7 +100,7 @@ function About() {
       title: 'Secure',
       description: 'Enterprise-grade security with data encryption and secure access controls.',
       icon: '🔒',
-      gradient: 'from-blue-500 to-indigo-500'
+  gradient: 'from-green-500 to-emerald-500'
     },
     {
       title: 'Fast',
@@ -123,7 +123,7 @@ function About() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+  <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         {/* Background Pattern */}
@@ -133,7 +133,7 @@ function About() {
           }}></div>
         </div>
         
-        <div className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 py-20">
+  <div className="relative bg-gradient-to-br from-green-600 via-emerald-600 to-green-700 py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-4xl mx-auto">
               {/* Floating elements for visual appeal */}
@@ -148,7 +148,7 @@ function About() {
                     BrightPath
                   </span>
                 </h1>
-                <p className="text-xl md:text-2xl text-blue-100 mb-8 leading-relaxed">
+                <p className="text-xl md:text-2xl text-green-100 mb-8 leading-relaxed">
                   BrightPath is a comprehensive educational management platform designed to 
                   streamline academic operations, enhance learning outcomes, and provide 
                   data-driven insights for educational institutions.
@@ -164,7 +164,7 @@ function About() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
+              <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-6">
                 Our Mission
               </h2>
               <p className="text-lg text-gray-600 mb-6 leading-relaxed">
@@ -179,12 +179,12 @@ function About() {
               </p>
               <Link 
                 to="/register" 
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105 inline-block"
+                className="bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105 inline-block"
               >
                 Join Our Community
               </Link>
             </div>
-            <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 rounded-2xl p-8 text-white shadow-2xl">
+            <div className="bg-gradient-to-br from-green-600 via-emerald-600 to-green-700 rounded-2xl p-8 text-white shadow-2xl">
               <h3 className="text-2xl font-bold mb-6 flex items-center">
                 <span className="text-3xl mr-3">✨</span>
                 Platform Highlights
@@ -202,7 +202,7 @@ function About() {
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-blue-100">{highlight}</span>
+                    <span className="text-green-100">{highlight}</span>
                   </li>
                 ))}
               </ul>

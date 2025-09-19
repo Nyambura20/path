@@ -14,9 +14,9 @@ function Home() {
       ),
       title: 'Course Management',
       description: 'Comprehensive course creation, enrollment, and tracking system for educational institutions.',
-      gradient: 'from-blue-500 to-indigo-500',
-      bgGradient: 'from-blue-50 to-indigo-50',
-      borderColor: 'border-blue-100'
+  gradient: 'from-green-500 to-emerald-500',
+  bgGradient: 'from-green-50 to-emerald-50',
+  borderColor: 'border-green-100'
     },
     {
       icon: (
@@ -57,14 +57,14 @@ function Home() {
   ];
 
   const stats = [
-    { label: 'Active Students', value: '1,200+', icon: '👨‍🎓', gradient: 'from-blue-600 to-indigo-600' },
+  { label: 'Active Students', value: '1,200+', icon: '👨‍🎓', gradient: 'from-green-600 to-emerald-600' },
     { label: 'Courses Available', value: '50+', icon: '📚', gradient: 'from-purple-600 to-pink-600' },
     { label: 'Expert Teachers', value: '25+', icon: '👩‍🏫', gradient: 'from-green-600 to-emerald-600' },
     { label: 'Success Rate', value: '95%', icon: '🎯', gradient: 'from-orange-600 to-red-600' },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+  <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         {/* Background Pattern */}
@@ -74,7 +74,7 @@ function Home() {
           }}></div>
         </div>
         
-        <div className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 py-20">
+  <div className="relative bg-gradient-to-br from-green-600 via-emerald-600 to-green-700 py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               {/* Floating elements for visual appeal */}
@@ -89,7 +89,7 @@ function Home() {
                     BrightPath
                   </span>
                 </h1>
-                <p className="text-xl md:text-2xl text-blue-100 max-w-4xl mx-auto mb-10 leading-relaxed">
+                <p className="text-xl md:text-2xl text-green-100 max-w-4xl mx-auto mb-10 leading-relaxed">
                   A comprehensive educational management platform that empowers students, 
                   teachers, and administrators with intelligent tools for academic success.
                 </p>
@@ -98,13 +98,13 @@ function Home() {
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Link 
                       to="/dashboard" 
-                      className="bg-white text-blue-600 hover:bg-blue-50 font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105"
+                      className="bg-white text-green-600 hover:bg-green-50 font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105"
                     >
                       Go to Dashboard
                     </Link>
                     <Link 
                       to="/courses" 
-                      className="border-2 border-white text-white hover:bg-white hover:text-blue-600 font-bold py-4 px-8 rounded-xl transition-all duration-300 backdrop-blur-sm"
+                      className="border-2 border-white text-white hover:bg-white hover:text-green-600 font-bold py-4 px-8 rounded-xl transition-all duration-300 backdrop-blur-sm"
                     >
                       Browse Courses
                     </Link>
@@ -119,7 +119,7 @@ function Home() {
                     </Link>
                     <Link 
                       to="/about" 
-                      className="border-2 border-white text-white hover:bg-white hover:text-blue-600 font-bold py-4 px-8 rounded-xl transition-all duration-300 backdrop-blur-sm"
+                      className="border-2 border-white text-white hover:bg-white hover:text-green-600 font-bold py-4 px-8 rounded-xl transition-all duration-300 backdrop-blur-sm"
                     >
                       Learn More
                     </Link>
@@ -154,7 +154,7 @@ function Home() {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-6">
               Powerful Features for Modern Education
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
@@ -186,7 +186,7 @@ function Home() {
       </section>
 
       {/* How it Works Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+  <section className="py-20 bg-gradient-to-br from-gray-50 to-green-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-6">
@@ -203,8 +203,8 @@ function Home() {
                 step: '1',
                 title: 'Sign Up',
                 description: 'Create your account as a student, teacher, or administrator to get started with our comprehensive platform.',
-                gradient: 'from-blue-500 to-indigo-500',
-                bgGradient: 'from-blue-50 to-indigo-50'
+                gradient: 'from-green-500 to-emerald-500',
+                bgGradient: 'from-green-50 to-emerald-50'
               },
               {
                 step: '2',
