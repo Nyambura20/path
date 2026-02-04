@@ -22,7 +22,7 @@ function AttendanceReports() {
     try {
       setLoading(true);
       const response = await apiClient.getTeacherCourses();
-      setCourses(response);
+      setCourses(response.courses || response || []);
     } catch (error) {
       addNotification('Error fetching courses: ' + error.message, 'error');
     } finally {
@@ -112,7 +112,7 @@ function AttendanceReports() {
 
   const getStatusBadge = (status) => {
     const styles = {
-      present: 'bg-green-100 text-green-800',
+      present: 'bg-primary-100 text-primary-800',
       absent: 'bg-red-100 text-red-800',
       late: 'bg-yellow-100 text-yellow-800',
       excused: 'bg-blue-100 text-blue-800'
@@ -209,7 +209,7 @@ function AttendanceReports() {
               <button
                 onClick={handleExportCSV}
                 disabled={!attendanceData.length}
-                className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                className="w-full px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
               >
                 Export CSV
               </button>

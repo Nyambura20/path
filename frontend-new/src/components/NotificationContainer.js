@@ -11,7 +11,7 @@ function NotificationContainer() {
     
     switch (type) {
       case 'success':
-        return `${baseStyles} bg-green-50 border-green-200 text-green-800`;
+        return `${baseStyles} bg-primary-50 border-primary-200 text-primary-800`;
       case 'error':
         return `${baseStyles} bg-red-50 border-red-200 text-red-800`;
       case 'warning':
@@ -25,7 +25,7 @@ function NotificationContainer() {
     switch (type) {
       case 'success':
         return (
-          <svg className="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="h-5 w-5 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         );

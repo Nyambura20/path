@@ -13,13 +13,7 @@ function MyCourses() {
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState('asc');
 
-  useEffect(() => {
-    if (user?.is_teacher) {
-      fetchCourses();
-    }
-  }, [user]);
-
-  const fetchCourses = async () => {
+  const fetchCourses = React.useCallback(async () => {
     try {
       setLoading(true);
       const response = await apiClient.getTeacherCourses();
@@ -30,7 +24,13 @@ function MyCourses() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [addNotification]);
+
+  useEffect(() => {
+    if (user?.is_teacher) {
+      fetchCourses();
+    }
+  }, [user, fetchCourses]);
 
   const filteredAndSortedCourses = React.useMemo(() => {
     if (!Array.isArray(courses)) return [];
@@ -129,12 +129,12 @@ function MyCourses() {
 
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center">
-              <div className="p-3 bg-green-100 rounded-full">
+              <div className="p-3 bg-primary-100 rounded-full">
                 <span className="text-2xl">👨‍🎓</span>
               </div>
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-gray-900">Total Students</h3>
-                <p className="text-3xl font-bold text-green-600">
+                <p className="text-3xl font-bold text-primary-600">
                   {Array.isArray(courses) ? courses.reduce((total, course) => total + (course.enrolled_students_count || 0), 0) : 0}
                 </p>
               </div>
@@ -215,7 +215,7 @@ function MyCourses() {
                       <h3 className="text-lg font-semibold text-gray-900 mb-1">{course.name}</h3>
                       <p className="text-blue-600 font-medium">{course.code}</p>
                     </div>
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
                       Active
                     </span>
                   </div>
@@ -238,7 +238,7 @@ function MyCourses() {
                     </button>
                     <button
                       onClick={() => window.location.href = `/teacher/attendance/mark?course=${course.id}`}
-                      className="flex-1 px-3 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition-colors"
+                      className="flex-1 px-3 py-2 bg-primary-600 text-white text-sm rounded-md hover:bg-primary-700 transition-colors"
                     >
                       Mark Attendance
                     </button>

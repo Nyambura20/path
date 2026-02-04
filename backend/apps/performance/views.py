@@ -642,3 +642,206 @@ def teacher_performance_records(request):
             'has_previous': page > 1
         }
     })
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def record_performance(request):
+    """Record performance/grades for students - alternative endpoint"""
+    if not request.user.is_teacher:
+        return Response({'error': 'Access denied. Teacher role required.'}, 
+                       status=status.HTTP_403_FORBIDDEN)
+    
+    course_id = request.data.get('course_id')
+    # Accept both field names from frontend
+    assessment_title = request.data.get('assessment_name') or request.data.get('assessment_title', 'Class Assessment')
+    assessment_type = request.data.get('assessment_type', 'assignment')
+    total_marks = request.data.get('total_marks', 100)
+    # Accept both 'performance' and 'grades' arrays
+    grades_data = request.data.get('performance') or request.data.get('grades', [])
+    
+    try:
+        course = Course.objects.get(id=course_id, instructor=request.user)
+    except Course.DoesNotExist:
+        return Response({'error': 'Course not found or access denied'}, 
+                       status=status.HTTP_404_NOT_FOUND)
+    
+    from django.utils import timezone
+    
+    # Parse due_date if provided
+    due_date = request.data.get('due_date')
+    if due_date:
+        from datetime import datetime
+        try:
+            if isinstance(due_date, str):
+                due_date = datetime.fromisoformat(due_date.replace('Z', '+00:00'))
+        except:
+            due_date = timezone.now()
+    else:
+        due_date = timezone.now()
+    
+    # Create assessment if it doesn't exist
+    assessment, created = Assessment.objects.get_or_create(
+        course=course,
+        title=assessment_title,
+        defaults={
+            'assessment_type': assessment_type,
+            'total_marks': total_marks,
+            'weight_percentage': 10.0,  # Default weight
+            'due_date': due_date,
+            'is_published': True
+        }
+    )
+    
+    created_grades = []
+    updated_grades = []
+    
+    for grade_item in grades_data:
+        student_id = grade_item.get('student_id')
+        # Accept both 'score' and 'marks_obtained' field names
+        score = grade_item.get('marks_obtained') or grade_item.get('score', 0)
+        # Accept both 'feedback' and 'comments' field names  
+        feedback = grade_item.get('comments') or grade_item.get('feedback', '')
+        
+        try:
+            student = StudentProfile.objects.get(id=student_id)
+            
+            grade, was_created = Grade.objects.get_or_create(
+                student=student,
+                assessment=assessment,
+                defaults={
+                    'marks_obtained': score,
+                    'feedback': feedback,
+                    'graded_by': request.user,
+                    'is_published': True
+                }
+            )
+            
+            if was_created:
+                created_grades.append(grade)
+            else:
+                grade.marks_obtained = score
+                grade.feedback = feedback
+                grade.graded_by = request.user
+                grade.save()
+                updated_grades.append(grade)
+                
+        except StudentProfile.DoesNotExist:
+            continue
+    
+    return Response({
+        'message': 'Performance recorded successfully',
+        'assessment_id': assessment.id,
+        'created_grades': len(created_grades),
+        'updated_grades': len(updated_grades),
+        'total_processed': len(created_grades) + len(updated_grades)
+    })
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def course_performance(request, course_id):
+    """Get performance data for a specific course (for teachers)"""
+    if not request.user.is_teacher:
+        return Response({'error': 'Access denied. Teacher role required.'}, 
+                       status=status.HTTP_403_FORBIDDEN)
+    
+    try:
+        course = Course.objects.get(id=course_id, instructor=request.user)
+    except Course.DoesNotExist:
+        return Response({'error': 'Course not found or access denied'}, 
+                       status=status.HTTP_404_NOT_FOUND)
+    
+    from apps.courses.models import Enrollment
+    
+    # Get assessment type filter
+    assessment_type = request.query_params.get('assessment_type')
+    
+    # Get assessments for this course
+    assessments_qs = Assessment.objects.filter(course=course).order_by('-created_at')
+    
+    # Filter by assessment type (ignore 'undefined', 'all', or empty values)
+    if assessment_type and assessment_type not in ('undefined', 'all', ''):
+        assessments_qs = assessments_qs.filter(assessment_type=assessment_type)
+    
+    # Get enrolled students
+    enrollments = Enrollment.objects.filter(course=course, is_active=True).select_related('student__user')
+    students = []
+    for enrollment in enrollments:
+        # Get student's grades for this course
+        student_grades = Grade.objects.filter(
+            student=enrollment.student,
+            assessment__course=course
+        )
+        avg_score = student_grades.aggregate(avg=Avg('marks_obtained'))['avg'] or 0
+        
+        students.append({
+            'id': enrollment.student.id,
+            'name': enrollment.student.user.get_full_name(),
+            'student_id': enrollment.student.student_id,
+            'email': enrollment.student.user.email,
+            'total_assessments': student_grades.count(),
+            'average_score': round(avg_score, 2)
+        })
+    
+    # Build assessments with grades
+    assessments_data = []
+    for assessment in assessments_qs[:50]:  # Limit to 50 assessments
+        grades = Grade.objects.filter(assessment=assessment).select_related('student__user')
+        
+        performance_list = []
+        for grade in grades:
+            percentage = (grade.marks_obtained / assessment.total_marks * 100) if assessment.total_marks > 0 else 0
+            # Calculate letter grade
+            if percentage >= 90:
+                letter_grade = 'A+'
+            elif percentage >= 85:
+                letter_grade = 'A'
+            elif percentage >= 80:
+                letter_grade = 'B+'
+            elif percentage >= 75:
+                letter_grade = 'B'
+            elif percentage >= 70:
+                letter_grade = 'C+'
+            elif percentage >= 65:
+                letter_grade = 'C'
+            elif percentage >= 60:
+                letter_grade = 'D'
+            else:
+                letter_grade = 'F'
+            
+            performance_list.append({
+                'student_id': grade.student.student_id,
+                'student_name': grade.student.user.get_full_name(),
+                'marks_obtained': float(grade.marks_obtained),
+                'percentage': round(percentage, 1),
+                'grade': letter_grade,
+                'comments': grade.feedback or ''
+            })
+        
+        avg_score = grades.aggregate(avg=Avg('marks_obtained'))['avg'] or 0
+        
+        assessments_data.append({
+            'id': assessment.id,
+            'assessment_name': assessment.title,
+            'assessment_type': assessment.assessment_type,
+            'total_marks': float(assessment.total_marks),
+            'due_date': assessment.due_date,
+            'created_at': assessment.created_at,
+            'performance': performance_list,
+            'total_students': len(students),
+            'graded_count': len(performance_list),
+            'average_score': round(avg_score, 2),
+            'average_percentage': round((avg_score / assessment.total_marks * 100) if assessment.total_marks > 0 else 0, 1)
+        })
+    
+    return Response({
+        'course': {
+            'id': course.id,
+            'name': course.name,
+            'code': course.code
+        },
+        'students': students,
+        'assessments': assessments_data
+    })
+

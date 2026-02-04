@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../utils/AuthContext';
 import { useNotification } from '../../utils/NotificationContext';
+import { useLocation } from 'react-router-dom';
 import apiClient from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
 function EnrolledStudents() {
   const { user } = useAuth();
   const { addNotification } = useNotification();
+  const location = useLocation();
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState('');
   const [students, setStudents] = useState([]);
@@ -17,6 +19,15 @@ function EnrolledStudents() {
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState('asc');
   const [courseStats, setCourseStats] = useState(null);
+
+  // Read course from URL query parameter
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const courseParam = params.get('course');
+    if (courseParam) {
+      setSelectedCourse(courseParam);
+    }
+  }, [location.search]);
 
   const fetchTeacherCourses = useCallback(async () => {
     try {
@@ -162,7 +173,7 @@ function EnrolledStudents() {
 
   const getStatusBadge = (status) => {
     const styles = {
-      active: 'bg-green-100 text-green-800',
+      active: 'bg-primary-100 text-primary-800',
       inactive: 'bg-red-100 text-red-800',
       pending: 'bg-yellow-100 text-yellow-800',
       suspended: 'bg-gray-100 text-gray-800'
@@ -279,7 +290,7 @@ function EnrolledStudents() {
               <button
                 onClick={handleExportCSV}
                 disabled={!Array.isArray(filteredStudents) || filteredStudents.length === 0}
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
               >
                 Export CSV
               </button>
@@ -394,7 +405,7 @@ function EnrolledStudents() {
                           </button>
                           <button
                             onClick={() => handleSendMessage(student.id)}
-                            className="text-green-600 hover:text-green-900 transition-colors"
+                            className="text-primary-600 hover:text-primary-900 transition-colors"
                           >
                             Message
                           </button>

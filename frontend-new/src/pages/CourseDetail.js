@@ -85,7 +85,7 @@ function CourseDetail() {
   const getDifficultyColor = (difficulty) => {
     switch (difficulty?.toLowerCase()) {
       case 'beginner':
-        return 'bg-green-100 text-green-800';
+        return 'bg-primary-100 text-primary-800';
       case 'intermediate':
         return 'bg-yellow-100 text-yellow-800';
       case 'advanced':
@@ -276,7 +276,7 @@ function CourseDetail() {
                 {course.is_active !== undefined && (
                   <div className="flex justify-between">
                     <span className="text-gray-600">Status:</span>
-                    <span className={`font-medium ${course.is_active ? 'text-green-600' : 'text-red-600'}`}>
+                    <span className={`font-medium ${course.is_active ? 'text-primary-600' : 'text-red-600'}`}>
                       {course.is_active ? 'Active' : 'Inactive'}
                     </span>
                   </div>

@@ -25,7 +25,7 @@ function PerformanceRecording() {
     try {
       setLoading(true);
       const response = await apiClient.getTeacherCourses();
-      setCourses(response);
+      setCourses(response.courses || response || []);
     } catch (error) {
       addNotification('Error fetching courses: ' + error.message, 'error');
     } finally {
@@ -96,8 +96,8 @@ function PerformanceRecording() {
 
   const getGradeColor = (grade) => {
     const colors = {
-      'A+': 'text-green-600 bg-green-100',
-      'A': 'text-green-600 bg-green-100',
+      'A+': 'text-primary-600 bg-primary-100',
+      'A': 'text-primary-600 bg-primary-100',
       'B+': 'text-blue-600 bg-blue-100',
       'B': 'text-blue-600 bg-blue-100',
       'C+': 'text-yellow-600 bg-yellow-100',
@@ -310,7 +310,7 @@ function PerformanceRecording() {
                     <button
                       type="button"
                       onClick={() => handleBulkMarks(assessmentDetails.total_marks)}
-                      className="px-3 py-1 bg-green-100 text-green-800 rounded-md hover:bg-green-200 transition-colors text-sm"
+                      className="px-3 py-1 bg-primary-100 text-primary-800 rounded-md hover:bg-primary-200 transition-colors text-sm"
                     >
                       Full Marks All
                     </button>

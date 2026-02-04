@@ -36,8 +36,8 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role',
                  'phone_number', 'date_of_birth', 'address', 'bio', 'profile_picture', 'is_active',
                  'is_teacher', 'is_student', 'is_admin',
-                 'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at']
+                 'date_joined', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'date_joined', 'created_at', 'updated_at']
 
 
 class LoginSerializer(serializers.Serializer):

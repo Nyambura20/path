@@ -19,7 +19,7 @@ function PerformanceReports() {
     try {
       setLoading(true);
       const response = await apiClient.getTeacherCourses();
-      setCourses(response);
+      setCourses(response.courses || response || []);
     } catch (error) {
       addNotification('Error fetching courses: ' + error.message, 'error');
     } finally {
@@ -73,8 +73,8 @@ function PerformanceReports() {
 
   const getGradeBadge = (grade) => {
     const colors = {
-      'A+': 'bg-green-100 text-green-800',
-      'A': 'bg-green-100 text-green-800',
+      'A+': 'bg-primary-100 text-primary-800',
+      'A': 'bg-primary-100 text-primary-800',
       'B+': 'bg-blue-100 text-blue-800',
       'B': 'bg-blue-100 text-blue-800',
       'C+': 'bg-yellow-100 text-yellow-800',
@@ -234,7 +234,7 @@ function PerformanceReports() {
               <button
                 onClick={handleExportCSV}
                 disabled={!performanceData.length}
-                className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                className="w-full px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
               >
                 Export CSV
               </button>

@@ -11,9 +11,9 @@ function About() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
       ),
-  gradient: 'from-green-500 to-emerald-500',
-  bgGradient: 'from-green-50 to-emerald-50',
-  borderColor: 'border-green-100'
+  gradient: 'from-primary-500 to-primary-600',
+  bgGradient: 'from-primary-50 to-primary-100',
+  borderColor: 'border-primary-100'
     },
     {
       title: 'AI-Powered Performance Analytics',
@@ -35,9 +35,9 @@ function About() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
         </svg>
       ),
-      gradient: 'from-green-500 to-emerald-500',
-      bgGradient: 'from-green-50 to-emerald-50',
-      borderColor: 'border-green-100'
+      gradient: 'from-primary-500 to-primary-600',
+      bgGradient: 'from-primary-50 to-primary-100',
+      borderColor: 'border-primary-100'
     },
     {
       title: 'Comprehensive User Management',
@@ -63,8 +63,8 @@ function About() {
         'Monitor attendance and performance metrics',
         'Set and track study goals',
       ],
-  gradient: 'from-green-500 to-emerald-500',
-  bgGradient: 'from-green-50 to-emerald-50',
+  gradient: 'from-primary-500 to-primary-600',
+  bgGradient: 'from-primary-50 to-primary-100',
       emoji: '👨‍🎓'
     },
     {
@@ -89,8 +89,8 @@ function About() {
         'Track institutional performance metrics',
         'Export data for reporting and compliance',
       ],
-      gradient: 'from-green-500 to-emerald-500',
-      bgGradient: 'from-green-50 to-emerald-50',
+      gradient: 'from-primary-500 to-primary-600',
+      bgGradient: 'from-primary-50 to-primary-100',
       emoji: '👨‍💼'
     },
   ];
@@ -100,7 +100,7 @@ function About() {
       title: 'Secure',
       description: 'Enterprise-grade security with data encryption and secure access controls.',
       icon: '🔒',
-  gradient: 'from-green-500 to-emerald-500'
+  gradient: 'from-primary-500 to-primary-600'
     },
     {
       title: 'Fast',
@@ -112,7 +112,7 @@ function About() {
       title: 'Scalable',
       description: 'Built to grow with your institution, from small schools to large universities.',
       icon: '📈',
-      gradient: 'from-green-500 to-emerald-500'
+      gradient: 'from-primary-500 to-primary-600'
     },
     {
       title: 'Mobile-First',
@@ -123,7 +123,7 @@ function About() {
   ];
 
   return (
-  <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
+  <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-100">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         {/* Background Pattern */}
@@ -133,7 +133,7 @@ function About() {
           }}></div>
         </div>
         
-  <div className="relative bg-gradient-to-br from-green-600 via-emerald-600 to-green-700 py-20">
+  <div className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-4xl mx-auto">
               {/* Floating elements for visual appeal */}
@@ -148,7 +148,7 @@ function About() {
                     BrightPath
                   </span>
                 </h1>
-                <p className="text-xl md:text-2xl text-green-100 mb-8 leading-relaxed">
+                <p className="text-xl md:text-2xl text-primary-100 mb-8 leading-relaxed">
                   BrightPath is a comprehensive educational management platform designed to 
                   streamline academic operations, enhance learning outcomes, and provide 
                   data-driven insights for educational institutions.
@@ -164,7 +164,7 @@ function About() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-6">
+              <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent mb-6">
                 Our Mission
               </h2>
               <p className="text-lg text-gray-600 mb-6 leading-relaxed">
@@ -179,12 +179,12 @@ function About() {
               </p>
               <Link 
                 to="/register" 
-                className="bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105 inline-block"
+                className="bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:from-primary-700 hover:to-primary-800 font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105 inline-block"
               >
                 Join Our Community
               </Link>
             </div>
-            <div className="bg-gradient-to-br from-green-600 via-emerald-600 to-green-700 rounded-2xl p-8 text-white shadow-2xl">
+            <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 rounded-2xl p-8 text-white shadow-2xl">
               <h3 className="text-2xl font-bold mb-6 flex items-center">
                 <span className="text-3xl mr-3">✨</span>
                 Platform Highlights
@@ -202,7 +202,7 @@ function About() {
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-green-100">{highlight}</span>
+                    <span className="text-primary-100">{highlight}</span>
                   </li>
                 ))}
               </ul>
@@ -250,7 +250,7 @@ function About() {
       <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent mb-6">
               Benefits for Everyone
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">

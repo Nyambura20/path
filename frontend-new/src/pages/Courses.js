@@ -66,7 +66,7 @@ function Courses() {
   const getDifficultyColor = (difficulty) => {
     switch (difficulty?.toLowerCase()) {
       case 'beginner':
-        return 'bg-green-100 text-green-800';
+        return 'bg-primary-100 text-primary-800';
       case 'intermediate':
         return 'bg-yellow-100 text-yellow-800';
       case 'advanced':
@@ -157,19 +157,21 @@ function Courses() {
               </select>
             </div>
             
-            <div>
-              <label htmlFor="instructor" className="block text-sm font-medium text-gray-700 mb-2">
-                Instructor
-              </label>
-              <input
-                type="text"
-                id="instructor"
-                value={filters.instructor}
-                onChange={(e) => setFilters({ ...filters, instructor: e.target.value })}
-                placeholder="Filter by instructor ID..."
-                className="input-field"
-              />
-            </div>
+            {!user?.is_teacher && (
+              <div>
+                <label htmlFor="instructor" className="block text-sm font-medium text-gray-700 mb-2">
+                  Instructor
+                </label>
+                <input
+                  type="text"
+                  id="instructor"
+                  value={filters.instructor}
+                  onChange={(e) => setFilters({ ...filters, instructor: e.target.value })}
+                  placeholder="Filter by instructor ID..."
+                  className="input-field"
+                />
+              </div>
+            )}
           </div>
         </div>
 

@@ -24,8 +24,12 @@ urlpatterns = [
     # Summary endpoints
     path('summary/', views.performance_summary, name='performance-summary'),
     
+    # Course performance (for teacher reports)
+    path('course/<int:course_id>/', views.course_performance, name='course-performance'),
+    
     # Teacher performance management
     path('teacher/dashboard/', views.teacher_performance_dashboard, name='teacher-performance-dashboard'),
+    path('teacher/record/', views.record_performance, name='record-performance'),
     path('teacher/record-grades/', views.record_student_grades, name='record-student-grades'),
     path('teacher/create-assessment/', views.create_assessment_with_grading, name='create-assessment-with-grading'),
     path('teacher/records/', views.teacher_performance_records, name='teacher-performance-records'),

@@ -31,8 +31,8 @@ function AttendanceMarking() {
 
   const fetchTeacherCourses = async () => {
     try {
-      const coursesData = await apiClient.getTeacherCourses();
-      setCourses(coursesData || []);
+      const response = await apiClient.getTeacherCourses();
+      setCourses(response?.courses || []);
     } catch (error) {
       console.error('Error fetching courses:', error);
       setError('Failed to load courses');
@@ -136,7 +136,7 @@ function AttendanceMarking() {
   const getStatusColor = (status) => {
     switch (status) {
       case 'present':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-primary-100 text-primary-800 border-primary-200';
       case 'absent':
         return 'bg-red-100 text-red-800 border-red-200';
       case 'late':
@@ -209,13 +209,13 @@ function AttendanceMarking() {
         )}
 
         {success && (
-          <div className="mb-6 bg-green-50 border border-green-200 rounded-md p-4">
+          <div className="mb-6 bg-primary-50 border border-primary-200 rounded-md p-4">
             <div className="flex">
-              <svg className="h-5 w-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="h-5 w-5 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <div className="ml-3">
-                <p className="text-sm text-green-700">{success}</p>
+                <p className="text-sm text-primary-700">{success}</p>
               </div>
             </div>
           </div>
@@ -296,7 +296,7 @@ function AttendanceMarking() {
                   <button
                     type="button"
                     onClick={() => handleBulkAction('present')}
-                    className="bg-green-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-green-700 transition-colors"
+                    className="bg-primary-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-primary-700 transition-colors"
                   >
                     Mark All Present
                   </button>
@@ -312,9 +312,9 @@ function AttendanceMarking() {
 
               {/* Status Summary */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-green-50 p-3 rounded-lg">
-                  <p className="text-sm font-medium text-green-800">Present</p>
-                  <p className="text-2xl font-bold text-green-900">{statusCounts.present}</p>
+                <div className="bg-primary-50 p-3 rounded-lg">
+                  <p className="text-sm font-medium text-primary-800">Present</p>
+                  <p className="text-2xl font-bold text-primary-900">{statusCounts.present}</p>
                 </div>
                 <div className="bg-red-50 p-3 rounded-lg">
                   <p className="text-sm font-medium text-red-800">Absent</p>

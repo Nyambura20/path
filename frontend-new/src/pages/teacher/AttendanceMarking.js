@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../utils/AuthContext';
 import { useNotification } from '../../utils/NotificationContext';
+import { useLocation } from 'react-router-dom';
 import apiClient from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
 function AttendanceMarking() {
   const { user } = useAuth();
   const { addNotification } = useNotification();
+  const location = useLocation();
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState('');
   const [students, setStudents] = useState([]);
@@ -16,11 +18,20 @@ function AttendanceMarking() {
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  // Read course from URL query parameter
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const courseParam = params.get('course');
+    if (courseParam) {
+      setSelectedCourse(courseParam);
+    }
+  }, [location.search]);
+
   const fetchTeacherCourses = useCallback(async () => {
     try {
       setLoading(true);
       const response = await apiClient.getTeacherCourses();
-      setCourses(response);
+      setCourses(response.courses || response || []);
     } catch (error) {
       addNotification('Error fetching courses: ' + error.message, 'error');
     } finally {
@@ -113,7 +124,7 @@ function AttendanceMarking() {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'present': return 'bg-green-100 text-green-800 border-green-300';
+      case 'present': return 'bg-primary-100 text-primary-800 border-primary-300';
       case 'absent': return 'bg-red-100 text-red-800 border-red-300';
       case 'late': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
       case 'excused': return 'bg-blue-100 text-blue-800 border-blue-300';
@@ -210,7 +221,7 @@ function AttendanceMarking() {
                       <button
                         type="button"
                         onClick={() => handleBulkAction('present')}
-                        className="px-3 py-1 bg-green-100 text-green-800 rounded-md hover:bg-green-200 transition-colors text-sm"
+                        className="px-3 py-1 bg-primary-100 text-primary-800 rounded-md hover:bg-primary-200 transition-colors text-sm"
                       >
                         Mark All Present
                       </button>

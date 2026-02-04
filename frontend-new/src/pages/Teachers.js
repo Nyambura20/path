@@ -64,7 +64,7 @@ function Teachers() {
   };
 
   const getStatusColor = (isActive) => {
-    return isActive ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100';
+    return isActive ? 'text-primary-600 bg-primary-100' : 'text-red-600 bg-red-100';
   };
 
   if (loading) {

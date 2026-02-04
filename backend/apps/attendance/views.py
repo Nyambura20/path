@@ -398,10 +398,15 @@ def mark_class_attendance(request):
                        status=status.HTTP_404_NOT_FOUND)
     
     # Create attendance session
+    from datetime import time
+    current_time = timezone.now().time()
     session = AttendanceSession.objects.create(
         course=course,
-        name=session_name,
+        topic=session_name,
         date=date,
+        start_time=current_time,
+        end_time=current_time,
+        session_type='lecture',
         created_by=request.user
     )
     
@@ -424,8 +429,7 @@ def mark_class_attendance(request):
                 defaults={
                     'status': status_value,
                     'notes': notes,
-                    'marked_by': request.user,
-                    'session': session
+                    'marked_by': request.user
                 }
             )
             
@@ -436,7 +440,6 @@ def mark_class_attendance(request):
                 record.status = status_value
                 record.notes = notes
                 record.marked_by = request.user
-                record.session = session
                 record.save()
                 updated_records.append(record)
                 
@@ -471,10 +474,15 @@ def mark_assignment_submission_attendance(request):
                        status=status.HTTP_404_NOT_FOUND)
     
     # Create attendance session for assignment submission
+    from datetime import time
+    current_time = timezone.now().time()
     session = AttendanceSession.objects.create(
         course=course,
-        name=f"Assignment Submission - {assignment_name}",
+        topic=f"Assignment Submission - {assignment_name}",
         date=date,
+        start_time=current_time,
+        end_time=current_time,
+        session_type='lecture',
         created_by=request.user
     )
     
@@ -498,8 +506,7 @@ def mark_assignment_submission_attendance(request):
             defaults={
                 'status': status_value,
                 'notes': notes,
-                'marked_by': request.user,
-                'session': session
+                'marked_by': request.user
             }
         )
         
@@ -615,4 +622,84 @@ def teacher_attendance_records(request):
             'has_next': end < total_count,
             'has_previous': page > 1
         }
+    })
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def course_attendance(request, course_id):
+    """Get attendance data for a specific course (for teachers)"""
+    if not request.user.is_teacher:
+        return Response({'error': 'Access denied. Teacher role required.'}, 
+                       status=status.HTTP_403_FORBIDDEN)
+    
+    try:
+        course = Course.objects.get(id=course_id, instructor=request.user)
+    except Course.DoesNotExist:
+        return Response({'error': 'Course not found or access denied'}, 
+                       status=status.HTTP_404_NOT_FOUND)
+    
+    # Get date range filters
+    date_from = request.query_params.get('start')
+    date_to = request.query_params.get('end')
+    
+    # Get attendance sessions for this course
+    sessions_qs = AttendanceSession.objects.filter(course=course).order_by('-date', '-start_time')
+    
+    if date_from:
+        sessions_qs = sessions_qs.filter(date__gte=date_from)
+    if date_to:
+        sessions_qs = sessions_qs.filter(date__lte=date_to)
+    
+    # Get enrolled students
+    enrollments = Enrollment.objects.filter(course=course, is_active=True).select_related('student__user')
+    students = []
+    for enrollment in enrollments:
+        students.append({
+            'id': enrollment.student.id,
+            'name': enrollment.student.user.get_full_name(),
+            'student_id': enrollment.student.student_id,
+            'email': enrollment.student.user.email
+        })
+    
+    # Build sessions with attendance
+    sessions_data = []
+    for session in sessions_qs[:50]:  # Limit to 50 sessions
+        # Get attendance records for this session's date and course
+        records = AttendanceRecord.objects.filter(
+            course=course,
+            date=session.date
+        ).select_related('student__user')
+        
+        attendance_list = []
+        for record in records:
+            attendance_list.append({
+                'student_id': record.student.student_id,
+                'student_name': record.student.user.get_full_name(),
+                'status': record.status,
+                'notes': record.notes
+            })
+        
+        sessions_data.append({
+            'id': session.id,
+            'session_name': session.topic or f"Session {session.id}",
+            'date': session.date,
+            'start_time': session.start_time,
+            'end_time': session.end_time,
+            'session_type': session.session_type,
+            'attendance': attendance_list,
+            'total_students': len(students),
+            'present_count': sum(1 for a in attendance_list if a['status'] == 'present'),
+            'absent_count': sum(1 for a in attendance_list if a['status'] == 'absent'),
+            'late_count': sum(1 for a in attendance_list if a['status'] == 'late')
+        })
+    
+    return Response({
+        'course': {
+            'id': course.id,
+            'name': course.name,
+            'code': course.code
+        },
+        'students': students,
+        'sessions': sessions_data
     })

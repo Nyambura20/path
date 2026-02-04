@@ -419,9 +419,13 @@ class ApiClient {
 
   async getCoursePerformance(courseId, filters = {}) {
     try {
+      // Filter out undefined/null values before creating URLSearchParams
+      const cleanFilters = Object.fromEntries(
+        Object.entries(filters).filter(([_, v]) => v != null && v !== undefined)
+      );
       const params = new URLSearchParams({
         course_id: courseId,
-        ...filters
+        ...cleanFilters
       });
       const response = await api.get(`/performance/course/${courseId}/?${params}`);
       return response.data;

@@ -84,7 +84,7 @@ function Attendance() {
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case 'present':
-        return 'text-green-800 bg-green-100';
+        return 'text-primary-800 bg-primary-100';
       case 'absent':
         return 'text-red-800 bg-red-100';
       case 'late':
@@ -100,7 +100,7 @@ function Attendance() {
     switch (status?.toLowerCase()) {
       case 'present':
         return (
-          <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         );
@@ -248,8 +248,8 @@ function Attendance() {
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-green-100 rounded-md flex items-center justify-center">
-                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-8 h-8 bg-primary-100 rounded-md flex items-center justify-center">
+                    <svg className="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>

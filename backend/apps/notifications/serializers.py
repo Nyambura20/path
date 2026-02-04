@@ -7,11 +7,12 @@ class NotificationSerializer(serializers.ModelSerializer):
     course_name = serializers.CharField(source='course.name', read_only=True)
     student_name = serializers.CharField(source='student.user.get_full_name', read_only=True)
     time_ago = serializers.SerializerMethodField()
+    type = serializers.CharField(source='notification_type', read_only=True)  # Alias for frontend compatibility
     
     class Meta:
         model = Notification
         fields = [
-            'id', 'title', 'message', 'notification_type', 'priority',
+            'id', 'title', 'message', 'notification_type', 'type', 'priority',
             'is_read', 'is_archived', 'created_at', 'read_at',
             'sender', 'course_name', 'student_name', 'data', 'time_ago'
         ]

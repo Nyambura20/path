@@ -61,7 +61,7 @@ function Performance() {
   };
 
   const getGradeColor = (grade) => {
-    if (grade >= 90) return 'text-green-600 bg-green-100';
+    if (grade >= 90) return 'text-primary-600 bg-primary-100';
     if (grade >= 80) return 'text-blue-600 bg-blue-100';
     if (grade >= 70) return 'text-yellow-600 bg-yellow-100';
     if (grade >= 60) return 'text-orange-600 bg-orange-100';
@@ -166,8 +166,8 @@ function Performance() {
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-green-100 rounded-md flex items-center justify-center">
-                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-8 h-8 bg-primary-100 rounded-md flex items-center justify-center">
+                    <svg className="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
@@ -276,7 +276,7 @@ function Performance() {
                         {item.graded_at ? new Date(item.graded_at).toLocaleDateString() : 'N/A'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full text-green-800 bg-green-100">
+                        <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full text-primary-800 bg-primary-100">
                           {item.status || 'Completed'}
                         </span>
                       </td>
