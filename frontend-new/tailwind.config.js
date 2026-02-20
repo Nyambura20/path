@@ -10,16 +10,16 @@ module.exports = {
       colors: {
         primary: {
           50: '#fdf2f4',
-          100: '#fce7eb',
-          200: '#f9d0d9',
-          300: '#f4a9b8',
-          400: '#ec7991',
-          500: '#e04d6d',
-          600: '#800020',
-          700: '#6b001a',
-          800: '#5a0016',
-          900: '#4a0012',
-          950: '#2d000b',
+          100: '#fbe5ea',
+          200: '#f7c8d5',
+          300: '#f09db3',
+          400: '#e6688a',
+          500: '#b8003f',
+          600: '#6b0023',
+          700: '#55001c',
+          800: '#420016',
+          900: '#340011',
+          950: '#1f000a',
         },
         secondary: {
           50: '#fdf2f4',
@@ -46,6 +46,28 @@ module.exports = {
           800: '#212529',
           900: '#1a1d21',
         },
+        // Anime-inspired accent colors
+        sakura: {
+          100: '#ffe4ec',
+          200: '#ffc8d9',
+          300: '#ffadc6',
+          400: '#ff8bb0',
+          500: '#ff6b9d',
+        },
+        lavender: {
+          100: '#f0e6ff',
+          200: '#dccfff',
+          300: '#c4b0ff',
+          400: '#a88bff',
+          500: '#8b5cf6',
+        },
+        mint: {
+          100: '#dcfce7',
+          200: '#bbf7d0',
+          300: '#86efac',
+          400: '#4ade80',
+          500: '#22c55e',
+        },
         // Softer background colors for better eye comfort
         softbg: {
           50: '#fafbfc',
@@ -63,6 +85,11 @@ module.exports = {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.3s ease-out',
         'bounce-light': 'bounce 1s infinite',
+        'float': 'float 6s ease-in-out infinite',
+        'float-delayed': 'float 6s ease-in-out 2s infinite',
+        'float-slow': 'float 8s ease-in-out 1s infinite',
+        'sparkle': 'sparkle 2s ease-in-out infinite',
+        'wiggle': 'wiggle 3s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -72,7 +99,19 @@ module.exports = {
         slideUp: {
           '0%': { transform: 'translateY(10px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
-        }
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-20px)' },
+        },
+        sparkle: {
+          '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+          '50%': { opacity: '0.5', transform: 'scale(1.2)' },
+        },
+        wiggle: {
+          '0%, 100%': { transform: 'rotate(-3deg)' },
+          '50%': { transform: 'rotate(3deg)' },
+        },
       }
     },
   },

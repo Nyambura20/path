@@ -434,6 +434,38 @@ class ApiClient {
     }
   }
 
+  // AI Predictions (Gemini)
+  async getAIPredictions(courseId) {
+    try {
+      const response = await api.get(`/performance/ai/predict/course/${courseId}/`);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async getAIStudentPrediction(courseId, studentId) {
+    try {
+      const response = await api.get(`/performance/ai/predict/course/${courseId}/student/${studentId}/`);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  // AI Performance Chat (Student)
+  async sendPerformanceChatMessage(message, conversationHistory = []) {
+    try {
+      const response = await api.post('/performance/ai/chat/', {
+        message,
+        conversation_history: conversationHistory,
+      });
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
   async getEnrolledStudents(courseId) {
     try {
       const response = await api.get(`/courses/${courseId}/enrolled-students/`);
@@ -466,7 +498,8 @@ class ApiClient {
     if (error.response) {
       // Server responded with error status
       const message = error.response.data?.message || 
-                     error.response.data?.detail || 
+                     error.response.data?.detail ||
+                     error.response.data?.error ||
                      `Error: ${error.response.status}`;
       return new Error(message);
     } else if (error.request) {

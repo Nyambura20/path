@@ -18,34 +18,21 @@ function Logout() {
           await logout();
           setMessage('You have been logged out successfully!');
           addNotification('You have been logged out successfully!', 'success');
-          
-          // Redirect to home page after a short delay
-          setTimeout(() => {
-            navigate('/');
-          }, 2000);
         } else {
           // User is already logged out
           setMessage('You are already logged out.');
-          setTimeout(() => {
-            navigate('/');
-          }, 1500);
         }
       } catch (error) {
         console.error('Logout error:', error);
         setMessage('There was an error logging you out. Please try again.');
         addNotification('Logout failed. Please try again.', 'error');
-        
-        // Redirect anyway after delay
-        setTimeout(() => {
-          navigate('/');
-        }, 3000);
       } finally {
         setLoading(false);
       }
     };
 
     performLogout();
-  }, [logout, isAuthenticated, navigate, addNotification]);
+  }, [logout, isAuthenticated, addNotification]);
 
   return (
     <div className="min-h-screen bg-darkbg-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -84,7 +71,7 @@ function Logout() {
                 </div>
                 <p className="text-gray-300 text-lg">{message}</p>
                 <p className="text-gray-500 text-sm mt-2">
-                  Redirecting you to the home page...
+                  Choose where you'd like to go next.
                 </p>
               </div>
               

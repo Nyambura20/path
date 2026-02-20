@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../utils/AuthContext';
 import apiClient from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
+import PerformanceAIChat from '../components/PerformanceAIChat';
 
 function Performance() {
   const { user } = useAuth();
@@ -288,6 +289,9 @@ function Performance() {
           </div>
         )}
       </div>
+
+      {/* AI Performance Chat for Students */}
+      {user?.role === 'student' && <PerformanceAIChat />}
     </div>
   );
 }

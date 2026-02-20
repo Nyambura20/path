@@ -230,6 +230,16 @@ function TeacherDashboard() {
                     <p className="text-sm text-gray-600">Download attendance & performance reports</p>
                   </div>
                 </a>
+
+                <a href="/teacher/ai-predictions" className="flex items-center p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                  <svg className="h-8 w-8 text-purple-600 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <div>
+                    <p className="font-medium text-gray-900">AI Predictions</p>
+                    <p className="text-sm text-gray-600">Identify at-risk students with Gemini AI</p>
+                  </div>
+                </a>
               </div>
             </div>
 

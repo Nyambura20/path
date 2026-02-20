@@ -33,4 +33,11 @@ urlpatterns = [
     path('teacher/record-grades/', views.record_student_grades, name='record-student-grades'),
     path('teacher/create-assessment/', views.create_assessment_with_grading, name='create-assessment-with-grading'),
     path('teacher/records/', views.teacher_performance_records, name='teacher-performance-records'),
+    
+    # AI Predictions (Gemini)
+    path('ai/predict/course/<int:course_id>/', views.ai_predict_course, name='ai-predict-course'),
+    path('ai/predict/course/<int:course_id>/student/<int:student_id>/', views.ai_predict_student, name='ai-predict-student'),
+    
+    # AI Performance Chat (Student)
+    path('ai/chat/', views.ai_performance_chat, name='ai-performance-chat'),
 ]

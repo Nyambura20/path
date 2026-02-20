@@ -22,7 +22,7 @@ function Footer() {
         <div className="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-center space-y-1 sm:space-y-0">
             <p className="text-gray-400 text-xs">
-              © 2025 BrightPath. All rights reserved.
+              © {new Date().getFullYear()} BrightPath. All rights reserved.
             </p>
             <p className="text-gray-400 text-xs">
               Designed by Sarah
@@ -99,7 +99,7 @@ function Footer() {
         {/* Bottom section */}
         <div className="mt-4 pt-4 border-t border-darkbg-700 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-xs">
-            © 2025 BrightPath. All rights reserved.
+            © {new Date().getFullYear()} BrightPath. All rights reserved.
           </p>
           <div className="flex space-x-4 mt-2 md:mt-0">
             <a href="https://github.com/brightpath" className="text-gray-400 hover:text-primary-600 transition-colors">

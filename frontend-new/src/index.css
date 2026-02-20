@@ -18,35 +18,35 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-sm;
+    @apply bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold py-2.5 px-5 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-md hover:shadow-lg hover:shadow-primary-600/25 transform hover:-translate-y-0.5;
   }
   .dark .btn-primary {
-    @apply bg-primary-700 hover:bg-primary-600 text-white;
+    @apply from-primary-700 to-primary-600 hover:from-primary-600 hover:to-primary-500 text-white;
   }
 
   .btn-secondary {
-    @apply bg-softbg-200 hover:bg-softbg-300 text-darkbg-700 font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-sm;
+    @apply bg-softbg-200 hover:bg-softbg-300 text-darkbg-700 font-semibold py-2.5 px-5 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-sm hover:shadow-md transform hover:-translate-y-0.5;
   }
   .dark .btn-secondary {
     @apply bg-darkbg-700 hover:bg-darkbg-600 text-gray-100;
   }
 
   .btn-outline {
-    @apply border border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 bg-white shadow-sm;
+    @apply border-2 border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white font-semibold py-2.5 px-5 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 bg-white shadow-sm hover:shadow-md transform hover:-translate-y-0.5;
   }
   .dark .btn-outline {
     @apply border-primary-400 text-primary-300 hover:bg-primary-700 hover:text-white bg-darkbg-800;
   }
 
   .input-field {
-    @apply w-full px-3 py-2 border border-softbg-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200 bg-white text-darkbg-800 shadow-sm;
+    @apply w-full px-4 py-2.5 border border-softbg-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 bg-white text-darkbg-800 shadow-sm hover:shadow-md;
   }
   .dark .input-field {
     @apply bg-darkbg-800 border-darkbg-600 text-gray-100 placeholder-gray-400;
   }
 
   .card {
-    @apply bg-white rounded-lg shadow-md p-6 border border-softbg-300;
+    @apply bg-white/80 backdrop-blur-sm rounded-2xl shadow-md hover:shadow-xl p-6 border border-softbg-300 transition-all duration-300;
   }
   .dark .card {
     @apply bg-darkbg-800 border-darkbg-700 text-gray-100;
@@ -59,10 +59,14 @@
 
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary-600 to-violet-600 bg-clip-text text-transparent;
   }
   
   .bg-gradient-primary {
-    @apply bg-gradient-to-r from-primary-500 to-secondary-500;
+    @apply bg-gradient-to-r from-primary-500 to-primary-700;
+  }
+
+  .glass {
+    @apply bg-white/80 backdrop-blur-sm border border-white/30;
   }
 }

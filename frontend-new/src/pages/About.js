@@ -4,240 +4,223 @@ import { Link } from 'react-router-dom';
 function About() {
   const features = [
     {
-      title: 'Intelligent Course Management',
-      description: 'Advanced course creation, enrollment tracking, and curriculum management with automated prerequisites and scheduling.',
-      icon: (
-        <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg>
-      ),
-  gradient: 'from-primary-500 to-primary-600',
-  bgGradient: 'from-primary-50 to-primary-100',
-  borderColor: 'border-primary-100'
+      emoji: '📚',
+      title: 'Smart Course Management',
+      description: 'Advanced course creation, enrollment tracking & curriculum management with auto scheduling.',
+      gradient: 'from-pink-500 to-rose-600',
+      bg: 'bg-gradient-to-br from-pink-50 to-rose-100',
+      border: 'border-pink-200',
     },
     {
-      title: 'AI-Powered Performance Analytics',
-      description: 'Machine learning algorithms analyze student performance patterns to provide predictive insights and personalized recommendations.',
-      icon: (
-        <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-        </svg>
-      ),
-      gradient: 'from-purple-500 to-pink-500',
-      bgGradient: 'from-purple-50 to-pink-50',
-      borderColor: 'border-purple-100'
+      emoji: '🧠',
+      title: 'AI Performance Prediction',
+      description: 'Machine learning models predict future grades, detect at-risk students & provide actionable insights.',
+      gradient: 'from-violet-500 to-purple-600',
+      bg: 'bg-gradient-to-br from-violet-50 to-purple-100',
+      border: 'border-violet-200',
     },
     {
-      title: 'Real-Time Attendance Monitoring',
-      description: 'Automated attendance tracking with instant alerts for absenteeism and comprehensive reporting for parents and administrators.',
-      icon: (
-        <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-        </svg>
-      ),
-      gradient: 'from-primary-500 to-primary-600',
-      bgGradient: 'from-primary-50 to-primary-100',
-      borderColor: 'border-primary-100'
+      emoji: '📋',
+      title: 'Real-Time Attendance',
+      description: 'Automated tracking with instant alerts for absences and comprehensive visual reports.',
+      gradient: 'from-emerald-500 to-teal-600',
+      bg: 'bg-gradient-to-br from-emerald-50 to-teal-100',
+      border: 'border-emerald-200',
     },
     {
-      title: 'Comprehensive User Management',
-      description: 'Role-based access control for students, teachers, and administrators with detailed profile management and communication tools.',
-      icon: (
-        <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-        </svg>
-      ),
-      gradient: 'from-orange-500 to-red-500',
-      bgGradient: 'from-orange-50 to-red-50',
-      borderColor: 'border-orange-100'
+      emoji: '👥',
+      title: 'User Management',
+      description: 'Role-based access for students, teachers & admins with detailed profiles & communication.',
+      gradient: 'from-amber-500 to-orange-600',
+      bg: 'bg-gradient-to-br from-amber-50 to-orange-100',
+      border: 'border-amber-200',
     },
   ];
 
   const benefits = [
     {
       title: 'For Students',
+      emoji: '🎓',
+      gradient: 'from-pink-500 to-rose-600',
+      bg: 'bg-gradient-to-br from-pink-50 to-rose-50',
+      border: 'border-pink-200',
       items: [
         'Track academic progress in real-time',
-        'Receive personalized learning recommendations',
-        'Access course materials and schedules',
-        'Monitor attendance and performance metrics',
-        'Set and track study goals',
+        'Receive AI-powered performance predictions',
+        'Access course materials & schedules',
+        'Chat with AI about your grades & weak areas',
+        'Get personalized improvement recommendations',
       ],
-  gradient: 'from-primary-500 to-primary-600',
-  bgGradient: 'from-primary-50 to-primary-100',
-      emoji: '👨‍🎓'
     },
     {
       title: 'For Teachers',
+      emoji: '👩‍🏫',
+      gradient: 'from-violet-500 to-purple-600',
+      bg: 'bg-gradient-to-br from-violet-50 to-purple-50',
+      border: 'border-violet-200',
       items: [
-        'Manage courses and student enrollments',
-        'Create assessments and track grades',
+        'Manage courses & enrollments easily',
+        'Create assessments & track grades',
         'Monitor class attendance automatically',
         'Generate detailed performance reports',
-        'Identify at-risk students early',
+        'Identify at-risk students early with AI',
       ],
-      gradient: 'from-purple-500 to-pink-500',
-      bgGradient: 'from-purple-50 to-pink-50',
-      emoji: '👩‍🏫'
     },
     {
-      title: 'For Administrators',
+      title: 'For Admins',
+      emoji: '🏢',
+      gradient: 'from-emerald-500 to-teal-600',
+      bg: 'bg-gradient-to-br from-emerald-50 to-teal-50',
+      border: 'border-emerald-200',
       items: [
         'Oversee institution-wide operations',
         'Generate comprehensive analytics',
-        'Manage user accounts and permissions',
+        'Manage user accounts & permissions',
         'Track institutional performance metrics',
-        'Export data for reporting and compliance',
+        'Export data for reporting & compliance',
       ],
-      gradient: 'from-primary-500 to-primary-600',
-      bgGradient: 'from-primary-50 to-primary-100',
-      emoji: '👨‍💼'
     },
   ];
 
   const techFeatures = [
-    {
-      title: 'Secure',
-      description: 'Enterprise-grade security with data encryption and secure access controls.',
-      icon: '🔒',
-  gradient: 'from-primary-500 to-primary-600'
-    },
-    {
-      title: 'Fast',
-      description: 'Optimized performance with modern web technologies and cloud infrastructure.',
-      icon: '⚡',
-      gradient: 'from-yellow-500 to-orange-500'
-    },
-    {
-      title: 'Scalable',
-      description: 'Built to grow with your institution, from small schools to large universities.',
-      icon: '📈',
-      gradient: 'from-primary-500 to-primary-600'
-    },
-    {
-      title: 'Mobile-First',
-      description: 'Responsive design that works perfectly on all devices and screen sizes.',
-      icon: '📱',
-      gradient: 'from-purple-500 to-pink-500'
-    },
+    { title: 'Secure', description: 'Enterprise-grade security with encryption & role-based access.', emoji: '🔒', gradient: 'from-pink-500 to-rose-600' },
+    { title: 'Fast', description: 'Optimized performance with modern tech & cloud infrastructure.', emoji: '⚡', gradient: 'from-amber-500 to-orange-600' },
+    { title: 'Scalable', description: 'Built to grow, from small schools to large universities.', emoji: '📈', gradient: 'from-emerald-500 to-teal-600' },
+    { title: 'Mobile-First', description: 'Responsive design that looks great on any device.', emoji: '📱', gradient: 'from-violet-500 to-purple-600' },
   ];
 
   return (
-  <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-100">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23667eea' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}></div>
+    <div className="min-h-screen bg-gradient-to-b from-violet-50 via-white to-pink-50 overflow-hidden">
+
+      {/* ═══════════ HERO ═══════════ */}
+      <section className="relative py-24 overflow-hidden">
+        {/* Background shapes */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-20 -right-20 w-80 h-80 bg-violet-200/40 rounded-full blur-3xl animate-float" />
+          <div className="absolute top-1/2 -left-20 w-72 h-72 bg-pink-200/30 rounded-full blur-3xl animate-float-delayed" />
+          <span className="absolute top-16 left-[12%] text-3xl animate-sparkle select-none">✦</span>
+          <span className="absolute top-32 right-[15%] text-2xl animate-sparkle select-none" style={{ animationDelay: '0.7s' }}>✧</span>
+          <span className="absolute bottom-20 left-[50%] text-xl animate-sparkle select-none" style={{ animationDelay: '1.1s' }}>❋</span>
         </div>
-        
-  <div className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-4xl mx-auto">
-              {/* Floating elements for visual appeal */}
-              <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-              <div className="absolute top-32 right-20 w-32 h-32 bg-white/5 rounded-full blur-2xl animate-pulse delay-1000"></div>
-              <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-white/10 rounded-full blur-lg animate-pulse delay-500"></div>
-              
-              <div className="relative z-10">
-                <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-                  About{' '}
-                  <span className="block bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-                    BrightPath
-                  </span>
-                </h1>
-                <p className="text-xl md:text-2xl text-primary-100 mb-8 leading-relaxed">
-                  BrightPath is a comprehensive educational management platform designed to 
-                  streamline academic operations, enhance learning outcomes, and provide 
-                  data-driven insights for educational institutions.
-                </p>
+
+        <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
+          <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-violet-200 rounded-full px-4 py-1.5 mb-6 shadow-sm">
+            <span>💜</span>
+            <span className="text-sm font-medium text-violet-700">About Us</span>
+          </div>
+
+          <h1 className="text-5xl md:text-7xl font-extrabold leading-tight mb-6">
+            <span className="text-gray-900">What is</span>{' '}
+            <span className="bg-gradient-to-r from-primary-600 to-violet-600 bg-clip-text text-transparent">BrightPath</span>
+            <span className="inline-block animate-wiggle ml-2">✨</span>
+          </h1>
+
+          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            BrightPath is a comprehensive performance prediction platform designed to 
+            streamline academics, identify at-risk students early, and provide AI-driven 
+            insights, all wrapped in a cute &amp; intuitive interface ♡
+          </p>
+        </div>
+      </section>
+
+      {/* ═══════════ MISSION ═══════════ */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left – Text */}
+            <div>
+              <div className="inline-flex items-center gap-2 bg-pink-100 rounded-full px-4 py-1.5 mb-4">
+                <span>🎯</span>
+                <span className="text-sm font-semibold text-pink-700">Our Mission</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
+                Making Education{' '}
+                <span className="bg-gradient-to-r from-primary-600 to-pink-500 bg-clip-text text-transparent">Better</span>
+              </h2>
+              <p className="text-lg text-gray-600 mb-5 leading-relaxed">
+                We believe AI should enhance education, not complicate it. 
+                BrightPath uses machine learning to predict student performance 
+                and provide early interventions.
+              </p>
+              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                Our platform empowers educators with predictive analytics, gives students 
+                personalized AI guidance on their weak areas, and provides administrators the 
+                insights they need, all in one beautiful place.
+              </p>
+              <Link
+                to="/register"
+                className="group inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-bold py-4 px-8 rounded-2xl shadow-lg shadow-primary-600/30 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
+              >
+                <span>Join Our Community</span>
+                <span className="group-hover:rotate-12 transition-transform">🌸</span>
+              </Link>
+            </div>
+
+            {/* Right – Highlights card */}
+            <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden">
+              {/* Background glow */}
+              <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
+              <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-pink-400/15 rounded-full blur-2xl" />
+
+              <div className="relative">
+                <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                  <span className="text-3xl">⭐</span>
+                  Platform Highlights
+                </h3>
+                <ul className="space-y-4">
+                  {[
+                    { text: 'ML-powered grade predictions', emoji: '🤖' },
+                    { text: 'Real-time attendance monitoring', emoji: '📊' },
+                    { text: 'At-risk student detection', emoji: '⚠️' },
+                    { text: 'Personalized AI performance chat', emoji: '💬' },
+                    { text: 'Beautiful & intuitive interface', emoji: '🎨' },
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-white/15 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <span>{item.emoji}</span>
+                      </div>
+                      <span className="text-primary-100 font-medium">{item.text}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Mission Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent mb-6">
-                Our Mission
-              </h2>
-              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                We believe that technology should enhance education, not complicate it. 
-                BrightPath was created to bridge the gap between traditional educational 
-                methods and modern digital solutions.
-              </p>
-              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                Our platform empowers educators with intelligent tools, provides students 
-                with personalized learning experiences, and gives administrators the 
-                insights they need to make informed decisions.
-              </p>
-              <Link 
-                to="/register" 
-                className="bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:from-primary-700 hover:to-primary-800 font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105 inline-block"
-              >
-                Join Our Community
-              </Link>
-            </div>
-            <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 rounded-2xl p-8 text-white shadow-2xl">
-              <h3 className="text-2xl font-bold mb-6 flex items-center">
-                <span className="text-3xl mr-3">✨</span>
-                Platform Highlights
-              </h3>
-              <ul className="space-y-4">
-                {[
-                  'AI-powered performance predictions',
-                  'Real-time attendance monitoring',
-                  'Comprehensive grade management',
-                  'Role-based access control'
-                ].map((highlight, index) => (
-                  <li key={index} className="flex items-start">
-                    <div className="flex-shrink-0 w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <span className="text-primary-100">{highlight}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+      {/* ═══════════ FEATURES ═══════════ */}
+      <section className="py-20 relative">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <span className="absolute top-10 right-[10%] text-2xl animate-sparkle select-none" style={{ animationDelay: '0.4s' }}>✦</span>
+          <span className="absolute bottom-16 left-[8%] text-xl animate-sparkle select-none" style={{ animationDelay: '1s' }}>✧</span>
         </div>
-      </section>
 
-      {/* Features Section */}
-      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-6">
-              Cutting-Edge Features
+            <div className="inline-flex items-center gap-2 bg-violet-100 rounded-full px-4 py-1.5 mb-4">
+              <span>✨</span>
+              <span className="text-sm font-semibold text-violet-700">Features</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+              Cutting-Edge{' '}
+              <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">Capabilities</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Discover the powerful capabilities that make BrightPath the ideal 
-              choice for modern educational institutions.
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+              Discover the powerful features that make BrightPath the ideal choice for modern education ♡
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {features.map((feature, index) => (
-              <div key={index} className={`bg-gradient-to-br ${feature.bgGradient} border ${feature.borderColor} rounded-2xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105`}>
-                <div className="flex items-start space-x-4">
-                  <div className={`w-16 h-16 bg-gradient-to-r ${feature.gradient} rounded-xl flex items-center justify-center text-white flex-shrink-0`}>
-                    {feature.icon}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {features.map((f, i) => (
+              <div key={i} className={`${f.bg} border ${f.border} rounded-3xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 group`}>
+                <div className="flex items-start gap-5">
+                  <div className={`w-16 h-16 bg-gradient-to-br ${f.gradient} rounded-2xl flex items-center justify-center text-3xl shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 flex-shrink-0`}>
+                    {f.emoji}
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                      {feature.title}
-                    </h3>
-                    <p className="text-gray-700 leading-relaxed">
-                      {feature.description}
-                    </p>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{f.title}</h3>
+                    <p className="text-gray-600 leading-relaxed">{f.description}</p>
                   </div>
                 </div>
               </div>
@@ -246,37 +229,45 @@ function About() {
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ═══════════ BENEFITS ═══════════ */}
+      <section className="py-20 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-20 -left-20 w-60 h-60 bg-white/5 rounded-full blur-3xl" />
+          <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-pink-300/10 rounded-full blur-3xl" />
+          <span className="absolute top-16 right-[10%] text-white/20 text-3xl animate-sparkle select-none">✦</span>
+          <span className="absolute bottom-16 left-[10%] text-white/20 text-2xl animate-sparkle select-none" style={{ animationDelay: '0.7s' }}>✧</span>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent mb-6">
-              Benefits for Everyone
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-4 border border-white/20">
+              <span>💝</span>
+              <span className="text-sm font-semibold text-white/90">Benefits</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
+              Made for Everyone ✨
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              BrightPath is designed to serve the unique needs of all stakeholders 
-              in the educational ecosystem.
+            <p className="text-lg text-primary-200 max-w-2xl mx-auto">
+              BrightPath is designed to serve the unique needs of everyone in the educational ecosystem.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {benefits.map((benefit, index) => (
-              <div key={index} className={`bg-gradient-to-br ${benefit.bgGradient} rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105`}>
+            {benefits.map((b, i) => (
+              <div key={i} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl p-8 hover:bg-white/15 transition-all duration-300 transform hover:-translate-y-2 group">
                 <div className="text-center mb-6">
-                  <div className="text-6xl mb-4">{benefit.emoji}</div>
-                  <h3 className="text-2xl font-bold text-gray-900">
-                    {benefit.title}
-                  </h3>
+                  <div className="text-5xl mb-3 group-hover:scale-110 transition-transform">{b.emoji}</div>
+                  <h3 className="text-2xl font-bold text-white">{b.title}</h3>
                 </div>
                 <ul className="space-y-3">
-                  {benefit.items.map((item, itemIndex) => (
-                    <li key={itemIndex} className="flex items-start">
-                      <div className={`flex-shrink-0 w-5 h-5 bg-gradient-to-r ${benefit.gradient} rounded-full flex items-center justify-center mr-3 mt-0.5`}>
+                  {b.items.map((item, j) => (
+                    <li key={j} className="flex items-start gap-3">
+                      <div className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                         <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       </div>
-                      <span className="text-gray-700 font-medium">{item}</span>
+                      <span className="text-primary-100 font-medium text-sm">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -286,70 +277,72 @@ function About() {
         </div>
       </section>
 
-      {/* Technology Section */}
-      <section className="py-20">
+      {/* ═══════════ TECHNOLOGY ═══════════ */}
+      <section className="py-20 relative">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <span className="absolute top-12 left-[15%] text-2xl animate-sparkle select-none">✦</span>
+          <span className="absolute bottom-12 right-[15%] text-xl animate-sparkle select-none" style={{ animationDelay: '0.6s' }}>✧</span>
+        </div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-6">
-              Built with Modern Technology
+            <div className="inline-flex items-center gap-2 bg-amber-100 rounded-full px-4 py-1.5 mb-4">
+              <span>🛠️</span>
+              <span className="text-sm font-semibold text-amber-700">Technology</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+              Built with{' '}
+              <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">Modern Tech</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              BrightPath leverages cutting-edge technologies to deliver a fast, 
-              secure, and reliable educational platform.
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+              Powered by cutting-edge technologies for a fast, secure &amp; delightful experience.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {techFeatures.map((tech, index) => (
-              <div key={index} className="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-center">
-                <div className="text-6xl mb-4">{tech.icon}</div>
-                <h3 className={`text-xl font-bold bg-gradient-to-r ${tech.gradient} bg-clip-text text-transparent mb-3`}>
-                  {tech.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {tech.description}
-                </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {techFeatures.map((t, i) => (
+              <div key={i} className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 text-center group">
+                <div className="text-5xl mb-4 group-hover:scale-125 transition-transform duration-300">{t.emoji}</div>
+                <h3 className={`text-lg font-bold bg-gradient-to-r ${t.gradient} bg-clip-text text-transparent mb-2`}>{t.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{t.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700"></div>
-        
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}></div>
+      {/* ═══════════ CTA ═══════════ */}
+      <section className="py-24 relative">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-violet-100 to-pink-100 rounded-full blur-3xl opacity-60" />
+          <span className="absolute top-12 left-[20%] text-3xl animate-sparkle select-none">✦</span>
+          <span className="absolute bottom-12 right-[20%] text-2xl animate-sparkle select-none" style={{ animationDelay: '0.5s' }}>✧</span>
         </div>
-        
-        {/* Floating elements */}
-        <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-32 h-32 bg-white/5 rounded-full blur-2xl animate-pulse delay-1000"></div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Ready to Transform Your Educational Experience?
+
+        <div className="relative max-w-4xl mx-auto px-4 text-center">
+          <div className="text-6xl mb-6 animate-float">🚀</div>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
+            Ready to{' '}
+            <span className="bg-gradient-to-r from-primary-600 to-violet-600 bg-clip-text text-transparent">Transform</span>{' '}
+            Your Education?
           </h2>
-          <p className="text-xl text-blue-100 mb-10 max-w-3xl mx-auto leading-relaxed">
-            Join the growing community of educators and students who are already 
-            experiencing the benefits of BrightPath and transforming their educational journey.
+          <p className="text-lg text-gray-500 mb-10 max-w-2xl mx-auto leading-relaxed">
+            Join the growing community of educators and students already experiencing 
+            the magic of BrightPath. Your brighter academic future starts here! ✨
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link 
-              to="/register" 
-              className="bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 hover:from-yellow-300 hover:to-orange-300 font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105"
+            <Link
+              to="/register"
+              className="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-bold py-4 px-10 rounded-2xl shadow-lg shadow-primary-600/30 hover:shadow-xl hover:shadow-primary-600/40 transition-all duration-300 transform hover:-translate-y-1"
             >
-              Get Started Today
+              <span>Get Started Today</span>
+              <span className="group-hover:rotate-12 transition-transform text-lg">💫</span>
             </Link>
-            <Link 
-              to="/courses" 
-              className="border-2 border-white text-white hover:bg-white hover:text-blue-600 font-bold py-4 px-8 rounded-xl transition-all duration-300 backdrop-blur-sm"
+            <Link
+              to="/courses"
+              className="inline-flex items-center justify-center gap-2 bg-white border-2 border-gray-200 text-gray-700 font-bold py-4 px-10 rounded-2xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-1"
             >
-              Explore Courses
+              Explore Courses 📖
             </Link>
           </div>
         </div>

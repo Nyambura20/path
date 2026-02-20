@@ -4,7 +4,7 @@ import { useAuth } from '../utils/AuthContext';
 import { useSidebar } from '../utils/SidebarContext';
 
 function Sidebar() {
-  const { isOpen, toggleSidebar, closeSidebar } = useSidebar();
+  const { isOpen, isPinned, toggleSidebar, closeSidebar, handleHoverEnter, handleHoverLeave } = useSidebar();
   const { user, isAuthenticated } = useAuth();
   const location = useLocation();
   
@@ -71,13 +71,22 @@ function Sidebar() {
         aria-label="Toggle sidebar"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          {isOpen ? (
+          {isPinned ? (
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
           ) : (
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
           )}
         </svg>
       </button>
+
+      {/* Invisible hover zone on the left edge (desktop only) */}
+      {!isOpen && (
+        <div
+          className="hidden md:block fixed top-16 left-0 w-5 z-40"
+          style={{ height: 'calc(100vh - 4rem)' }}
+          onMouseEnter={handleHoverEnter}
+        />
+      )}
 
       {/* Overlay for mobile */}
       {isOpen && (
@@ -92,6 +101,8 @@ function Sidebar() {
         className={`fixed top-16 left-0 h-full bg-darkbg-800 border-r border-darkbg-700 transition-transform duration-300 ease-in-out z-40 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } w-64 shadow-xl`}
+        onMouseEnter={handleHoverEnter}
+        onMouseLeave={handleHoverLeave}
       >
         <div className="flex flex-col h-full">
           {/* Sidebar Header */}
@@ -231,6 +242,12 @@ function Sidebar() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
                         </svg>
                         View Performance
+                      </Link>
+                      <Link to="/teacher/ai-predictions" className={subLinkClass('/teacher/ai-predictions')} onClick={closeSidebar}>
+                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        AI Predictions
                       </Link>
                     </div>
                   )}

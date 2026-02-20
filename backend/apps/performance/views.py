@@ -13,6 +13,7 @@ from .serializers import (
     PerformanceSummarySerializer
 )
 from .ml_utils import PerformancePredictor
+from .gemini_predictor import predict_course_performance, predict_single_student, chat_with_ai
 from apps.students.models import StudentProfile
 from apps.courses.models import Course
 
@@ -845,3 +846,117 @@ def course_performance(request, course_id):
         'assessments': assessments_data
     })
 
+
+# ─── Gemini AI Prediction Endpoints ──────────────────────────────────
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def ai_predict_course(request, course_id):
+    """
+    Generate AI predictions for all students in a course.
+    Teachers only. Uses Gemini to analyse performance + attendance data.
+    """
+    if not request.user.is_teacher:
+        return Response(
+            {'error': 'Access denied. Teacher role required.'},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
+    try:
+        result = predict_course_performance(course_id, request.user)
+        if result.get('error'):
+            return Response(result, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(result, status=status.HTTP_200_OK)
+    except Course.DoesNotExist:
+        return Response(
+            {'error': 'Course not found or access denied.'},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+    except Exception as e:
+        return Response(
+            {'error': f'Prediction failed: {str(e)}'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def ai_predict_student(request, course_id, student_id):
+    """
+    Generate AI prediction for a single student in a course.
+    Teachers only.
+    """
+    if not request.user.is_teacher:
+        return Response(
+            {'error': 'Access denied. Teacher role required.'},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
+    try:
+        result = predict_single_student(student_id, course_id, request.user)
+        if result.get('error'):
+            return Response(result, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(result, status=status.HTTP_200_OK)
+    except Course.DoesNotExist:
+        return Response(
+            {'error': 'Course not found or access denied.'},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+    except StudentProfile.DoesNotExist:
+        return Response(
+            {'error': 'Student not found.'},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+    except Exception as e:
+        return Response(
+            {'error': f'Prediction failed: {str(e)}'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def ai_performance_chat(request):
+    """
+    AI-powered chat endpoint for students to discuss their performance.
+    Students can ask what went wrong, where to improve, and get personalised advice.
+    
+    POST body:
+        message (str): The student's question/message
+        conversation_history (list, optional): Previous messages for context
+            Each entry: { role: 'user'|'assistant', content: '...' }
+    """
+    if not request.user.is_student:
+        return Response(
+            {'error': 'This feature is available to students only.'},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
+    message = request.data.get('message', '').strip()
+    if not message:
+        return Response(
+            {'error': 'Message is required.'},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    conversation_history = request.data.get('conversation_history', [])
+
+    try:
+        student_profile = request.user.student_profile
+    except Exception:
+        return Response(
+            {'error': 'Student profile not found.'},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+
+    result = chat_with_ai(student_profile, message, conversation_history)
+
+    if result.get('error'):
+        return Response(
+            {'error': result['error']},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+    return Response({
+        'response': result['response'],
+    }, status=status.HTTP_200_OK)

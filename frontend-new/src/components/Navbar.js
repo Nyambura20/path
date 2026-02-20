@@ -30,15 +30,17 @@ function Navbar() {
             </Link>
           </div>
 
-          {/* Navigation links - centered */}
-          <div className="hidden md:flex items-center space-x-1 flex-1 justify-center">
-            <Link to="/" className={navLinkClass('/')}>
-              Home
-            </Link>
-            <Link to="/about" className={navLinkClass('/about')}>
-              About
-            </Link>
-          </div>
+          {/* Navigation links - centered (hidden for logged-in students) */}
+          {!(isAuthenticated && user?.role === 'student') && (
+            <div className="hidden md:flex items-center space-x-1 flex-1 justify-center">
+              <Link to="/" className={navLinkClass('/')}>
+                Home
+              </Link>
+              <Link to="/about" className={navLinkClass('/about')}>
+                About
+              </Link>
+            </div>
+          )}
 
           {/* Right side - Auth buttons for non-authenticated users */}
           {!isAuthenticated && (
