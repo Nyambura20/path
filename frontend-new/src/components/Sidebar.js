@@ -98,21 +98,21 @@ function Sidebar() {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-16 left-0 h-full bg-darkbg-800 border-r border-darkbg-700 transition-transform duration-300 ease-in-out z-40 ${
+        className={`fixed top-16 left-0 h-full bg-darkbg-800 transition-transform duration-300 ease-in-out z-40 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
-        } w-64 shadow-xl`}
+        } w-64`}
+        style={{ boxShadow: '2px 0 16px -4px rgba(0,0,0,0.35), 1px 0 4px -1px rgba(0,0,0,0.2)' }}
         onMouseEnter={handleHoverEnter}
         onMouseLeave={handleHoverLeave}
       >
         <div className="flex flex-col h-full">
           {/* Sidebar Header */}
-          <div className="p-4 border-b border-darkbg-700">
+          <div className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="h-8 w-8 bg-gradient-primary rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-lg">B</span>
                 </div>
-                <span className="text-lg font-bold text-white">BrightPath</span>
               </div>
               <button
                 onClick={toggleSidebar}
@@ -243,15 +243,17 @@ function Sidebar() {
                         </svg>
                         View Performance
                       </Link>
-                      <Link to="/teacher/ai-predictions" className={subLinkClass('/teacher/ai-predictions')} onClick={closeSidebar}>
-                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                        AI Predictions
-                      </Link>
                     </div>
                   )}
                 </div>
+
+                {/* AI Predictions - Standalone */}
+                <Link to="/teacher/ai-predictions" className={sidebarLinkClass('/teacher/ai-predictions')} onClick={closeSidebar}>
+                  <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  AI Predictions
+                </Link>
 
                 {/* Notifications */}
                 <Link to="/notifications" className={sidebarLinkClass('/notifications')} onClick={closeSidebar}>
@@ -285,6 +287,13 @@ function Sidebar() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                   </svg>
                   Attendance
+                </Link>
+
+                <Link to="/ai-analytics" className={sidebarLinkClass('/ai-analytics')} onClick={closeSidebar}>
+                  <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  AI Analytics
                 </Link>
 
                 <Link to="/notifications" className={sidebarLinkClass('/notifications')} onClick={closeSidebar}>

@@ -222,6 +222,15 @@ class ApiClient {
     }
   }
 
+  async getEnrollments() {
+    try {
+      const response = await api.get('/courses/enrollments/');
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
   async enrollInCourse(courseId) {
     try {
       const response = await api.post(`/courses/${courseId}/enroll/`);

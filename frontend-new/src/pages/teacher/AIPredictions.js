@@ -2,6 +2,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../utils/AuthContext';
 import apiClient from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell, Legend, ScatterChart, Scatter, ZAxis,
+  RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
+} from 'recharts';
+
+const RISK_COLORS = { high: '#ef4444', medium: '#f59e0b', low: '#10b981' };
+const PIE_COLORS = ['#ef4444', '#f59e0b', '#10b981'];
 
 function AIPredictions() {
   const { user } = useAuth();
@@ -235,40 +243,209 @@ function AIPredictions() {
               </div>
             </div>
 
-            {/* Risk Distribution Bar */}
-            {predictions.summary?.total_students > 0 && (
-              <div className="card mb-8">
-                <h3 className="text-sm font-medium text-gray-700 mb-3">Risk Distribution</h3>
-                <div className="flex h-4 rounded-full overflow-hidden bg-gray-100">
-                  {predictions.summary.high_risk > 0 && (
-                    <div
-                      className="bg-red-500 transition-all"
-                      style={{ width: `${(predictions.summary.high_risk / predictions.summary.total_students) * 100}%` }}
-                      title={`High Risk: ${predictions.summary.high_risk}`}
-                    />
+            {/* Analytics Charts Section */}
+            {predictions.summary?.total_students > 0 && (() => {
+              const allPredictions = predictions.predictions || [];
+
+              // Risk distribution pie data
+              const riskPieData = [
+                { name: 'High Risk', value: predictions.summary.high_risk || 0 },
+                { name: 'Medium Risk', value: predictions.summary.medium_risk || 0 },
+                { name: 'Low Risk', value: predictions.summary.low_risk || 0 },
+              ].filter(d => d.value > 0);
+
+              // Student predicted grades bar chart (sorted by grade ascending so at-risk are visible first)
+              const studentGradesData = [...allPredictions]
+                .filter(s => s.predicted_grade != null)
+                .sort((a, b) => a.predicted_grade - b.predicted_grade)
+                .map(s => ({
+                  name: s.student_name?.split(' ')[0] || s.student_id,
+                  fullName: s.student_name,
+                  predicted: s.predicted_grade,
+                  current: s.current_avg ?? 0,
+                  risk: s.risk_level,
+                  fill: RISK_COLORS[s.risk_level] || RISK_COLORS.low,
+                }));
+
+              // Scatter data: attendance vs predicted grade
+              const scatterData = allPredictions
+                .filter(s => s.predicted_grade != null && s.attendance?.attendance_rate != null)
+                .map(s => ({
+                  x: s.attendance.attendance_rate,
+                  y: s.predicted_grade,
+                  z: 80,
+                  name: s.student_name,
+                  risk: s.risk_level,
+                  fill: RISK_COLORS[s.risk_level] || RISK_COLORS.low,
+                }));
+
+              // At-risk students radar/comparison
+              const atRiskStudents = allPredictions
+                .filter(s => s.risk_level === 'high' || s.risk_level === 'medium')
+                .slice(0, 8)
+                .map(s => ({
+                  name: s.student_name?.split(' ')[0] || s.student_id,
+                  fullName: s.student_name,
+                  predicted: s.predicted_grade ?? 0,
+                  attendance: s.attendance?.attendance_rate ?? 0,
+                  current: s.current_avg ?? 0,
+                  risk: s.risk_level,
+                }));
+
+              // Class overview radar data
+              const classAvg = predictions.summary.class_predicted_avg || 0;
+              const highRiskPct = predictions.summary.total_students > 0 ? Math.round((predictions.summary.high_risk / predictions.summary.total_students) * 100) : 0;
+              const avgAttendance = allPredictions.length > 0
+                ? Math.round(allPredictions.reduce((sum, s) => sum + (s.attendance?.attendance_rate || 0), 0) / allPredictions.length)
+                : 0;
+              const classRadarData = [
+                { subject: 'Predicted Avg', value: classAvg, fullMark: 100 },
+                { subject: 'Attendance', value: avgAttendance, fullMark: 100 },
+                { subject: 'Low Risk %', value: predictions.summary.total_students > 0 ? Math.round((predictions.summary.low_risk / predictions.summary.total_students) * 100) : 0, fullMark: 100 },
+                { subject: 'Engagement', value: Math.min(100, Math.round((avgAttendance * 0.5) + (classAvg * 0.5))), fullMark: 100 },
+                { subject: 'Stability', value: Math.max(0, 100 - highRiskPct * 2), fullMark: 100 },
+              ];
+
+              const CustomBarTooltip = ({ active, payload }) => {
+                if (!active || !payload?.length) return null;
+                const d = payload[0].payload;
+                return (
+                  <div className="bg-white border border-gray-200 rounded-lg shadow-lg px-4 py-3">
+                    <p className="text-sm font-semibold text-gray-900">{d.fullName}</p>
+                    <p className="text-sm" style={{ color: '#8b5cf6' }}>Predicted: {d.predicted}%</p>
+                    {d.current > 0 && <p className="text-sm text-gray-500">Current: {d.current}%</p>}
+                    <p className="text-xs mt-1" style={{ color: RISK_COLORS[d.risk] }}>{d.risk?.toUpperCase()} RISK</p>
+                  </div>
+                );
+              };
+
+              const CustomScatterTooltip = ({ active, payload }) => {
+                if (!active || !payload?.length) return null;
+                const d = payload[0].payload;
+                return (
+                  <div className="bg-white border border-gray-200 rounded-lg shadow-lg px-4 py-3">
+                    <p className="text-sm font-semibold text-gray-900">{d.name}</p>
+                    <p className="text-sm text-blue-600">Attendance: {d.x}%</p>
+                    <p className="text-sm text-purple-600">Predicted: {d.y}%</p>
+                    <p className="text-xs mt-1" style={{ color: RISK_COLORS[d.risk] }}>{d.risk?.toUpperCase()} RISK</p>
+                  </div>
+                );
+              };
+
+              return (
+                <>
+                  {/* Row 1: Risk Pie + Class Overview Radar */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-1">Risk Distribution</h3>
+                      <p className="text-sm text-gray-500 mb-4">Breakdown of students by risk level</p>
+                      <ResponsiveContainer width="100%" height={280}>
+                        <PieChart>
+                          <Pie
+                            data={riskPieData}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={60}
+                            outerRadius={100}
+                            paddingAngle={4}
+                            dataKey="value"
+                            label={({ name, value, percent }) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`}
+                          >
+                            {riskPieData.map((entry, idx) => (
+                              <Cell key={idx} fill={PIE_COLORS[idx % PIE_COLORS.length]} />
+                            ))}
+                          </Pie>
+                          <Tooltip />
+                          <Legend />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-1">Class Health Overview</h3>
+                      <p className="text-sm text-gray-500 mb-4">Overall class performance indicators</p>
+                      <ResponsiveContainer width="100%" height={280}>
+                        <RadarChart data={classRadarData}>
+                          <PolarGrid stroke="#e5e7eb" />
+                          <PolarAngleAxis dataKey="subject" tick={{ fontSize: 11, fill: '#6b7280' }} />
+                          <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fontSize: 10, fill: '#9ca3af' }} />
+                          <Radar name="Class" dataKey="value" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.25} strokeWidth={2} />
+                        </RadarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  {/* Row 2: Student Predicted Grades Bar Chart */}
+                  {studentGradesData.length > 0 && (
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-1">Student Predicted Grades</h3>
+                      <p className="text-sm text-gray-500 mb-4">Each bar is color-coded by risk level — red (high), yellow (medium), green (low)</p>
+                      <ResponsiveContainer width="100%" height={Math.max(300, studentGradesData.length * 20)}>
+                        <BarChart data={studentGradesData} layout="vertical" margin={{ left: 10 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                          <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 12, fill: '#6b7280' }} />
+                          <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: '#6b7280' }} width={80} />
+                          <Tooltip content={<CustomBarTooltip />} />
+                          <Bar dataKey="predicted" name="Predicted Grade" radius={[0, 6, 6, 0]} barSize={16}>
+                            {studentGradesData.map((entry, idx) => (
+                              <Cell key={idx} fill={entry.fill} />
+                            ))}
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
                   )}
-                  {predictions.summary.medium_risk > 0 && (
-                    <div
-                      className="bg-yellow-400 transition-all"
-                      style={{ width: `${(predictions.summary.medium_risk / predictions.summary.total_students) * 100}%` }}
-                      title={`Medium Risk: ${predictions.summary.medium_risk}`}
-                    />
-                  )}
-                  {predictions.summary.low_risk > 0 && (
-                    <div
-                      className="bg-green-500 transition-all"
-                      style={{ width: `${(predictions.summary.low_risk / predictions.summary.total_students) * 100}%` }}
-                      title={`Low Risk: ${predictions.summary.low_risk}`}
-                    />
-                  )}
-                </div>
-                <div className="flex justify-between mt-2 text-xs text-gray-500">
-                  <span className="flex items-center"><span className="w-3 h-3 rounded-full bg-red-500 mr-1"></span>High Risk</span>
-                  <span className="flex items-center"><span className="w-3 h-3 rounded-full bg-yellow-400 mr-1"></span>Medium Risk</span>
-                  <span className="flex items-center"><span className="w-3 h-3 rounded-full bg-green-500 mr-1"></span>Low Risk</span>
-                </div>
-              </div>
-            )}
+
+                  {/* Row 3: Attendance vs Predicted Grade Scatter + At-Risk Comparison */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    {scatterData.length > 0 && (
+                      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-1">Attendance vs Predicted Grade</h3>
+                        <p className="text-sm text-gray-500 mb-4">Correlation between attendance and predicted performance</p>
+                        <ResponsiveContainer width="100%" height={300}>
+                          <ScatterChart margin={{ bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                            <XAxis type="number" dataKey="x" name="Attendance" unit="%" domain={[0, 100]} tick={{ fontSize: 11, fill: '#6b7280' }} />
+                            <YAxis type="number" dataKey="y" name="Predicted" unit="%" domain={[0, 100]} tick={{ fontSize: 11, fill: '#6b7280' }} />
+                            <ZAxis dataKey="z" range={[60, 120]} />
+                            <Tooltip content={<CustomScatterTooltip />} />
+                            <Scatter data={scatterData} shape="circle">
+                              {scatterData.map((entry, idx) => (
+                                <Cell key={idx} fill={entry.fill} />
+                              ))}
+                            </Scatter>
+                          </ScatterChart>
+                        </ResponsiveContainer>
+                        <div className="flex justify-center gap-4 mt-2 text-xs text-gray-500">
+                          <span className="flex items-center"><span className="w-2.5 h-2.5 rounded-full bg-red-500 mr-1"></span>High</span>
+                          <span className="flex items-center"><span className="w-2.5 h-2.5 rounded-full bg-yellow-400 mr-1"></span>Medium</span>
+                          <span className="flex items-center"><span className="w-2.5 h-2.5 rounded-full bg-green-500 mr-1"></span>Low</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {atRiskStudents.length > 0 && (
+                      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-1">At-Risk Students Comparison</h3>
+                        <p className="text-sm text-gray-500 mb-4">Predicted grade, attendance, and current average for at-risk students</p>
+                        <ResponsiveContainer width="100%" height={300}>
+                          <BarChart data={atRiskStudents} barGap={2}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                            <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#6b7280' }} />
+                            <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: '#6b7280' }} />
+                            <Tooltip formatter={(value) => `${value}%`} />
+                            <Legend />
+                            <Bar dataKey="predicted" name="Predicted" fill="#8b5cf6" radius={[4, 4, 0, 0]} barSize={14} />
+                            <Bar dataKey="attendance" name="Attendance" fill="#6366f1" radius={[4, 4, 0, 0]} barSize={14} />
+                            <Bar dataKey="current" name="Current Avg" fill="#a78bfa" radius={[4, 4, 0, 0]} barSize={14} />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                    )}
+                  </div>
+                </>
+              );
+            })()}
 
             {/* Filters */}
             <div className="card mb-6">

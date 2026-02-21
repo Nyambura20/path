@@ -33,6 +33,7 @@ import PerformanceReports from './pages/teacher/PerformanceReports';
 import EnrolledStudents from './pages/teacher/EnrolledStudents';
 import MyCourses from './pages/teacher/MyCourses';
 import AIPredictions from './pages/teacher/AIPredictions';
+import AIAnalytics from './pages/AIAnalytics';
 
 // Context
 import { AuthProvider, useAuth } from './utils/AuthContext';
@@ -195,6 +196,14 @@ function MainContent() {
           element={
             <ProtectedRoute>
               <EnrolledStudents />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/ai-analytics"
+          element={
+            <ProtectedRoute>
+              <AIAnalytics />
             </ProtectedRoute>
           }
         />

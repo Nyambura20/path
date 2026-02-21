@@ -17,7 +17,7 @@ function Navbar() {
   `;
 
   return (
-  <nav className="bg-darkbg-800 dark:bg-darkbg-800 shadow-sm border-b border-darkbg-700 sticky top-0 z-50">
+  <nav className="bg-darkbg-800 dark:bg-darkbg-800 sticky top-0 z-50" style={{ boxShadow: '0 1px 3px 0 rgba(0,0,0,0.3), 0 4px 12px -2px rgba(0,0,0,0.2)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Logo and brand */}
