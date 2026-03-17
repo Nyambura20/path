@@ -38,8 +38,8 @@ function Register() {
 
     try {
       await register(formData);
-      addNotification('Registration successful! Welcome to BrightPath!', 'success');
-      navigate('/dashboard');
+      addNotification('Registration successful! Please check your email to verify your account.', 'success');
+      navigate('/verify-email', { state: { email: formData.email } });
     } catch (error) {
       addNotification(error.message, 'error');
     } finally {
@@ -51,9 +51,6 @@ function Register() {
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <div className="h-12 w-12 bg-gradient-primary rounded-lg flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-2xl">B</span>
-          </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
             Join BrightPath
           </h2>

@@ -57,14 +57,19 @@ export function AuthProvider({ children }) {
 
   const register = async (userData) => {
     try {
+      // Registration now requires email verification. The API returns no tokens.
       const response = await apiClient.register(userData);
-      setUser(response.user);
-      setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(response.user));
       return response;
     } catch (error) {
       throw error;
     }
+  };
+
+  // Called after email verification succeeds — tokens already stored by apiClient.verifyEmail
+  const loginWithTokens = (responseData) => {
+    setUser(responseData.user);
+    setIsAuthenticated(true);
+    localStorage.setItem('user', JSON.stringify(responseData.user));
   };
 
   const logout = async () => {
@@ -101,6 +106,7 @@ export function AuthProvider({ children }) {
     register,
     logout,
     updateProfile,
+    loginWithTokens,
   };
 
   return (

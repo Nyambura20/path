@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import apiClient from '../services/api';
 import { useNotification } from '../utils/NotificationContext';
@@ -14,6 +14,7 @@ function Courses() {
     instructor: '',
     search: '',
   });
+  const [enrolledCourseIds, setEnrolledCourseIds] = useState([]);
   const { addNotification } = useNotification();
   const { user } = useAuth();
 
@@ -27,19 +28,40 @@ function Courses() {
       if (filters.instructor) params.instructor = filters.instructor;
       if (filters.search) params.search = filters.search;
       
-      const data = await apiClient.getCourses(params);
-      setCourses(data.results || data || []);
+      const coursePromise = apiClient.getCourses(params);
+      const enrollmentPromise = user?.role === 'student'
+        ? apiClient.getEnrollments()
+        : Promise.resolve(null);
+
+      const [courseData, enrollmentData] = await Promise.all([coursePromise, enrollmentPromise]);
+      const courseList = courseData.results || courseData || [];
+      setCourses(courseList);
+
+      if (user?.role === 'student' && enrollmentData) {
+        const enrollmentList = enrollmentData.results || enrollmentData || [];
+        setEnrolledCourseIds(enrollmentList.map((enrollment) => enrollment.course));
+      } else {
+        setEnrolledCourseIds([]);
+      }
     } catch (err) {
       setError(err.message);
       addNotification('Failed to load courses', 'error');
     } finally {
       setLoading(false);
     }
-  }, [filters, addNotification]);
+  }, [filters, addNotification, user?.role]);
 
   useEffect(() => {
     fetchCourses();
   }, [fetchCourses]);
+
+  const visibleCourses = useMemo(() => {
+    if (user?.role !== 'student' || enrolledCourseIds.length === 0) {
+      return courses;
+    }
+    const enrolledSet = new Set(enrolledCourseIds);
+    return courses.filter((course) => !enrolledSet.has(course.id));
+  }, [courses, enrolledCourseIds, user?.role]);
 
   const handleEnroll = async (courseId) => {
     try {
@@ -176,7 +198,7 @@ function Courses() {
         </div>
 
         {/* Course Grid */}
-        {courses.length === 0 ? (
+        {visibleCourses.length === 0 ? (
           <div className="text-center py-12">
             <svg className="h-12 w-12 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -194,7 +216,7 @@ function Courses() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.map((course) => (
+            {visibleCourses.map((course) => (
               <div key={course.id} className="card hover:shadow-lg transition-shadow duration-300">
                 <div className="flex justify-between items-start mb-4">
                   <div>

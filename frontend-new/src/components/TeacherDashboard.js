@@ -245,76 +245,101 @@ function TeacherDashboard() {
 
             {/* Recent Activity */}
             <div className="card">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Recent Activity</h2>
-              <div className="space-y-4">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-gray-900">Recent Activity</h2>
+                {recentPages.length > 0 && (
+                  <span className="text-xs font-medium text-primary-600 bg-primary-50 px-3 py-1 rounded-full">
+                    Live timeline
+                  </span>
+                )}
+              </div>
+              <div className="relative space-y-4 pl-3">
+                <span
+                  aria-hidden
+                  className="absolute left-3 top-0 hidden h-full w-0.5 bg-gradient-to-b from-primary-200 via-primary-100 to-transparent md:block"
+                />
                 {recentPages.length > 0 ? (
-                  recentPages.slice(0, 5).map((page, index) => (
-                    <Link 
-                      key={index} 
+                  recentPages.slice(0, 4).map((page, index) => (
+                    <Link
+                      key={index}
                       to={page.path}
-                      className="flex items-start hover:bg-gray-50 p-2 rounded-lg transition-colors -mx-2"
+                      className="relative flex items-center gap-4 rounded-2xl border border-gray-100 bg-white/90 px-4 py-3 shadow-sm ring-1 ring-gray-100/60 transition-all hover:-translate-y-0.5 hover:border-primary-200 hover:bg-white hover:shadow-lg"
                     >
-                      <div className="flex-shrink-0 w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center mr-3">
+                      <span className="absolute -left-[1.15rem] hidden h-3 w-3 rounded-full border-4 border-white bg-primary-400 shadow-md md:flex" aria-hidden />
+                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-inner">
                         {page.icon === 'book' && (
-                          <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                           </svg>
                         )}
                         {page.icon === 'chart' && (
-                          <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                           </svg>
                         )}
                         {page.icon === 'clipboard' && (
-                          <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                           </svg>
                         )}
                         {page.icon === 'edit' && (
-                          <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                           </svg>
                         )}
                         {page.icon === 'bell' && (
-                          <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                           </svg>
                         )}
                         {page.icon === 'users' && (
-                          <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                           </svg>
                         )}
                         {page.icon === 'user' && (
-                          <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                           </svg>
                         )}
                         {page.icon === 'home' && (
-                          <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                           </svg>
                         )}
                         {!['book', 'chart', 'clipboard', 'edit', 'bell', 'users', 'user', 'home'].includes(page.icon) && (
-                          <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                           </svg>
                         )}
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900">{page.title}</p>
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm font-semibold text-gray-900">{page.title}</p>
+                          <span className="text-xs font-medium text-gray-500">{page.timeAgo}</span>
+                        </div>
                         <p className="text-sm text-gray-600">{page.description}</p>
-                        <p className="text-xs text-gray-500 mt-1">{page.timeAgo}</p>
+                        <div className="mt-2 flex items-center gap-2 text-xs text-gray-500">
+                          <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 font-medium">
+                            {page.path}
+                          </span>
+                          <svg className="h-3 w-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden>
+                            <path d="M9.293 16.707a1 1 0 010-1.414L12.586 12 9.293 8.707a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
+                          </svg>
+                          <span className="font-medium text-primary-600">Open</span>
+                        </div>
                       </div>
                     </Link>
                   ))
                 ) : (
-                  <div className="text-center py-8">
-                    <svg className="h-8 w-8 text-gray-400 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <p className="text-sm text-gray-600">No recent activity</p>
-                    <p className="text-xs text-gray-500 mt-1">Start browsing to see your history</p>
+                  <div className="rounded-2xl border border-dashed border-gray-200 bg-gradient-to-br from-gray-50 to-white p-8 text-center">
+                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary-50 text-primary-500">
+                      <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <p className="mt-4 text-base font-medium text-gray-900">No recent activity yet</p>
+                    <p className="mt-1 text-sm text-gray-500">Navigate the platform to start building your teaching timeline.</p>
                   </div>
                 )}
               </div>

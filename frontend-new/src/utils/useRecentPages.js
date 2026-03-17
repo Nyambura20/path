@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 
 const STORAGE_KEY = 'brightpath_recent_pages';
 const MAX_RECENT_PAGES = 10;
+const EXCLUDED_PATHS = new Set(['/dashboard']);
 
 // Page metadata mapping
 const PAGE_METADATA = {
@@ -63,8 +64,9 @@ export const useRecentPages = () => {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const pages = JSON.parse(stored);
+        const filteredPages = pages.filter((page) => !EXCLUDED_PATHS.has(page.path));
         // Re-apply metadata to fix any stale entries with raw URLs
-        const refreshed = pages.map((page) => {
+        const refreshed = filteredPages.map((page) => {
           let meta = PAGE_METADATA[page.path];
           if (!meta) {
             const basePath = page.path.replace(/\/\d+$/, '');
@@ -91,6 +93,9 @@ export const useRecentPages = () => {
 
   // Add a page visit
   const addPageVisit = useCallback((path, customTitle = null) => {
+    if (EXCLUDED_PATHS.has(path)) {
+      return;
+    }
     // Try exact match first, then try matching dynamic routes like /courses/:id
     let metadata = PAGE_METADATA[path];
     if (!metadata) {

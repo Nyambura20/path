@@ -14,6 +14,8 @@ import About from './pages/About';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Logout from './pages/Logout';
+import VerifyEmail from './pages/VerifyEmail';
+import EmailVerified from './pages/EmailVerified';
 import Dashboard from './pages/Dashboard';
 import Courses from './pages/Courses';
 import CourseDetail from './pages/CourseDetail';
@@ -72,6 +74,10 @@ function MainContent() {
             </PublicRoute>
           }
         />
+
+        {/* Email verification routes — always public */}
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/verify-email/:token" element={<EmailVerified />} />
 
         {/* Logout Route - accessible to authenticated users */}
         <Route path="/logout" element={<Logout />} />

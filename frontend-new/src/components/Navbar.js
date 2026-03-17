@@ -30,8 +30,8 @@ function Navbar() {
             </Link>
           </div>
 
-          {/* Navigation links - centered (hidden for logged-in students) */}
-          {!(isAuthenticated && user?.role === 'student') && (
+          {/* Navigation links - only for guests; authenticated users get footer links */}
+          {!isAuthenticated && (
             <div className="hidden md:flex items-center space-x-1 flex-1 justify-center">
               <Link to="/" className={navLinkClass('/')}>
                 Home

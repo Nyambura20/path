@@ -49,11 +49,17 @@ class LoginSerializer(serializers.Serializer):
         password = attrs.get('password')
 
         if email and password:
-            user = authenticate(username=email, password=password)
-            if not user:
+            # Use authenticate but also check inactive users so we can return the
+            # specific "email not verified" message instead of just "invalid credentials".
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
                 raise serializers.ValidationError('Invalid credentials')
-            if not user.is_active:
-                raise serializers.ValidationError('Account is disabled')
+
+            if not user.check_password(password):
+                raise serializers.ValidationError('Invalid credentials')
+
+            # is_active is False until email is verified – let the view handle that case
             attrs['user'] = user
         else:
             raise serializers.ValidationError('Email and password are required')

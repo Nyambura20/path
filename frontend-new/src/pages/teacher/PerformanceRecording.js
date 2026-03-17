@@ -65,20 +65,29 @@ function PerformanceRecording() {
     }
   }, [selectedCourse, fetchCourseStudents]);
 
+  const handleAssessmentDetailChange = (field, value) => {
+    setAssessmentDetails(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const clampMarks = useCallback((value) => {
+    const total = Math.max(1, Number(assessmentDetails.total_marks) || 1);
+    const numericValue = Number(value);
+    if (Number.isNaN(numericValue)) {
+      return 0;
+    }
+    return Math.min(Math.max(numericValue, 0), total);
+  }, [assessmentDetails.total_marks]);
+
   const handlePerformanceChange = (studentId, field, value) => {
     setPerformanceData(prev => ({
       ...prev,
       [studentId]: {
         ...prev[studentId],
-        [field]: value
+        [field]: field === 'marks_obtained' ? clampMarks(value) : value
       }
-    }));
-  };
-
-  const handleAssessmentDetailChange = (field, value) => {
-    setAssessmentDetails(prev => ({
-      ...prev,
-      [field]: value
     }));
   };
 
@@ -163,15 +172,29 @@ function PerformanceRecording() {
   };
 
   const handleBulkMarks = (marks) => {
+    const sanitizedMarks = clampMarks(marks);
     const newData = {};
     students.forEach(student => {
       newData[student.student_id] = {
         ...performanceData[student.student_id],
-        marks_obtained: marks
+        marks_obtained: sanitizedMarks
       };
     });
     setPerformanceData(newData);
   };
+
+  useEffect(() => {
+    setPerformanceData(prev => {
+      const updated = {};
+      Object.entries(prev).forEach(([studentId, data]) => {
+        updated[studentId] = {
+          ...data,
+          marks_obtained: clampMarks(data?.marks_obtained ?? 0)
+        };
+      });
+      return updated;
+    });
+  }, [assessmentDetails.total_marks, clampMarks]);
 
   if (!user?.is_teacher) {
     return (

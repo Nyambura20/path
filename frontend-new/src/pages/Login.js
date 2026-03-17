@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../utils/AuthContext';
 import { useNotification } from '../utils/NotificationContext';
+import apiClient from '../services/api';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -9,6 +10,9 @@ function Login() {
     password: '',
   });
   const [loading, setLoading] = useState(false);
+  const [unverifiedEmail, setUnverifiedEmail] = useState('');
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendSent, setResendSent] = useState(false);
   const { login } = useAuth();
   const { addNotification } = useNotification();
   const navigate = useNavigate();
@@ -18,20 +22,52 @@ function Login() {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    // Clear the unverified banner if user changes the email
+    if (e.target.name === 'email') {
+      setUnverifiedEmail('');
+      setResendSent(false);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.email || !formData.password) {
+      addNotification('Please enter both email and password.', 'error');
+      return;
+    }
+
     setLoading(true);
+    setUnverifiedEmail('');
 
     try {
       await login(formData);
       addNotification('Login successful!', 'success');
       navigate('/dashboard');
     } catch (error) {
-      addNotification(error.message, 'error');
+      if (error.code === 'email_not_verified' || error.message?.includes('verify your email')) {
+        setUnverifiedEmail(formData.email);
+      } else {
+        const fallbackMessage = 'Invalid email or password. Please try again.';
+        const shouldUseFallback = !error?.message 
+          || error.message.includes('Request failed')
+          || /^Error:\s*\d+/.test(error.message);
+        addNotification(shouldUseFallback ? fallbackMessage : error.message, 'error');
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    setResendLoading(true);
+    try {
+      await apiClient.resendVerification(unverifiedEmail);
+      setResendSent(true);
+      addNotification('Verification email resent! Please check your inbox.', 'success');
+    } catch (error) {
+      addNotification(error.message || 'Failed to resend. Please try again.', 'error');
+    } finally {
+      setResendLoading(false);
     }
   };
 
@@ -39,9 +75,6 @@ function Login() {
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <div className="h-12 w-12 bg-gradient-primary rounded-lg flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-2xl">B</span>
-          </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
             Welcome back
           </h2>
@@ -51,6 +84,36 @@ function Login() {
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-8">
+          {/* Email-not-verified banner */}
+          {unverifiedEmail && (
+            <div className="mb-6 bg-yellow-50 border border-yellow-300 rounded-lg p-4 space-y-3">
+              <div className="flex items-start gap-2">
+                <svg className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                </svg>
+                <div>
+                  <p className="text-sm font-medium text-yellow-800">Email not verified</p>
+                  <p className="text-sm text-yellow-700 mt-1">
+                    Please verify your email address before signing in.
+                  </p>
+                </div>
+              </div>
+              {resendSent ? (
+                <p className="text-sm text-green-700 font-medium">✓ Verification email sent to {unverifiedEmail}</p>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleResend}
+                  disabled={resendLoading}
+                  className="text-sm font-medium text-yellow-700 underline hover:text-yellow-900 disabled:opacity-50"
+                >
+                  {resendLoading ? 'Sending…' : 'Resend verification email'}
+                </button>
+              )}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -159,3 +222,4 @@ function Login() {
 }
 
 export default Login;
+

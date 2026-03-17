@@ -77,19 +77,37 @@ class ApiClient {
       }
       return response.data;
     } catch (error) {
-      throw this.handleError(error);
+      throw this.handleError(error, 'Unable to sign in. Please check your email and password.');
     }
   }
 
   async register(userData) {
     try {
       const response = await api.post('/users/register/', userData);
+      // Registration now requires email verification — no tokens returned yet
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async verifyEmail(token) {
+    try {
+      const response = await api.post('/users/verify-email/', { token });
       if (response.data.access_token) {
         localStorage.setItem('access_token', response.data.access_token);
         localStorage.setItem('refresh_token', response.data.refresh_token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
         authToken = response.data.access_token;
       }
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async resendVerification(email) {
+    try {
+      const response = await api.post('/users/resend-verification/', { email });
       return response.data;
     } catch (error) {
       throw this.handleError(error);
@@ -503,19 +521,23 @@ class ApiClient {
   }
 
   // Error handler
-  handleError(error) {
+  handleError(error, fallbackMessage = 'Something went wrong. Please try again.') {
     if (error.response) {
       // Server responded with error status
       const message = error.response.data?.message || 
                      error.response.data?.detail ||
                      error.response.data?.error ||
                      `Error: ${error.response.status}`;
-      return new Error(message);
+      const err = new Error(message);
+      // Attach the error code from the response body so callers can branch on it
+      err.code = error.response.data?.error || null;
+      err.responseData = error.response.data;
+      return err;
     } else if (error.request) {
       // Network error
       return new Error('Network error. Please check your connection.');
     } else {
-      // Other error
+    throw new Error(error.message || fallbackMessage);
       return new Error(error.message || 'An unexpected error occurred.');
     }
   }

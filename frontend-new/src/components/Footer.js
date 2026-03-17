@@ -18,9 +18,17 @@ function Footer() {
       }`}
     >
       {isAuthenticated ? (
-        // Simplified footer for authenticated users
-        <div className="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row justify-between items-center space-y-1 sm:space-y-0">
+        <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap items-center gap-3 text-xs">
+              <Link to="/" className="text-gray-300 hover:text-primary-400 transition-colors">
+                Home
+              </Link>
+              <span className="text-gray-600">|</span>
+              <Link to="/about" className="text-gray-300 hover:text-primary-400 transition-colors">
+                About
+              </Link>
+            </div>
             <p className="text-gray-400 text-xs">
               © {new Date().getFullYear()} BrightPath. All rights reserved.
             </p>

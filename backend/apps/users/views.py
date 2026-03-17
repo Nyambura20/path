@@ -7,10 +7,45 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.core.mail import send_mail
+from django.conf import settings
+from django.utils import timezone
 from drf_spectacular.utils import extend_schema, OpenApiExample
 from drf_spectacular.openapi import OpenApiParameter
-from .models import User
+from .models import User, EmailVerificationToken
 from .serializers import UserRegistrationSerializer, UserSerializer, LoginSerializer
+
+
+def _send_verification_email(user, token_obj):
+    """Send the email verification link to the user."""
+    verify_url = f"{settings.FRONTEND_URL}/verify-email/{token_obj.token}"
+    subject = "Verify your BrightPath email address"
+    message = (
+        f"Hi {user.first_name or user.username},\n\n"
+        f"Welcome to BrightPath! Please verify your email address by clicking the link below:\n\n"
+        f"{verify_url}\n\n"
+        f"This link will expire in 24 hours.\n\n"
+        f"If you did not create a BrightPath account, you can safely ignore this email.\n\n"
+        f"— The BrightPath Team"
+    )
+    html_message = (
+        f"<p>Hi <strong>{user.first_name or user.username}</strong>,</p>"
+        f"<p>Welcome to <strong>BrightPath</strong>! Please verify your email address by clicking the button below:</p>"
+        f'<p><a href="{verify_url}" style="background:#4F46E5;color:#fff;padding:12px 24px;'
+        f'border-radius:6px;text-decoration:none;display:inline-block;">Verify Email Address</a></p>'
+        f"<p>Or copy and paste this link into your browser:<br><a href=\"{verify_url}\">{verify_url}</a></p>"
+        f"<p>This link will expire in <strong>24 hours</strong>.</p>"
+        f"<p>If you did not create a BrightPath account, you can safely ignore this email.</p>"
+        f"<p>— The BrightPath Team</p>"
+    )
+    send_mail(
+        subject=subject,
+        message=message,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[user.email],
+        html_message=html_message,
+        fail_silently=False,
+    )
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -80,16 +115,18 @@ class RegisterView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        
-        # Generate JWT tokens
-        refresh = RefreshToken.for_user(user)
-        access_token = str(refresh.access_token)
-        refresh_token = str(refresh)
-        
+
+        # Create and send verification token
+        token_obj = EmailVerificationToken.objects.create(user=user)
+        try:
+            _send_verification_email(user, token_obj)
+        except Exception as e:
+            # Log but don't fail registration – token is still in DB
+            print(f"Error sending verification email: {e}")
+
         return Response({
-            'user': UserSerializer(user).data,
-            'access_token': access_token,
-            'refresh_token': refresh_token
+            'message': 'Registration successful! Please check your email to verify your account.',
+            'email': user.email,
         }, status=status.HTTP_201_CREATED)
 
 
@@ -147,6 +184,18 @@ def login_view(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     user = serializer.validated_data['user']
+
+    # Block login if email is not yet verified
+    if not user.email_verified:
+        return Response(
+            {
+                'error': 'email_not_verified',
+                'message': 'Please verify your email address before logging in. Check your inbox for the verification link.',
+                'email': user.email,
+            },
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
     login(request, user)
     
     # Generate JWT tokens
@@ -198,6 +247,73 @@ def logout_view(request):
         pass
     logout(request)
     return Response({'message': 'Logged out successfully'})
+
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def verify_email_view(request):
+    """Verify a user's email address using the token from their verification email."""
+    token_str = request.data.get('token', '').strip()
+    if not token_str:
+        return Response({'error': 'Verification token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        token_obj = EmailVerificationToken.objects.select_related('user').get(token=token_str)
+    except EmailVerificationToken.DoesNotExist:
+        return Response({'error': 'Invalid or already used verification link.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if token_obj.is_expired():
+        token_obj.delete()
+        return Response({'error': 'This verification link has expired. Please request a new one.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = token_obj.user
+    user.email_verified = True
+    user.is_active = True
+    user.save(update_fields=['email_verified', 'is_active'])
+
+    # Consume the token
+    token_obj.delete()
+
+    # Issue JWT tokens so the user is immediately logged in after verifying
+    refresh = RefreshToken.for_user(user)
+    return Response({
+        'message': 'Email verified successfully! You are now logged in.',
+        'user': UserSerializer(user).data,
+        'access_token': str(refresh.access_token),
+        'refresh_token': str(refresh),
+    }, status=status.HTTP_200_OK)
+
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def resend_verification_view(request):
+    """Resend the email verification link for a given email address."""
+    email = request.data.get('email', '').strip().lower()
+    if not email:
+        return Response({'error': 'Email address is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        # Return a generic response to avoid user enumeration
+        return Response({'message': 'If that email is registered, a new verification link has been sent.'})
+
+    if user.email_verified:
+        return Response({'error': 'This email address is already verified.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Delete any existing tokens and create a fresh one
+    EmailVerificationToken.objects.filter(user=user).delete()
+    token_obj = EmailVerificationToken.objects.create(user=user)
+
+    try:
+        _send_verification_email(user, token_obj)
+    except Exception as e:
+        print(f"Error resending verification email: {e}")
+        return Response({'error': 'Failed to send verification email. Please try again later.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    return Response({'message': 'A new verification link has been sent to your email address.'})
 
 
 @method_decorator(csrf_exempt, name='dispatch')
