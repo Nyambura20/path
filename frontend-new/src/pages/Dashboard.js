@@ -13,8 +13,6 @@ function Dashboard() {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  console.log('Dashboard user:', user); // Debug log
-
   useEffect(() => {
     fetchDashboardData();
   }, []);
@@ -37,7 +35,7 @@ function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="page-shell py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-12">
             <LoadingSpinner size="large" text="Loading dashboard..." />
@@ -53,7 +51,7 @@ function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="page-shell py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Welcome Header */}
         <div className="mb-8">
@@ -66,52 +64,60 @@ function Dashboard() {
         </div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg p-6 text-white">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-4 mb-8">
+          <div className="rounded-2xl border border-neutral-200/80 bg-white/95 p-6 shadow-sm backdrop-blur-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-primary-100 text-sm">Total Courses</p>
-                <p className="text-3xl font-bold">{dashboardData?.stats?.enrolled_courses || 0}</p>
+                <p className="text-sm text-neutral-500">Total Courses</p>
+                <p className="text-3xl font-bold text-primary-700">{dashboardData?.stats?.enrolled_courses || 0}</p>
               </div>
-              <svg className="h-12 w-12 text-primary-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-              </svg>
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-100 text-primary-700">
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-secondary-500 to-secondary-600 rounded-lg p-6 text-white">
+          <div className="rounded-2xl border border-neutral-200/80 bg-white/95 p-6 shadow-sm backdrop-blur-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-secondary-100 text-sm">Active Enrollments</p>
-                <p className="text-3xl font-bold">{dashboardData?.stats?.enrolled_courses || 0}</p>
+                <p className="text-sm text-neutral-500">Active Enrollments</p>
+                <p className="text-3xl font-bold text-neutral-800">{dashboardData?.stats?.enrolled_courses || 0}</p>
               </div>
-              <svg className="h-12 w-12 text-secondary-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-              </svg>
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-neutral-100 text-neutral-700">
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                </svg>
+              </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg p-6 text-white">
+          <div className="rounded-2xl border border-neutral-200/80 bg-white/95 p-6 shadow-sm backdrop-blur-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-yellow-100 text-sm">Avg Performance</p>
-                <p className="text-3xl font-bold">{dashboardData?.stats?.average_grade ? `${dashboardData.stats.average_grade.toFixed(1)}%` : 'N/A'}</p>
+                <p className="text-sm text-neutral-500">Avg Performance</p>
+                <p className="text-3xl font-bold text-amber-700">{dashboardData?.stats?.average_grade ? `${dashboardData.stats.average_grade.toFixed(1)}%` : 'N/A'}</p>
               </div>
-              <svg className="h-12 w-12 text-yellow-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg p-6 text-white">
+          <div className="rounded-2xl border border-neutral-200/80 bg-white/95 p-6 shadow-sm backdrop-blur-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-100 text-sm">Attendance Rate</p>
-                <p className="text-3xl font-bold">{dashboardData?.stats?.attendance_rate ? `${dashboardData.stats.attendance_rate}%` : 'N/A'}</p>
+                <p className="text-sm text-neutral-500">Attendance Rate</p>
+                <p className="text-3xl font-bold text-violet-700">{dashboardData?.stats?.attendance_rate ? `${dashboardData.stats.attendance_rate}%` : 'N/A'}</p>
               </div>
-              <svg className="h-12 w-12 text-purple-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-              </svg>
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-100 text-violet-700">
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+              </div>
             </div>
           </div>
         </div>
@@ -130,7 +136,7 @@ function Dashboard() {
                 <Link
                   key={enrollment.id}
                   to={`/courses/${enrollment.course}`}
-                  className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow"
+                  className="rounded-xl border border-neutral-200/70 bg-white/95 p-5 shadow-sm transition-all hover:border-neutral-300/70 hover:shadow-md"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-shrink-0 w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
@@ -157,7 +163,7 @@ function Dashboard() {
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+            <div className="rounded-xl border border-neutral-200/70 bg-white/95 p-8 text-center shadow-sm">
               <svg className="h-12 w-12 text-gray-400 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
               </svg>
@@ -214,8 +220,8 @@ function Dashboard() {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold text-gray-900">Recent Activity</h2>
               {recentPages.length > 0 && (
-                <span className="text-xs font-medium text-primary-600 bg-primary-50 px-3 py-1 rounded-full">
-                  Updated live
+                <span className="rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-600">
+                  Recent sessions
                 </span>
               )}
             </div>
@@ -229,7 +235,7 @@ function Dashboard() {
                   <Link
                     key={index}
                     to={page.path}
-                    className="relative flex items-center gap-4 rounded-2xl border border-gray-100 bg-white/90 px-4 py-3 shadow-sm ring-1 ring-gray-100/60 transition-all hover:-translate-y-0.5 hover:border-primary-200 hover:bg-white hover:shadow-lg"
+                    className="relative flex items-center gap-4 rounded-2xl border border-neutral-200/60 bg-white/95 px-4 py-3 shadow-sm ring-1 ring-neutral-200/50 transition-all hover:-translate-y-0.5 hover:border-primary-200/70 hover:bg-white hover:shadow-md"
                   >
                     <span className="absolute -left-[1.15rem] hidden h-3 w-3 rounded-full border-4 border-white bg-primary-400 shadow-md md:flex" aria-hidden />
                     <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-inner">
@@ -277,20 +283,17 @@ function Dashboard() {
                         </span>
                       </div>
                       <p className="text-sm text-gray-600">{page.description}</p>
-                      <div className="mt-2 flex items-center gap-2 text-xs text-gray-500">
-                        <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 font-medium">
-                          {page.path}
-                        </span>
-                        <svg className="h-3 w-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden>
-                          <path d="M9.293 16.707a1 1 0 010-1.414L12.586 12 9.293 8.707a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
-                        </svg>
-                        <span className="font-medium text-primary-600">Continue</span>
-                      </div>
+                        <div className="mt-2 flex items-center gap-2 text-xs text-gray-500">
+                          <svg className="h-3 w-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden>
+                            <path d="M9.293 16.707a1 1 0 010-1.414L12.586 12 9.293 8.707a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
+                          </svg>
+                          <span className="font-medium text-primary-600">Open page</span>
+                        </div>
                     </div>
                   </Link>
                 ))
               ) : (
-                <div className="rounded-2xl border border-dashed border-gray-200 bg-gradient-to-br from-gray-50 to-white p-8 text-center">
+                <div className="rounded-2xl border border-dashed border-neutral-200/80 bg-neutral-50 p-8 text-center">
                   <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary-50 text-primary-500">
                     <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />

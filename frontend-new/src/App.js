@@ -39,6 +39,7 @@ import AIAnalytics from './pages/AIAnalytics';
 
 // Context
 import { AuthProvider, useAuth } from './utils/AuthContext';
+import { ThemeProvider } from './utils/ThemeContext';
 import { NotificationProvider } from './utils/NotificationContext';
 import { SidebarProvider, useSidebar } from './utils/SidebarContext';
 import PageTracker from './utils/PageTracker';
@@ -254,7 +255,7 @@ function AppContent() {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen bg-darkbg-900 flex flex-col">
+      <div className="min-h-screen bg-neutral-50 flex flex-col">
         <Navbar />
         <Sidebar />
         <PageTracker />
@@ -268,11 +269,13 @@ function AppContent() {
 
 function App() {
   return (
-    <NotificationProvider>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
-    </NotificationProvider>
+    <ThemeProvider>
+      <NotificationProvider>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </NotificationProvider>
+    </ThemeProvider>
   );
 }
 

@@ -3,6 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../utils/AuthContext';
 import { useNotification } from '../utils/NotificationContext';
 import apiClient from '../services/api';
+import Button from '../components/ui/Button';
+import Card from '../components/ui/Card';
+import Input from '../components/ui/Input';
+import PublicLayout from '../layouts/PublicLayout';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -13,6 +17,7 @@ function Login() {
   const [unverifiedEmail, setUnverifiedEmail] = useState('');
   const [resendLoading, setResendLoading] = useState(false);
   const [resendSent, setResendSent] = useState(false);
+
   const { login } = useAuth();
   const { addNotification } = useNotification();
   const navigate = useNavigate();
@@ -22,7 +27,7 @@ function Login() {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    // Clear the unverified banner if user changes the email
+
     if (e.target.name === 'email') {
       setUnverifiedEmail('');
       setResendSent(false);
@@ -41,16 +46,17 @@ function Login() {
 
     try {
       await login(formData);
-      addNotification('Login successful!', 'success');
+      addNotification('Login successful.', 'success');
       navigate('/dashboard');
     } catch (error) {
       if (error.code === 'email_not_verified' || error.message?.includes('verify your email')) {
         setUnverifiedEmail(formData.email);
       } else {
         const fallbackMessage = 'Invalid email or password. Please try again.';
-        const shouldUseFallback = !error?.message 
-          || error.message.includes('Request failed')
-          || /^Error:\s*\d+/.test(error.message);
+        const shouldUseFallback =
+          !error?.message ||
+          error.message.includes('Request failed') ||
+          /^Error:\s*\d+/.test(error.message);
         addNotification(shouldUseFallback ? fallbackMessage : error.message, 'error');
       }
     } finally {
@@ -63,7 +69,7 @@ function Login() {
     try {
       await apiClient.resendVerification(unverifiedEmail);
       setResendSent(true);
-      addNotification('Verification email resent! Please check your inbox.', 'success');
+      addNotification('Verification email resent. Check your inbox.', 'success');
     } catch (error) {
       addNotification(error.message || 'Failed to resend. Please try again.', 'error');
     } finally {
@@ -72,154 +78,68 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back
-          </h2>
-          <p className="text-gray-600">
-            Sign in to your BrightPath account
-          </p>
-        </div>
+    <PublicLayout>
+      <div className="mx-auto flex min-h-[calc(100vh-64px)] w-full max-w-md items-center px-4 py-10">
+        <Card className="w-full">
+          <div className="mb-6 text-center">
+            <h1 className="text-3xl font-bold text-neutral-900">Welcome Back</h1>
+            <p className="mt-2 text-sm text-neutral-600">Sign in to continue to your dashboard.</p>
+          </div>
 
-        <div className="bg-white rounded-lg shadow-md p-8">
-          {/* Email-not-verified banner */}
           {unverifiedEmail && (
-            <div className="mb-6 bg-yellow-50 border border-yellow-300 rounded-lg p-4 space-y-3">
-              <div className="flex items-start gap-2">
-                <svg className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-                </svg>
-                <div>
-                  <p className="text-sm font-medium text-yellow-800">Email not verified</p>
-                  <p className="text-sm text-yellow-700 mt-1">
-                    Please verify your email address before signing in.
-                  </p>
-                </div>
-              </div>
+            <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4">
+              <p className="text-sm font-semibold text-amber-800">Email not verified</p>
+              <p className="mt-1 text-sm text-amber-700">Please verify your email before signing in.</p>
               {resendSent ? (
-                <p className="text-sm text-green-700 font-medium">✓ Verification email sent to {unverifiedEmail}</p>
+                <p className="mt-2 text-sm font-medium text-emerald-700">Verification email sent to {unverifiedEmail}</p>
               ) : (
                 <button
                   type="button"
                   onClick={handleResend}
                   disabled={resendLoading}
-                  className="text-sm font-medium text-yellow-700 underline hover:text-yellow-900 disabled:opacity-50"
+                  className="mt-2 text-sm font-medium text-amber-700 underline hover:text-amber-900 disabled:opacity-60"
                 >
-                  {resendLoading ? 'Sending…' : 'Resend verification email'}
+                  {resendLoading ? 'Sending...' : 'Resend verification email'}
                 </button>
               )}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                className="input-field"
-                placeholder="Enter your email"
-              />
-            </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Input
+              label="Email Address"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter your email"
+              required
+            />
+            <Input
+              label="Password"
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Enter your password"
+              required
+            />
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-                className="input-field"
-                placeholder="Enter your password"
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                  Remember me
-                </label>
-              </div>
-
-              <div className="text-sm">
-                <button type="button" className="font-medium text-primary-600 hover:text-primary-500">
-                  Forgot your password?
-                </button>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <div className="flex items-center justify-center">
-                  <div className="loading-spinner h-5 w-5 mr-2"></div>
-                  Signing in...
-                </div>
-              ) : (
-                'Sign in'
-              )}
-            </button>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Signing In...' : 'Sign In'}
+            </Button>
           </form>
 
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Don't have an account?</span>
-              </div>
-            </div>
-
-            <div className="mt-6 text-center">
-              <Link
-                to="/register"
-                className="font-medium text-primary-600 hover:text-primary-500"
-              >
-                Sign up for BrightPath
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        <div className="text-center text-sm text-gray-600">
-          <p>
-            By signing in, you agree to our{' '}
-            <Link to="/terms" className="text-primary-600 hover:text-primary-500">
-              Terms of Service
-            </Link>{' '}
-            and{' '}
-            <Link to="/privacy" className="text-primary-600 hover:text-primary-500">
-              Privacy Policy
+          <p className="mt-6 text-center text-sm text-neutral-600">
+            Do not have an account?{' '}
+            <Link to="/register" className="font-semibold text-primary-700 hover:text-primary-800">
+              Create one
             </Link>
           </p>
-        </div>
+        </Card>
       </div>
-    </div>
+    </PublicLayout>
   );
 }
 
 export default Login;
-

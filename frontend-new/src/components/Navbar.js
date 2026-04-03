@@ -1,119 +1,107 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../utils/AuthContext';
+import { useTheme } from '../utils/ThemeContext';
+import Dropdown from './ui/Dropdown';
 
 function Navbar() {
   const { user, isAuthenticated } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
 
-  const navLinkClass = (path) => `
-    px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200
-    ${isActive(path) 
-      ? 'bg-primary-600 text-white' 
-      : 'text-gray-100 hover:text-primary-400 hover:bg-darkbg-700'
-    }
-  `;
+  const navLinkClass = (path) =>
+    `rounded-lg px-3 py-2 text-sm font-medium transition ${
+      isActive(path)
+        ? 'bg-primary-600 text-white'
+        : 'text-neutral-700 hover:bg-primary-50 hover:text-primary-700'
+    }`;
 
   return (
-  <nav className="bg-darkbg-800 dark:bg-darkbg-800 sticky top-0 z-50" style={{ boxShadow: '0 1px 3px 0 rgba(0,0,0,0.3), 0 4px 12px -2px rgba(0,0,0,0.2)' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          {/* Logo and brand */}
-          <div className="flex items-center">
-            <Link to="/" className="flex items-center">
-              <div className="h-8 w-8 bg-gradient-primary rounded-lg flex items-center justify-center mr-3">
-                <span className="text-white font-bold text-lg">B</span>
-              </div>
-              <span className="text-xl font-bold text-gray-100">BrightPath</span>
+    <nav className="sticky top-0 z-50 border-b border-neutral-300 bg-[var(--bp-surface)] backdrop-blur">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <Link to="/" className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-600 text-base font-bold text-white">
+            B
+          </div>
+          <span className="text-lg font-semibold text-[var(--bp-text)]">BrightPath</span>
+        </Link>
+
+        {!isAuthenticated && (
+          <div className="hidden items-center gap-2 md:flex">
+            <Link to="/" className={navLinkClass('/')}>
+              Home
+            </Link>
+            <Link to="/about" className={navLinkClass('/about')}>
+              About
             </Link>
           </div>
+        )}
 
-          {/* Navigation links - only for guests; authenticated users get footer links */}
-          {!isAuthenticated && (
-            <div className="hidden md:flex items-center space-x-1 flex-1 justify-center">
-              <Link to="/" className={navLinkClass('/')}>
-                Home
-              </Link>
-              <Link to="/about" className={navLinkClass('/about')}>
-                About
-              </Link>
+        {!isAuthenticated ? (
+          <div className="hidden items-center gap-2 md:flex">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="inline-flex items-center gap-2 rounded-xl border border-neutral-300 bg-neutral-50 px-3 py-2 text-sm font-medium text-neutral-700 transition hover:border-primary-300 hover:text-primary-700"
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            >
+              {theme === 'dark' ? (
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v2m0 14v2m9-9h-2M5 12H3m14.95 6.95-1.41-1.41M7.46 7.46 6.05 6.05m12.9 0-1.41 1.41M7.46 16.54l-1.41 1.41M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                </svg>
+              ) : (
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12.8A9 9 0 1111.2 3a7 7 0 109.8 9.8z" />
+                </svg>
+              )}
+              <span className="hidden sm:inline">{theme === 'dark' ? 'Light mode' : 'Dark mode'}</span>
+            </button>
+            <Link to="/login" className="btn-secondary">
+              Login
+            </Link>
+            <Link to="/register" className="btn-primary">
+              Sign Up
+            </Link>
+          </div>
+        ) : (
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-neutral-300 bg-neutral-50 text-neutral-700 transition hover:border-primary-300 hover:text-primary-700"
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            >
+              {theme === 'dark' ? (
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v2m0 14v2m9-9h-2M5 12H3m14.95 6.95-1.41-1.41M7.46 7.46 6.05 6.05m12.9 0-1.41 1.41M7.46 16.54l-1.41 1.41M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                </svg>
+              ) : (
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12.8A9 9 0 1111.2 3a7 7 0 109.8 9.8z" />
+                </svg>
+              )}
+            </button>
+            <div className="hidden text-right md:block">
+              <p className="text-sm font-semibold text-[var(--bp-text)]">{user?.first_name || user?.username}</p>
+              <p className="text-xs capitalize text-neutral-500">{user?.role}</p>
             </div>
-          )}
-
-          {/* Right side - Auth buttons for non-authenticated users */}
-          {!isAuthenticated && (
-            <div className="hidden md:flex items-center space-x-1">
-              <Link to="/login" className={navLinkClass('/login')}>
-                Login
-              </Link>
-              <Link to="/register" className="btn-primary ml-2">
-                Sign Up
-              </Link>
-            </div>
-          )}
-
-          {/* User menu */}
-          {isAuthenticated && (
-            <div className="flex items-center space-x-4">
-              <div className="relative group">
-                <button className="flex items-center space-x-2 text-gray-100 hover:text-primary-400 transition-colors">
-                  <div className="h-8 w-8 bg-primary-600 rounded-full flex items-center justify-center overflow-hidden">
-                    {user?.profile_picture ? (
-                      <img
-                        src={user.profile_picture}
-                        alt="Profile"
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-white font-medium text-sm">
-                        {user?.first_name?.charAt(0) || user?.username?.charAt(0) || 'U'}
-                      </span>
-                    )}
-                  </div>
-                  <span className="hidden md:block text-sm font-medium">
-                    {user?.first_name || user?.username}
+            <Dropdown
+              trigger={
+                <span className="flex items-center gap-2">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-600 text-sm font-semibold text-white">
+                    {user?.first_name?.charAt(0) || user?.username?.charAt(0) || 'U'}
                   </span>
-                  {/* Dropdown arrow */}
-                  <svg className="w-4 h-4 text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                
-                {/* Dropdown menu with profile and logout links */}
-                <div className="absolute right-0 mt-2 w-48 bg-darkbg-800 rounded-md shadow-xl border border-darkbg-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                  <div className="py-1">
-                    <Link
-                      to="/profile"
-                      className="block px-4 py-2 text-sm text-gray-100 hover:bg-darkbg-700 hover:text-primary-400 transition-colors"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        <span>Profile</span>
-                      </div>
-                    </Link>
-                    <div className="border-t border-darkbg-700 my-1"></div>
-                    <Link
-                      to="/logout"
-                      className="block px-4 py-2 text-sm text-gray-100 hover:bg-darkbg-700 hover:text-red-400 transition-colors"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                        <span>Sign Out</span>
-                      </div>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-        </div>
+                </span>
+              }
+              items={[
+                { label: 'Profile', onClick: () => (window.location.href = '/profile') },
+                { label: 'Sign Out', onClick: () => (window.location.href = '/logout') },
+              ]}
+            />
+          </div>
+        )}
       </div>
     </nav>
   );

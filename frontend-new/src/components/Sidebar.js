@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../utils/AuthContext';
 import { useSidebar } from '../utils/SidebarContext';
+import { useTheme } from '../utils/ThemeContext';
 
 function Sidebar() {
   const { isOpen, isPinned, toggleSidebar, closeSidebar, handleHoverEnter, handleHoverLeave } = useSidebar();
   const { user, isAuthenticated } = useAuth();
+  const { isDarkMode } = useTheme();
   const location = useLocation();
   
   // State for collapsible sections
@@ -24,24 +26,62 @@ function Sidebar() {
 
   const isActive = (path) => location.pathname === path;
 
+  const sidebarTone = isDarkMode
+    ? {
+        link: 'text-slate-300 hover:text-white hover:bg-white/8',
+        activeLink: 'bg-white/14 text-white ring-1 ring-white/15',
+        subLink: 'text-slate-300/90 hover:text-white hover:bg-white/8',
+        activeSubLink: 'bg-white/12 text-white',
+        section: 'text-slate-300 hover:text-white hover:bg-white/8',
+        toggleBtn: 'bg-slate-700 text-white hover:bg-slate-600',
+        closeBtn: 'text-primary-200 hover:text-white',
+        footerBorder: 'border-white/10',
+        footerName: 'text-white',
+        footerRole: 'text-slate-400',
+      }
+    : {
+        link: 'text-slate-700 hover:text-slate-900 hover:bg-slate-100',
+        activeLink: 'bg-primary-50 text-primary-700 ring-1 ring-primary-100',
+        subLink: 'text-slate-600 hover:text-slate-900 hover:bg-slate-100',
+        activeSubLink: 'bg-primary-50 text-primary-700',
+        section: 'text-slate-700 hover:text-slate-900 hover:bg-slate-100',
+        toggleBtn: 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200',
+        closeBtn: 'text-slate-500 hover:text-slate-800',
+        footerBorder: 'border-slate-200',
+        footerName: 'text-slate-800',
+        footerRole: 'text-slate-500',
+      };
+
+  const sidebarStyle = isDarkMode
+    ? {
+        background: 'linear-gradient(180deg, rgba(12, 18, 32, 0.96) 0%, rgba(13, 21, 38, 0.95) 100%)',
+        boxShadow: '2px 0 16px -4px rgba(0,0,0,0.35), 1px 0 4px -1px rgba(0,0,0,0.2)',
+        borderRight: '1px solid rgba(255,255,255,0.06)',
+      }
+    : {
+        background: 'linear-gradient(180deg, #ffffff 0%, #f7f8fa 100%)',
+        boxShadow: '2px 0 18px -6px rgba(15,23,42,0.24), 1px 0 5px -2px rgba(15,23,42,0.12)',
+        borderRight: '1px solid rgba(15,23,42,0.08)',
+      };
+
   const sidebarLinkClass = (path) => `
     flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 mb-1
     ${isActive(path) 
-      ? 'bg-primary-600 text-white' 
-      : 'text-gray-300 hover:text-white hover:bg-darkbg-700'
+      ? sidebarTone.activeLink
+      : sidebarTone.link
     }
   `;
 
   const subLinkClass = (path) => `
     flex items-center px-8 py-2 text-sm rounded-lg transition-colors duration-200 mb-1
     ${isActive(path) 
-      ? 'bg-primary-500 text-white' 
-      : 'text-gray-400 hover:text-white hover:bg-darkbg-700'
+      ? sidebarTone.activeSubLink
+      : sidebarTone.subLink
     }
   `;
 
   const sectionButtonClass = (expanded) => `
-    flex items-center justify-between w-full px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 mb-1 text-gray-300 hover:text-white hover:bg-darkbg-700
+    flex items-center justify-between w-full px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 mb-1 ${sidebarTone.section}
   `;
 
   // Don't render sidebar if user is not authenticated
@@ -52,7 +92,7 @@ function Sidebar() {
       {/* Sidebar Toggle Button */}
       <button
         onClick={toggleSidebar}
-        className="fixed top-20 left-4 z-50 p-2 bg-primary-600 text-white rounded-lg shadow-lg hover:bg-primary-700 transition-colors duration-200 md:hidden"
+        className={`fixed top-20 left-4 z-50 p-2 rounded-lg shadow-lg transition-colors duration-200 md:hidden ${sidebarTone.toggleBtn}`}
         aria-label="Toggle sidebar"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,7 +107,7 @@ function Sidebar() {
       {/* Desktop Sidebar Toggle */}
       <button
         onClick={toggleSidebar}
-        className="hidden md:block fixed top-20 left-4 z-50 p-2 bg-primary-600 text-white rounded-lg shadow-lg hover:bg-primary-700 transition-colors duration-200"
+        className={`hidden md:block fixed top-20 left-4 z-50 p-2 rounded-lg shadow-lg transition-colors duration-200 ${sidebarTone.toggleBtn}`}
         aria-label="Toggle sidebar"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -98,10 +138,10 @@ function Sidebar() {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-16 left-0 h-full bg-darkbg-800 transition-transform duration-300 ease-in-out z-40 ${
+        className={`fixed top-16 left-0 h-full transition-transform duration-300 ease-in-out z-40 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } w-64`}
-        style={{ boxShadow: '2px 0 16px -4px rgba(0,0,0,0.35), 1px 0 4px -1px rgba(0,0,0,0.2)' }}
+        style={sidebarStyle}
         onMouseEnter={handleHoverEnter}
         onMouseLeave={handleHoverLeave}
       >
@@ -116,7 +156,7 @@ function Sidebar() {
               </div>
               <button
                 onClick={toggleSidebar}
-                className="p-1 text-gray-400 hover:text-white transition-colors"
+                className={`p-1 transition-colors ${sidebarTone.closeBtn}`}
                 aria-label="Close sidebar"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -127,7 +167,7 @@ function Sidebar() {
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-darkbg-600 scrollbar-track-darkbg-800" style={{ maxHeight: 'calc(100vh - 180px)' }}>
+          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto " style={{ maxHeight: 'calc(100vh - 180px)' }}>
             {/* Dashboard - Always available to authenticated users */}
             <Link to="/dashboard" className={sidebarLinkClass('/dashboard')} onClick={closeSidebar}>
               <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -326,7 +366,7 @@ function Sidebar() {
           </nav>
 
           {/* Sidebar Footer */}
-          <div className="p-4 border-t border-darkbg-700">
+          <div className={`p-4 border-t ${sidebarTone.footerBorder}`}>
             <div className="flex items-center space-x-3">
               <div className="h-8 w-8 bg-primary-600 rounded-full flex items-center justify-center overflow-hidden">
                 {user?.profile_picture ? (
@@ -342,10 +382,10 @@ function Sidebar() {
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">
+                <p className={`text-sm font-medium truncate ${sidebarTone.footerName}`}>
                   {user?.first_name || user?.username}
                 </p>
-                <p className="text-xs text-gray-400 capitalize">
+                <p className={`text-xs capitalize ${sidebarTone.footerRole}`}>
                   {user?.role}
                 </p>
               </div>

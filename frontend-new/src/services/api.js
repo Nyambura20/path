@@ -537,8 +537,7 @@ class ApiClient {
       // Network error
       return new Error('Network error. Please check your connection.');
     } else {
-    throw new Error(error.message || fallbackMessage);
-      return new Error(error.message || 'An unexpected error occurred.');
+      throw new Error(error.message || fallbackMessage);
     }
   }
 

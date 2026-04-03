@@ -35,21 +35,21 @@ function Logout() {
   }, [logout, isAuthenticated, addNotification]);
 
   return (
-    <div className="min-h-screen bg-darkbg-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-neutral-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <div className="h-16 w-16 bg-gradient-primary rounded-lg flex items-center justify-center mx-auto mb-6">
             <span className="text-white font-bold text-3xl">B</span>
           </div>
           
-          <h2 className="text-3xl font-bold text-gray-100 mb-6">
+          <h2 className="text-3xl font-bold text-neutral-900 mb-6">
             {loading ? 'Logging Out' : 'Logout Complete'}
           </h2>
           
           {loading ? (
             <div className="flex flex-col items-center space-y-4">
               <LoadingSpinner />
-              <p className="text-gray-400 text-lg">{message}</p>
+              <p className="text-neutral-600 text-lg">{message}</p>
             </div>
           ) : (
             <div className="space-y-6">
@@ -69,8 +69,8 @@ function Logout() {
                     />
                   </svg>
                 </div>
-                <p className="text-gray-300 text-lg">{message}</p>
-                <p className="text-gray-500 text-sm mt-2">
+                <p className="text-neutral-700 text-lg">{message}</p>
+                <p className="text-neutral-500 text-sm mt-2">
                   Choose where you'd like to go next.
                 </p>
               </div>
@@ -95,11 +95,11 @@ function Logout() {
         
         {/* Thank you message */}
         {!loading && (
-          <div className="bg-darkbg-800 rounded-lg p-6 border border-darkbg-700">
-            <h3 className="text-lg font-semibold text-gray-100 mb-2">
+          <div className="bg-white rounded-lg p-6 border border-neutral-200">
+            <h3 className="text-lg font-semibold text-neutral-900 mb-2">
               Thank you for using BrightPath!
             </h3>
-            <p className="text-gray-400 text-sm">
+            <p className="text-neutral-600 text-sm">
               We hope to see you again soon. Your learning journey continues when you're ready.
             </p>
           </div>

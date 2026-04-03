@@ -4,6 +4,7 @@ Uses Google's Gemini API to analyze student data and predict performance risks.
 """
 import json
 import os
+import time
 from google import genai
 from django.db.models import Avg, Count, Q
 from django.utils import timezone
@@ -477,6 +478,67 @@ def _collect_all_student_data(student):
     return data
 
 
+def _build_fallback_chat_response(student_data, message):
+    """Generate a lightweight student-specific response when Gemini is unavailable."""
+    lower_message = message.lower()
+    strengths = []
+    concerns = []
+    recommendations = []
+
+    if student_data['courses']:
+        sorted_courses = sorted(student_data['courses'], key=lambda course: course['average'], reverse=True)
+        top_course = sorted_courses[0]
+        strengths.append(f"Your strongest course right now is {top_course['course_code']} ({top_course['average']}%)")
+        if len(sorted_courses) > 1:
+            second_course = sorted_courses[1]
+            strengths.append(f"You are also doing reasonably well in {second_course['course_code']} ({second_course['average']}%)")
+
+        weakest_course = sorted(student_data['courses'], key=lambda course: course['average'])[0]
+        if weakest_course['average'] < 70:
+            concerns.append(
+                f"{weakest_course['course_code']} is your main improvement area at {weakest_course['average']}%"
+            )
+
+    if student_data['overall_attendance']:
+        attendance_rate = student_data['overall_attendance']['attendance_rate']
+        if attendance_rate < 80:
+            concerns.append(f"Attendance is currently {attendance_rate}%, which may be affecting performance")
+        else:
+            strengths.append(f"Attendance is strong at {attendance_rate}%")
+
+    if 'strength' in lower_message or 'strong' in lower_message:
+        opening = 'Your main strengths are:'
+    elif 'weak' in lower_message or 'improve' in lower_message or 'fix' in lower_message:
+        opening = 'The clearest areas to improve are:'
+    else:
+        opening = 'Here is a quick performance summary:'
+
+    if student_data['courses']:
+        lowest_course = sorted(student_data['courses'], key=lambda course: course['average'])[0]
+        recommendations.append(
+            f"Spend extra time on {lowest_course['course_code']} by reviewing recent feedback and retaking practice questions"
+        )
+        recommendations.append("Focus on the next assessment early instead of cramming at the end")
+
+    if student_data['overall_attendance'] and student_data['overall_attendance']['attendance_rate'] < 85:
+        recommendations.append("Protect your attendance because missing classes can quickly lower your grade")
+
+    if not recommendations:
+        recommendations.append("Keep following your current study routine and review each graded task for patterns")
+
+    lines = [opening]
+    if strengths:
+        lines.append('Strengths: ' + '; '.join(strengths))
+    if concerns:
+        lines.append('Concerns: ' + '; '.join(concerns))
+    lines.append('Next steps:')
+    for recommendation in recommendations[:3]:
+        lines.append(f'- {recommendation}')
+    lines.append('If you want, ask me about one course and I will narrow this down further.')
+
+    return '\n'.join(lines)
+
+
 def chat_with_ai(student, message, conversation_history=None):
     """
     AI-powered performance chat for students.
@@ -549,17 +611,33 @@ GUIDELINES:
         'parts': [{'text': message}],
     })
 
+    last_error = None
     try:
         client = _get_gemini_client()
-        response = client.models.generate_content(
-            model='gemini-2.0-flash',
-            contents=contents,
-            config={
-                'system_instruction': system_context,
-                'temperature': 0.7,
-                'max_output_tokens': 1024,
-            },
-        )
+        response = None
+        for attempt in range(2):
+            try:
+                response = client.models.generate_content(
+                    model='gemini-2.0-flash',
+                    contents=contents,
+                    config={
+                        'system_instruction': system_context,
+                        'temperature': 0.7,
+                        'max_output_tokens': 1024,
+                    },
+                )
+                break
+            except Exception as e:
+                last_error = e
+                error_text = str(e)
+                if attempt == 0 and ('429' in error_text or 'RESOURCE_EXHAUSTED' in error_text or '503' in error_text or 'UNAVAILABLE' in error_text):
+                    time.sleep(1.5)
+                    continue
+                raise
+
+        if response is None:
+            raise last_error if last_error else RuntimeError('Gemini did not return a response.')
+
         return {
             'response': response.text.strip(),
             'error': None,
@@ -567,8 +645,16 @@ GUIDELINES:
     except Exception as e:
         error_msg = str(e)
         if '429' in error_msg or 'RESOURCE_EXHAUSTED' in error_msg:
-            error_msg = 'AI is temporarily busy. Please wait a moment and try again.'
+            return {
+                'response': _build_fallback_chat_response(student_data, message),
+                'error': None,
+            }
+        if '503' in error_msg or 'UNAVAILABLE' in error_msg:
+            return {
+                'response': _build_fallback_chat_response(student_data, message),
+                'error': None,
+            }
         return {
-            'response': None,
-            'error': error_msg,
+            'response': _build_fallback_chat_response(student_data, message),
+            'error': None,
         }

@@ -18,6 +18,23 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <script>
+      (function () {
+        try {
+          var storedTheme = localStorage.getItem('brightpath_theme');
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = storedTheme === 'light' || storedTheme === 'dark' ? storedTheme : (prefersDark ? 'dark' : 'light');
+          document.documentElement.classList.toggle('dark', theme === 'dark');
+          document.documentElement.setAttribute('data-theme', theme);
+          var themeColor = document.querySelector('meta[name="theme-color"]');
+          if (themeColor) {
+            themeColor.setAttribute('content', theme === 'dark' ? '#0d1016' : '#22c55e');
+          }
+        } catch (error) {
+          // Ignore theme bootstrap failures and let React handle the fallback.
+        }
+      })();
+    </script>
     
     <title>BrightPath - Educational Management Platform</title>
   </head>

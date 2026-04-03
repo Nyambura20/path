@@ -285,7 +285,7 @@ function EnrolledStudents() {
                 className="px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center space-x-1"
                 title="Refresh"
               >
-                <span>🔄</span>
+                <span className="text-xs font-semibold uppercase tracking-wide">Refresh</span>
               </button>
               <button
                 onClick={handleExportCSV}

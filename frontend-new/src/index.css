@@ -4,69 +4,219 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
+:root {
+  color-scheme: light;
+  --bp-bg: #f4f1ef;
+  --bp-surface: #ffffff;
+  --bp-surface-soft: #faf7f5;
+  --bp-border: #ded7d3;
+  --bp-text: #1f1c1a;
+  --bp-text-muted: #615953;
+  --bp-text-subtle: #8a817b;
+  --bp-sidebar: #1c1619;
+  --bp-sidebar-soft: #2a2226;
+  --bp-sidebar-border: rgba(255, 255, 255, 0.08);
+}
+
+html.dark {
+  color-scheme: dark;
+  --bp-bg: #0c1018;
+  --bp-surface: #171c27;
+  --bp-surface-soft: #202838;
+  --bp-border: #313c4f;
+  --bp-text: #ecf1f8;
+  --bp-text-muted: #b8c0cf;
+  --bp-text-subtle: #8f9bb0;
+  --bp-sidebar: #0f1320;
+  --bp-sidebar-soft: #171d2c;
+  --bp-sidebar-border: rgba(255, 255, 255, 0.08);
+}
+
 @layer base {
   html {
     font-family: 'Inter', system-ui, sans-serif;
   }
+
   body {
-    @apply bg-softbg-50 text-darkbg-800;
+    background:
+      radial-gradient(circle at 5% 5%, rgba(127, 29, 53, 0.04), transparent 24%),
+      radial-gradient(circle at 95% 0%, rgba(109, 24, 46, 0.035), transparent 20%),
+      var(--bp-bg);
+    color: var(--bp-text);
+    @apply antialiased transition-colors duration-300;
   }
+
   .dark body {
-    @apply bg-darkbg-900 text-gray-100;
+    background:
+      radial-gradient(circle at 0% 0%, rgba(145, 59, 90, 0.09), transparent 24%),
+      radial-gradient(circle at 100% 0%, rgba(61, 95, 168, 0.08), transparent 20%),
+      var(--bp-bg);
+  }
+
+  ::selection {
+    background-color: rgba(127, 29, 53, 0.22);
+  }
+
+  .dark ::selection {
+    background-color: rgba(167, 74, 95, 0.22);
+  }
+
+  .dark .bg-white {
+    background-color: var(--bp-surface) !important;
+  }
+
+  .dark .bg-white\/95,
+  .dark .bg-white\/90 {
+    background-color: color-mix(in srgb, var(--bp-surface) 90%, transparent) !important;
+  }
+
+  .dark .bg-neutral-50,
+  .dark .bg-gray-50 {
+    background-color: var(--bp-surface-soft) !important;
+  }
+
+  .dark .bg-neutral-100,
+  .dark .bg-gray-100 {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  .dark .bg-primary-50,
+  .dark .bg-primary-100,
+  .dark .bg-amber-50,
+  .dark .bg-amber-100,
+  .dark .bg-rose-50,
+  .dark .bg-rose-100,
+  .dark .bg-yellow-50,
+  .dark .bg-yellow-100,
+  .dark .bg-blue-50,
+  .dark .bg-blue-100,
+  .dark .bg-green-50,
+  .dark .bg-green-100,
+  .dark .bg-violet-50,
+  .dark .bg-violet-100,
+  .dark .bg-secondary-50,
+  .dark .bg-secondary-100 {
+    background-color: rgba(237, 241, 248, 0.09) !important;
+  }
+
+  .dark .border-neutral-200,
+  .dark .border-neutral-300,
+  .dark .border-gray-200 {
+    border-color: var(--bp-border) !important;
+  }
+
+  .dark .border-neutral-200\/80,
+  .dark .border-neutral-200\/70,
+  .dark .border-neutral-200\/60,
+  .dark .border-neutral-200\/50,
+  .dark .border-neutral-300\/80,
+  .dark .border-neutral-300\/70,
+  .dark .border-neutral-300\/60,
+  .dark .border-neutral-300\/50,
+  .dark .ring-neutral-200\/50,
+  .dark .ring-neutral-200\/60,
+  .dark .ring-neutral-200\/70 {
+    border-color: color-mix(in srgb, var(--bp-border) 76%, transparent) !important;
+    --tw-ring-color: color-mix(in srgb, var(--bp-border) 60%, transparent) !important;
+  }
+
+  .dark .text-gray-900,
+  .dark .text-neutral-900,
+  .dark .text-gray-800,
+  .dark .text-neutral-800 {
+    color: var(--bp-text) !important;
+  }
+
+  .dark .text-gray-700,
+  .dark .text-neutral-700,
+  .dark .text-gray-600,
+  .dark .text-neutral-600,
+  .dark .text-gray-500,
+  .dark .text-neutral-500 {
+    color: var(--bp-text-muted) !important;
+  }
+
+  .dark .text-gray-400,
+  .dark .text-neutral-400 {
+    color: #6f7887 !important;
+  }
+
+  .dark .shadow-sm,
+  .dark .shadow-md {
+    box-shadow: 0 12px 24px -18px rgba(0, 0, 0, 0.8);
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold py-2.5 px-5 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-md hover:shadow-lg hover:shadow-primary-600/25 transform hover:-translate-y-0.5;
-  }
-  .dark .btn-primary {
-    @apply from-primary-700 to-primary-600 hover:from-primary-600 hover:to-primary-500 text-white;
+    @apply inline-flex items-center justify-center rounded-xl bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition duration-200 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .btn-secondary {
-    @apply bg-softbg-200 hover:bg-softbg-300 text-darkbg-700 font-semibold py-2.5 px-5 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-sm hover:shadow-md transform hover:-translate-y-0.5;
-  }
-  .dark .btn-secondary {
-    @apply bg-darkbg-700 hover:bg-darkbg-600 text-gray-100;
+    @apply inline-flex items-center justify-center rounded-xl border border-neutral-300 bg-neutral-50 px-4 py-2.5 text-sm font-semibold text-neutral-700 shadow-sm transition duration-200 hover:border-primary-200 hover:bg-primary-50 hover:text-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .btn-outline {
-    @apply border-2 border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white font-semibold py-2.5 px-5 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 bg-white shadow-sm hover:shadow-md transform hover:-translate-y-0.5;
-  }
-  .dark .btn-outline {
-    @apply border-primary-400 text-primary-300 hover:bg-primary-700 hover:text-white bg-darkbg-800;
+    @apply inline-flex items-center justify-center rounded-xl border border-primary-300 bg-neutral-50 px-4 py-2.5 text-sm font-semibold text-primary-700 shadow-sm transition duration-200 hover:bg-primary-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .input-field {
-    @apply w-full px-4 py-2.5 border border-softbg-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 bg-white text-darkbg-800 shadow-sm hover:shadow-md;
+    @apply w-full rounded-xl border border-neutral-300 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-800 shadow-sm transition duration-200 placeholder:text-neutral-400 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-200;
   }
-  .dark .input-field {
-    @apply bg-darkbg-800 border-darkbg-600 text-gray-100 placeholder-gray-400;
+
+  .input-invalid {
+    @apply border-red-300 focus:border-red-400 focus:ring-red-200;
   }
 
   .card {
-    @apply bg-white/80 backdrop-blur-sm rounded-2xl shadow-md hover:shadow-xl p-6 border border-softbg-300 transition-all duration-300;
+    @apply rounded-2xl border border-neutral-300 bg-neutral-50 p-6 shadow-sm transition duration-200 hover:shadow-md;
   }
-  .dark .card {
-    @apply bg-darkbg-800 border-darkbg-700 text-gray-100;
+
+  .table-base {
+    @apply min-w-full divide-y divide-neutral-200;
+  }
+
+  .table-head {
+    @apply bg-neutral-100;
+  }
+
+  .table-head-cell {
+    @apply px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-neutral-600;
+  }
+
+  .table-row {
+    @apply border-b border-neutral-100 transition-colors hover:bg-primary-50/40;
+  }
+
+  .table-cell {
+    @apply px-4 py-3 text-sm text-neutral-700;
+  }
+
+  .modal-overlay {
+    @apply fixed inset-0 z-40 bg-neutral-900/45;
+  }
+
+  .modal-content {
+    @apply fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-neutral-300 bg-neutral-50 p-6 shadow-xl;
   }
 
   .loading-spinner {
-    @apply animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600;
+    @apply h-8 w-8 animate-spin rounded-full border-2 border-neutral-200 border-t-primary-600;
   }
 }
 
 @layer utilities {
-  .text-gradient {
-    @apply bg-gradient-to-r from-primary-600 to-violet-600 bg-clip-text text-transparent;
-  }
-  
-  .bg-gradient-primary {
-    @apply bg-gradient-to-r from-primary-500 to-primary-700;
+  .page-shell {
+    @apply min-h-screen;
+    background: var(--bp-bg);
+    color: var(--bp-text);
   }
 
-  .glass {
-    @apply bg-white/80 backdrop-blur-sm border border-white/30;
+  .bg-gradient-primary {
+    @apply bg-gradient-to-r from-primary-600 to-primary-700;
+  }
+
+  .panel {
+    @apply rounded-2xl border border-neutral-300 bg-white shadow-sm;
   }
 }

@@ -11,7 +11,7 @@ function LoadingSpinner({ size = 'medium', text = 'Loading...' }) {
     <div className="flex flex-col items-center justify-center">
       <div className={`loading-spinner ${sizeClasses[size]}`}></div>
       {text && (
-        <p className="mt-2 text-sm text-gray-600">{text}</p>
+        <p className="mt-2 text-sm text-neutral-600">{text}</p>
       )}
     </div>
   );

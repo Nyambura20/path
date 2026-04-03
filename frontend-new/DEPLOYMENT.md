@@ -1,4 +1,4 @@
-# 🚀 BrightPath Frontend - Deployment Guide
+ru# 🚀 BrightPath Frontend - Deployment Guide
 
 This guide covers deploying the BrightPath React frontend to various platforms.
 
