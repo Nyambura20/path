@@ -176,6 +176,148 @@ Do NOT include any markdown formatting, code blocks, or extra text. Only return 
     return prompt
 
 
+def _compute_fallback_predicted_grade(student_data):
+    """Compute a deterministic predicted grade when Gemini is unavailable."""
+    components = []
+    weights = []
+
+    current_avg = student_data.get('current_course_avg_percentage')
+    historical_avg = student_data.get('historical_avg_percentage')
+    gpa = student_data.get('gpa')
+    attendance = student_data.get('attendance')
+
+    if current_avg is not None:
+        components.append(float(current_avg))
+        weights.append(0.55)
+    if historical_avg is not None:
+        components.append(float(historical_avg))
+        weights.append(0.2)
+    if gpa is not None:
+        # Approximate GPA(0-4) onto a percentage-like axis.
+        gpa_pct = max(0.0, min(100.0, float(gpa) / 4.0 * 100.0))
+        components.append(gpa_pct)
+        weights.append(0.1)
+    if attendance and attendance.get('attendance_rate') is not None:
+        components.append(float(attendance['attendance_rate']))
+        weights.append(0.15)
+
+    if not components:
+        return 65.0
+
+    total_weight = sum(weights) if weights else 1.0
+    weighted = sum(value * weight for value, weight in zip(components, weights)) / total_weight
+
+    # Penalise very low attendance and no completed assessments.
+    if attendance and attendance.get('attendance_rate') is not None and float(attendance['attendance_rate']) < 70:
+        weighted -= 6.0
+    if int(student_data.get('assessments_completed') or 0) == 0:
+        weighted -= 4.0
+
+    return round(max(0.0, min(100.0, weighted)), 1)
+
+
+def _build_fallback_course_predictions(course, students_data, reason='Gemini unavailable'):
+    """Generate course predictions without Gemini so teachers still get usable insights."""
+    results = []
+    high_risk = 0
+    medium_risk = 0
+    low_risk = 0
+
+    for sd in students_data:
+        predicted_grade = _compute_fallback_predicted_grade(sd)
+        attendance_rate = (sd.get('attendance') or {}).get('attendance_rate')
+
+        risk_factors = []
+        strengths = []
+        recommendations = []
+
+        if attendance_rate is not None:
+            if attendance_rate < 75:
+                risk_factors.append(f'Low attendance at {attendance_rate}%')
+                recommendations.append('Follow up on attendance and agree a weekly attendance target.')
+            elif attendance_rate >= 90:
+                strengths.append(f'Strong attendance at {attendance_rate}%')
+
+        if sd.get('current_course_avg_percentage') is not None:
+            current_avg = float(sd['current_course_avg_percentage'])
+            if current_avg < 60:
+                risk_factors.append(f'Current course average is low at {current_avg}%')
+                recommendations.append('Provide targeted remediation on recent low-scoring topics.')
+            elif current_avg >= 80:
+                strengths.append(f'Current course average is strong at {current_avg}%')
+
+        if int(sd.get('assessments_completed') or 0) == 0:
+            risk_factors.append('No completed assessments yet in this course')
+            recommendations.append('Schedule an early formative assessment to establish a baseline.')
+
+        if predicted_grade < 55 or (attendance_rate is not None and attendance_rate < 70):
+            risk_level = 'high'
+            high_risk += 1
+        elif predicted_grade < 72:
+            risk_level = 'medium'
+            medium_risk += 1
+        else:
+            risk_level = 'low'
+            low_risk += 1
+
+        if not strengths and predicted_grade >= 72:
+            strengths.append('Consistent trajectory based on current indicators')
+
+        if not recommendations:
+            recommendations.append('Maintain momentum with weekly review and timely feedback loops.')
+
+        summary = (
+            f"Fallback estimate: predicted around {predicted_grade}% with {risk_level} risk "
+            f"(generated because {reason})."
+        )
+
+        results.append({
+            'student_name': sd['student_name'],
+            'student_id': sd['student_id'],
+            'year_of_study': sd['year_of_study'],
+            'major': sd['major'],
+            'gpa': sd['gpa'],
+            'current_avg': sd['current_course_avg_percentage'],
+            'assessments_completed': sd['assessments_completed'],
+            'historical_avg': sd['historical_avg_percentage'],
+            'attendance': sd['attendance'],
+            'predicted_grade': predicted_grade,
+            'risk_level': risk_level,
+            'risk_factors': risk_factors,
+            'strengths': strengths,
+            'recommendations': recommendations,
+            'summary': summary,
+        })
+
+    risk_order = {'high': 0, 'medium': 1, 'low': 2}
+    results.sort(key=lambda r: (risk_order.get(r['risk_level'], 3), -(r['predicted_grade'] or 0)))
+
+    predicted_values = [r['predicted_grade'] for r in results if r.get('predicted_grade') is not None]
+    class_avg = round(sum(predicted_values) / max(len(predicted_values), 1), 1) if predicted_values else 0.0
+
+    return {
+        'course': {
+            'id': course.id,
+            'name': course.name,
+            'code': course.code,
+            'difficulty': course.difficulty_level,
+            'credits': course.credits,
+        },
+        'predictions': results,
+        'summary': {
+            'total_students': len(results),
+            'high_risk': high_risk,
+            'medium_risk': medium_risk,
+            'low_risk': low_risk,
+            'class_predicted_avg': class_avg,
+        },
+        'generated_at': timezone.now().isoformat(),
+        'model': 'fallback-heuristic',
+        'warning': f'Gemini unavailable ({reason}). Showing deterministic fallback predictions.',
+        'error': None,
+    }
+
+
 def predict_course_performance(course_id, teacher_user):
     """
     Generate Gemini AI predictions for all students in a course.
@@ -220,24 +362,15 @@ def predict_course_performance(course_id, teacher_user):
             raw_text = '\n'.join(lines)
 
         predictions_list = json.loads(raw_text)
-    except json.JSONDecodeError as e:
-        return {
-            'course': {'id': course.id, 'name': course.name, 'code': course.code},
-            'predictions': [],
-            'summary': {'total_students': len(students_data)},
-            'error': f'Failed to parse AI response: {str(e)}',
-            'raw_response': raw_text if 'raw_text' in dir() else None,
-        }
+    except json.JSONDecodeError:
+        return _build_fallback_course_predictions(course, students_data, reason='AI response parse error')
     except Exception as e:
         error_msg = str(e)
         if '429' in error_msg or 'RESOURCE_EXHAUSTED' in error_msg:
-            error_msg = 'Gemini API rate limit exceeded. Please wait a minute and try again, or upgrade your API plan.'
-        return {
-            'course': {'id': course.id, 'name': course.name, 'code': course.code},
-            'predictions': [],
-            'summary': {'total_students': len(students_data)},
-            'error': error_msg,
-        }
+            return _build_fallback_course_predictions(course, students_data, reason='rate limit')
+        if '503' in error_msg or 'UNAVAILABLE' in error_msg:
+            return _build_fallback_course_predictions(course, students_data, reason='service unavailable')
+        return _build_fallback_course_predictions(course, students_data, reason='provider error')
 
     # Map predictions back to student data
     pred_map = {p['student_id']: p for p in predictions_list}
@@ -483,57 +616,135 @@ def _build_fallback_chat_response(student_data, message):
     lower_message = message.lower()
     strengths = []
     concerns = []
-    recommendations = []
 
-    if student_data['courses']:
-        sorted_courses = sorted(student_data['courses'], key=lambda course: course['average'], reverse=True)
-        top_course = sorted_courses[0]
+    courses = student_data.get('courses') or []
+    sorted_courses = sorted(courses, key=lambda course: course.get('average', 0), reverse=True)
+    top_course = sorted_courses[0] if sorted_courses else None
+    second_course = sorted_courses[1] if len(sorted_courses) > 1 else None
+    weakest_course = sorted(courses, key=lambda course: course.get('average', 0))[0] if courses else None
+
+    if top_course:
         strengths.append(f"Your strongest course right now is {top_course['course_code']} ({top_course['average']}%)")
-        if len(sorted_courses) > 1:
-            second_course = sorted_courses[1]
-            strengths.append(f"You are also doing reasonably well in {second_course['course_code']} ({second_course['average']}%)")
+    if second_course:
+        strengths.append(f"You are also doing reasonably well in {second_course['course_code']} ({second_course['average']}%)")
+    if weakest_course and weakest_course.get('average', 0) < 70:
+        concerns.append(f"{weakest_course['course_code']} is your main improvement area at {weakest_course['average']}%")
 
-        weakest_course = sorted(student_data['courses'], key=lambda course: course['average'])[0]
-        if weakest_course['average'] < 70:
-            concerns.append(
-                f"{weakest_course['course_code']} is your main improvement area at {weakest_course['average']}%"
-            )
-
-    if student_data['overall_attendance']:
+    attendance_rate = None
+    if student_data.get('overall_attendance'):
         attendance_rate = student_data['overall_attendance']['attendance_rate']
         if attendance_rate < 80:
             concerns.append(f"Attendance is currently {attendance_rate}%, which may be affecting performance")
         else:
             strengths.append(f"Attendance is strong at {attendance_rate}%")
 
-    if 'strength' in lower_message or 'strong' in lower_message:
-        opening = 'Your main strengths are:'
-    elif 'weak' in lower_message or 'improve' in lower_message or 'fix' in lower_message:
-        opening = 'The clearest areas to improve are:'
-    else:
-        opening = 'Here is a quick performance summary:'
+    mentioned_course = None
+    for course in student_data['courses']:
+        code = (course.get('course_code') or '').lower()
+        name = (course.get('course_name') or '').lower()
+        if code and code in lower_message:
+            mentioned_course = course
+            break
+        if name and name in lower_message:
+            mentioned_course = course
+            break
 
-    if student_data['courses']:
-        lowest_course = sorted(student_data['courses'], key=lambda course: course['average'])[0]
-        recommendations.append(
-            f"Spend extra time on {lowest_course['course_code']} by reviewing recent feedback and retaking practice questions"
-        )
-        recommendations.append("Focus on the next assessment early instead of cramming at the end")
+    if mentioned_course:
+        recent_items = mentioned_course.get('grades', [])[-3:]
+        opening = f"Here is a focused breakdown for {mentioned_course['course_code']} ({mentioned_course['average']}%):"
+        course_lines = []
+        if recent_items:
+            course_lines.append('Recent graded work:')
+            for item in recent_items:
+                course_lines.append(
+                    f"- {item['assessment']} ({item['type']}): {item['percentage']}%"
+                )
+        course_lines.append('Suggested next move: prioritize the lowest two topics from this course this week.')
+        return '\n'.join([opening] + course_lines)
 
-    if student_data['overall_attendance'] and student_data['overall_attendance']['attendance_rate'] < 85:
-        recommendations.append("Protect your attendance because missing classes can quickly lower your grade")
+    is_prediction_intent = (
+        'predict' in lower_message or 'predicted grade' in lower_message or 'improve my grade' in lower_message
+    )
+    is_attendance_intent = 'attendance' in lower_message
+    is_grade_intent = ('grade' in lower_message or 'score' in lower_message or 'assessment' in lower_message)
+    is_strength_intent = ('strength' in lower_message or 'strong' in lower_message)
+    is_improve_intent = ('improve' in lower_message or 'weak' in lower_message or 'fix' in lower_message)
 
-    if not recommendations:
-        recommendations.append("Keep following your current study routine and review each graded task for patterns")
+    if is_prediction_intent:
+        lines = ['To improve your predicted grade, use this 2-week plan:']
+        if weakest_course:
+            lines.append(
+                f"1) Priority course: spend 45-60 focused minutes daily on {weakest_course['course_code']} until it rises above 70%."
+            )
+            lines.append(
+                f"2) For {weakest_course['course_code']}, do one timed practice set every 2 days and review every mistake immediately."
+            )
+        else:
+            lines.append('1) Pick your lowest-scoring topic this week and practice it daily in short sessions.')
 
+        lines.append('3) Submit each upcoming assessment at least 24 hours early to leave time for one revision pass.')
+        lines.append('4) After each grade, write a 3-line error log: concept missed, why it happened, and how to prevent it.')
+
+        if attendance_rate is not None and attendance_rate < 90:
+            lines.append(
+                f"5) Increase attendance from {attendance_rate}% to at least 92% this month; this usually improves consistency fast."
+            )
+        else:
+            lines.append('5) Keep attendance high and convert that consistency into weekly revision milestones.')
+
+        if top_course:
+            lines.append(
+                f"6) Borrow strategy from {top_course['course_code']} ({top_course['average']}%): same study format, same timing, same review loop."
+            )
+
+        lines.append('Reply with "build me a daily schedule" and I will turn this into a day-by-day timetable.')
+        return '\n'.join(lines)
+
+    if is_attendance_intent:
+        lines = ['Here is how attendance is affecting your performance:']
+        if attendance_rate is None:
+            lines.append('No attendance records are available yet, so track every class for the next 2 weeks first.')
+        else:
+            lines.append(f'Your current attendance is {attendance_rate}%.')
+            if attendance_rate < 80:
+                lines.append('This is likely suppressing your grades; aim for +10% attendance as your fastest win.')
+            else:
+                lines.append('Attendance is not your main bottleneck right now; focus more on assessment quality.')
+        if weakest_course:
+            lines.append(f'Pair better attendance with extra practice in {weakest_course["course_code"]} for best impact.')
+        return '\n'.join(lines)
+
+    if is_grade_intent:
+        lines = ['Here is what your grade trend shows:']
+        if top_course:
+            lines.append(f'- Strongest: {top_course["course_code"]} at {top_course["average"]}%')
+        if weakest_course:
+            lines.append(f'- Needs attention: {weakest_course["course_code"]} at {weakest_course["average"]}%')
+        lines.append('- Pattern to apply: pre-study before class, then same-day recap, then timed retrieval practice.')
+        return '\n'.join(lines)
+
+    if is_strength_intent:
+        lines = ['Your main strengths are:']
+        if strengths:
+            lines.extend([f'- {item}' for item in strengths[:3]])
+        else:
+            lines.append('- You are showing steady engagement, which is a good base to build on.')
+        lines.append('Use these strengths as templates in your weakest course this week.')
+        return '\n'.join(lines)
+
+    # Generic improvement / summary response
+    opening = 'The clearest areas to improve are:' if is_improve_intent else 'Here is a quick performance summary:'
     lines = [opening]
     if strengths:
         lines.append('Strengths: ' + '; '.join(strengths))
     if concerns:
         lines.append('Concerns: ' + '; '.join(concerns))
     lines.append('Next steps:')
-    for recommendation in recommendations[:3]:
-        lines.append(f'- {recommendation}')
+    if weakest_course:
+        lines.append(f'- Spend extra time on {weakest_course["course_code"]} by reviewing recent feedback and retaking practice questions')
+    lines.append('- Focus on the next assessment early instead of cramming at the end')
+    if attendance_rate is not None and attendance_rate < 85:
+        lines.append('- Protect your attendance because missing classes can quickly lower your grade')
     lines.append('If you want, ask me about one course and I will narrow this down further.')
 
     return '\n'.join(lines)

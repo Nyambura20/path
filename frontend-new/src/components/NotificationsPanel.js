@@ -64,19 +64,43 @@ function NotificationsPanel({ isStandalone = false }) {
       key: 'title',
       header: 'Title',
       render: (row) => (
-        <div>
-          <p className="font-medium text-neutral-800">{row.title}</p>
+        <div className="space-y-1">
+          <p className="font-semibold text-neutral-800 dark:text-white">{row.title}</p>
           {!row.is_read && (
-            <span className="mt-1 inline-block rounded-full bg-primary-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary-800">
+            <span className="inline-block rounded-full bg-primary-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary-800 dark:bg-primary-950/40 dark:text-primary-300">
               New
             </span>
           )}
         </div>
       ),
     },
-    { key: 'type', header: 'Type', render: (row) => row.type || 'general' },
-    { key: 'message', header: 'Message', render: (row) => row.message || '-' },
-    { key: 'created_at', header: 'Created', render: (row) => (row.created_at ? new Date(row.created_at).toLocaleString() : 'N/A') },
+    {
+      key: 'type',
+      header: 'Type',
+      render: (row) => (
+        <span className="inline-flex rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-medium capitalize text-neutral-700 dark:bg-[var(--bp-surface-soft)] dark:text-[var(--bp-text-muted)]">
+          {row.type || 'general'}
+        </span>
+      ),
+    },
+    {
+      key: 'message',
+      header: 'Message',
+      render: (row) => (
+        <p className="max-w-[52ch] truncate text-neutral-700 dark:text-[var(--bp-text-muted)]" title={row.message || '-'}>
+          {row.message || '-'}
+        </p>
+      ),
+    },
+    {
+      key: 'created_at',
+      header: 'Created',
+      render: (row) => (
+        <span className="text-neutral-600 dark:text-[var(--bp-text-subtle)]">
+          {row.created_at ? new Date(row.created_at).toLocaleString() : 'N/A'}
+        </span>
+      ),
+    },
     {
       key: 'action',
       header: 'Action',
@@ -101,6 +125,21 @@ function NotificationsPanel({ isStandalone = false }) {
 
   const content = (
     <>
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <Card>
+          <p className="text-sm text-neutral-500">Total</p>
+          <p className="mt-2 text-3xl font-bold text-primary-700 dark:text-primary-400">{notifications.length}</p>
+        </Card>
+        <Card>
+          <p className="text-sm text-neutral-500">Unread</p>
+          <p className="mt-2 text-3xl font-bold text-amber-700 dark:text-amber-400">{unreadCount}</p>
+        </Card>
+        <Card>
+          <p className="text-sm text-neutral-500">Read</p>
+          <p className="mt-2 text-3xl font-bold text-emerald-700 dark:text-emerald-400">{Math.max(0, notifications.length - unreadCount)}</p>
+        </Card>
+      </div>
+
       <Card className="mb-6" aria-label="Notification filters">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <Select label="Read Status" value={filter} onChange={(e) => setFilter(e.target.value)}>
@@ -126,13 +165,15 @@ function NotificationsPanel({ isStandalone = false }) {
         {unreadCount} unread notification{unreadCount !== 1 ? 's' : ''}
       </div>
 
-      <PaginatedDataTable
-        columns={columns}
-        data={filteredNotifications}
-        pageSize={10}
-        emptyMessage="No notifications found for the selected filters."
-        ariaLabel="Notifications table"
-      />
+      <Card className="overflow-hidden" aria-label="Notifications list">
+        <PaginatedDataTable
+          columns={columns}
+          data={filteredNotifications}
+          pageSize={10}
+          emptyMessage="No notifications found for the selected filters."
+          ariaLabel="Notifications table"
+        />
+      </Card>
     </>
   );
 

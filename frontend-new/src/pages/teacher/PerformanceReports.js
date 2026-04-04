@@ -73,18 +73,18 @@ function PerformanceReports() {
 
   const getGradeBadge = (grade) => {
     const colors = {
-      'A+': 'bg-primary-100 text-primary-800',
-      'A': 'bg-primary-100 text-primary-800',
-      'B+': 'bg-blue-100 text-blue-800',
-      'B': 'bg-blue-100 text-blue-800',
-      'C+': 'bg-yellow-100 text-yellow-800',
-      'C': 'bg-yellow-100 text-yellow-800',
-      'D': 'bg-orange-100 text-orange-800',
-      'F': 'bg-red-100 text-red-800'
+      'A+': 'bg-primary-100 text-primary-800 dark:bg-primary-950/40 dark:text-primary-300',
+      'A': 'bg-primary-100 text-primary-800 dark:bg-primary-950/40 dark:text-primary-300',
+      'B+': 'bg-blue-100 text-blue-800 dark:bg-blue-950/40 dark:text-blue-300',
+      'B': 'bg-blue-100 text-blue-800 dark:bg-blue-950/40 dark:text-blue-300',
+      'C+': 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300',
+      'C': 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300',
+      'D': 'bg-orange-100 text-orange-800 dark:bg-orange-950/40 dark:text-orange-300',
+      'F': 'bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300'
     };
     
     return (
-      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colors[grade] || 'bg-gray-100 text-gray-800'}`}>
+      <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${colors[grade] || 'bg-neutral-100 text-neutral-700 dark:bg-neutral-500/20 dark:text-neutral-300'}`}>
         {grade}
       </span>
     );
@@ -170,11 +170,11 @@ function PerformanceReports() {
 
   if (!user?.is_teacher) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="page-shell py-8">
+        <div className="mx-auto max-w-7xl px-4 pl-14 sm:px-6 sm:pl-16 lg:px-8 lg:pl-20">
           <div className="text-center py-12">
-            <h2 className="text-2xl font-bold text-gray-900">Access Denied</h2>
-            <p className="text-gray-600 mt-2">This page is only available to teachers.</p>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-[var(--bp-text)]">Access Denied</h2>
+            <p className="mt-2 text-gray-600 dark:text-[var(--bp-text-muted)]">This page is only available to teachers.</p>
           </div>
         </div>
       </div>
@@ -182,25 +182,25 @@ function PerformanceReports() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="page-shell py-8">
+      <div className="mx-auto max-w-7xl px-4 pl-14 sm:px-6 sm:pl-16 lg:px-8 lg:pl-20">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Performance Reports</h1>
-          <p className="text-gray-600 mt-2">View and download performance reports for your courses</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-[var(--bp-text)]">Performance Reports</h1>
+          <p className="mt-2 text-gray-600 dark:text-[var(--bp-text-muted)]">View and download performance reports for your courses</p>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div className="mb-6 rounded-2xl border border-neutral-200/80 bg-white/90 p-6 shadow-sm backdrop-blur-sm dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface)]/95 dark:shadow-black/20">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-[var(--bp-text-muted)]">
                 Select Course
               </label>
               <select
                 value={selectedCourse}
                 onChange={(e) => setSelectedCourse(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="input-field"
               >
                 <option value="">Choose a course...</option>
                 {courses.map(course => (
@@ -212,13 +212,13 @@ function PerformanceReports() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-[var(--bp-text-muted)]">
                 Assessment Type
               </label>
               <select
                 value={selectedAssessmentType}
                 onChange={(e) => setSelectedAssessmentType(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="input-field"
               >
                 <option value="all">All Types</option>
                 <option value="assignment">Assignments</option>
@@ -234,7 +234,7 @@ function PerformanceReports() {
               <button
                 onClick={handleExportCSV}
                 disabled={!performanceData.length}
-                className="w-full px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                className="btn-primary w-full disabled:bg-neutral-400 dark:disabled:bg-neutral-600"
               >
                 Export CSV
               </button>
@@ -243,23 +243,23 @@ function PerformanceReports() {
 
           {/* View Mode Toggle */}
           {selectedCourse && (
-            <div className="flex space-x-2">
+            <div className="inline-flex rounded-2xl border border-neutral-200/80 bg-white/70 p-1.5 shadow-sm dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface-soft)]">
               <button
                 onClick={() => setViewMode('assessments')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${
                   viewMode === 'assessments'
                     ? 'bg-primary-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    : 'text-gray-600 hover:bg-primary-50 hover:text-primary-700 dark:text-[var(--bp-text-subtle)] dark:hover:bg-primary-950/25 dark:hover:text-primary-300'
                 }`}
               >
                 Assessments View
               </button>
               <button
                 onClick={() => setViewMode('students')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${
                   viewMode === 'students'
                     ? 'bg-primary-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    : 'text-gray-600 hover:bg-primary-50 hover:text-primary-700 dark:text-[var(--bp-text-subtle)] dark:hover:bg-primary-950/25 dark:hover:text-primary-300'
                 }`}
               >
                 Students View
@@ -274,48 +274,48 @@ function PerformanceReports() {
             <LoadingSpinner size="large" text="Loading performance data..." />
           </div>
         ) : selectedCourse && performanceData.length > 0 ? (
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="overflow-hidden rounded-2xl border border-neutral-200/80 bg-white/95 shadow-sm dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface)] dark:shadow-black/20">
             {viewMode === 'assessments' ? (
               /* Assessments View */
               <div className="space-y-6 p-6">
                 {performanceData.map(assessment => {
                   const stats = calculateAssessmentStats(assessment);
                   return (
-                    <div key={assessment.id} className="border rounded-lg p-6">
+                    <div key={assessment.id} className="rounded-xl border border-neutral-200/80 p-6 dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface-soft)]/60">
                       <div className="flex justify-between items-start mb-4">
                         <div>
-                          <h3 className="text-lg font-semibold text-gray-900">{assessment.assessment_name}</h3>
-                          <div className="flex items-center space-x-4 mt-1">
-                            <span className="text-sm text-gray-600 capitalize">{assessment.assessment_type}</span>
-                            <span className="text-sm text-gray-600">Due: {assessment.due_date}</span>
-                            <span className="text-sm text-gray-600">Total: {assessment.total_marks} marks</span>
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{assessment.assessment_name}</h3>
+                          <div className="flex flex-wrap gap-2 text-sm mt-1">
+                            <span className="text-sm text-gray-600 dark:text-slate-400 capitalize">{assessment.assessment_type}</span>
+                            <span className="text-sm text-gray-600 dark:text-slate-400">Due: {assessment.due_date}</span>
+                            <span className="text-sm text-gray-600 dark:text-slate-400">Total: {assessment.total_marks} marks</span>
                           </div>
                         </div>
-                        <div className="text-right text-sm text-gray-600">
+                        <div className="text-right text-sm text-gray-600 dark:text-slate-400">
                           <div>Avg: {stats.average}%</div>
                           <div>High: {stats.highest}% | Low: {stats.lowest}%</div>
                         </div>
                       </div>
                       
                       {assessment.description && (
-                        <p className="text-gray-600 mb-4">{assessment.description}</p>
+                        <p className="text-gray-600 dark:text-slate-400 mb-4">{assessment.description}</p>
                       )}
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                         {assessment.performance?.map(record => {
                           const percentage = ((record.marks_obtained / assessment.total_marks) * 100).toFixed(1);
                           return (
-                            <div key={record.student_id} className="p-3 bg-gray-50 rounded">
+                            <div key={record.student_id} className="rounded-lg border border-neutral-200/70 bg-neutral-50 p-3 dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface)]">
                               <div className="flex items-center justify-between mb-2">
-                                <p className="font-medium text-sm">{record.student_name}</p>
+                                <p className="text-sm font-medium text-gray-900 dark:text-[var(--bp-text)]">{record.student_name}</p>
                                 {getGradeBadge(record.grade)}
                               </div>
-                              <div className="flex items-center justify-between text-sm text-gray-600">
+                              <div className="flex items-center justify-between text-sm text-gray-600 dark:text-[var(--bp-text-muted)]">
                                 <span>{record.marks_obtained}/{assessment.total_marks}</span>
                                 <span>{percentage}%</span>
                               </div>
                               {record.comments && (
-                                <p className="text-xs text-gray-500 mt-1">{record.comments}</p>
+                                <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">{record.comments}</p>
                               )}
                             </div>
                           );
@@ -328,30 +328,30 @@ function PerformanceReports() {
             ) : (
               /* Students View */
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
+                <table className="min-w-full divide-y divide-neutral-200 dark:divide-[var(--bp-border)]">
+                  <thead className="bg-neutral-50 dark:bg-[var(--bp-surface-soft)]">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-[var(--bp-text-muted)]">
                         Student
                       </th>
                       {performanceData.map(assessment => (
-                        <th key={assessment.id} className="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          <div>{assessment.assessment_name}</div>
-                          <div className="text-gray-400">({assessment.total_marks} marks)</div>
+                        <th key={assessment.id} className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-[var(--bp-text-muted)]">
+                          {assessment.assessment_name}
+                          <div className="text-gray-400 dark:text-[var(--bp-text-subtle)]">({assessment.total_marks} marks)</div>
                         </th>
                       ))}
-                      <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-[var(--bp-text-muted)]">
                         Average
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="divide-y divide-neutral-200 bg-white dark:divide-[var(--bp-border)] dark:bg-[var(--bp-surface)]">
                     {students.map(student => (
-                      <tr key={student.student_id}>
+                      <tr key={student.student_id} className="transition-colors duration-150 hover:bg-primary-50/50 dark:hover:bg-primary-950/15">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div>
-                            <div className="text-sm font-medium text-gray-900">{student.name}</div>
-                            <div className="text-sm text-gray-600">ID: {student.student_id}</div>
+                            <div className="text-sm font-medium text-gray-900 dark:text-white">{student.name}</div>
+                            <div className="text-sm text-gray-600 dark:text-[var(--bp-text-subtle)]">ID: {student.student_id}</div>
                           </div>
                         </td>
                         {performanceData.map(assessment => {
@@ -360,22 +360,22 @@ function PerformanceReports() {
                             <td key={assessment.id} className="px-3 py-4 whitespace-nowrap text-center">
                               {record ? (
                                 <div>
-                                  <div className="text-sm font-medium">
+                                  <div className="text-sm font-medium text-gray-900 dark:text-[var(--bp-text)]">
                                     {record.marks_obtained}/{assessment.total_marks}
                                   </div>
-                                  <div className="text-xs text-gray-600">
+                                  <div className="text-xs text-gray-600 dark:text-slate-400">
                                     {((record.marks_obtained / assessment.total_marks) * 100).toFixed(1)}%
                                   </div>
                                   {getGradeBadge(record.grade)}
                                 </div>
                               ) : (
-                                <span className="text-gray-400 text-sm">N/A</span>
+                                <span className="text-gray-400 dark:text-slate-500 text-sm">N/A</span>
                               )}
                             </td>
                           );
                         })}
                         <td className="px-6 py-4 whitespace-nowrap text-center">
-                          <div className="text-sm font-medium text-gray-900">
+                          <div className="text-sm font-medium text-gray-900 dark:text-[var(--bp-text)]">
                             {calculateStudentAverage(student.student_id)}
                           </div>
                         </td>
@@ -387,24 +387,24 @@ function PerformanceReports() {
             )}
           </div>
         ) : selectedCourse ? (
-          <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <div className="text-gray-400 mb-4">
+          <div className="rounded-2xl border border-neutral-200/80 bg-white/90 p-12 text-center shadow-sm dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface)] dark:shadow-black/20">
+            <div className="mb-4 text-gray-400 dark:text-[var(--bp-text-subtle)]">
               <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No Performance Data</h3>
-            <p className="text-gray-600">No performance records found for the selected course and filters.</p>
+            <h3 className="mb-2 text-lg font-medium text-gray-900 dark:text-[var(--bp-text)]">No Performance Data</h3>
+            <p className="text-gray-600 dark:text-[var(--bp-text-muted)]">No performance records found for the selected course and filters.</p>
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <div className="text-gray-400 mb-4">
+          <div className="rounded-2xl border border-neutral-200/80 bg-white/90 p-12 text-center shadow-sm dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface)] dark:shadow-black/20">
+            <div className="mb-4 text-gray-400 dark:text-[var(--bp-text-subtle)]">
               <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Select a Course</h3>
-            <p className="text-gray-600">Choose a course from the dropdown above to view performance reports.</p>
+            <h3 className="mb-2 text-lg font-medium text-gray-900 dark:text-[var(--bp-text)]">Select a Course</h3>
+            <p className="text-gray-600 dark:text-[var(--bp-text-muted)]">Choose a course from the dropdown above to view performance reports.</p>
           </div>
         )}
       </div>

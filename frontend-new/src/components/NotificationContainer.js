@@ -7,17 +7,30 @@ function NotificationContainer() {
   if (notifications.length === 0) return null;
 
   const getNotificationStyles = (type) => {
-    const baseStyles = 'p-4 rounded-lg shadow-lg border flex items-center justify-between max-w-sm w-full';
+    const baseStyles = 'group relative w-full max-w-md overflow-hidden rounded-2xl border p-4 shadow-2xl backdrop-blur-sm ring-1 ring-black/5 transition-all';
     
     switch (type) {
       case 'success':
-        return `${baseStyles} bg-primary-50 border-primary-200 text-primary-800`;
+        return `${baseStyles} bg-emerald-50/95 border-emerald-200 text-emerald-900 shadow-emerald-900/10 dark:bg-emerald-950/75 dark:border-emerald-700/60 dark:text-emerald-100 dark:ring-emerald-400/20`;
       case 'error':
-        return `${baseStyles} bg-red-50 border-red-200 text-red-800`;
+        return `${baseStyles} bg-red-50/95 border-red-200 text-red-900 shadow-red-900/10 dark:bg-red-950/75 dark:border-red-700/60 dark:text-red-100 dark:ring-red-400/20`;
       case 'warning':
-        return `${baseStyles} bg-yellow-50 border-yellow-200 text-yellow-800`;
+        return `${baseStyles} bg-amber-50/95 border-amber-200 text-amber-900 shadow-amber-900/10 dark:bg-amber-950/75 dark:border-amber-700/60 dark:text-amber-100 dark:ring-amber-400/20`;
       default:
-        return `${baseStyles} bg-blue-50 border-blue-200 text-blue-800`;
+        return `${baseStyles} bg-sky-50/95 border-sky-200 text-sky-900 shadow-sky-900/10 dark:bg-sky-950/75 dark:border-sky-700/60 dark:text-sky-100 dark:ring-sky-400/20`;
+    }
+  };
+
+  const getIconWrapStyles = (type) => {
+    switch (type) {
+      case 'success':
+        return 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200 dark:bg-emerald-900/55 dark:text-emerald-200 dark:ring-emerald-700/60';
+      case 'error':
+        return 'bg-red-100 text-red-700 ring-1 ring-red-200 dark:bg-red-900/55 dark:text-red-200 dark:ring-red-700/60';
+      case 'warning':
+        return 'bg-amber-100 text-amber-700 ring-1 ring-amber-200 dark:bg-amber-900/55 dark:text-amber-200 dark:ring-amber-700/60';
+      default:
+        return 'bg-sky-100 text-sky-700 ring-1 ring-sky-200 dark:bg-sky-900/55 dark:text-sky-200 dark:ring-sky-700/60';
     }
   };
 
@@ -51,23 +64,25 @@ function NotificationContainer() {
   };
 
   return (
-    <div className="fixed top-4 right-4 z-50 space-y-2">
+    <div className="fixed right-4 top-4 z-[90] w-[min(92vw,28rem)] space-y-3">
       {notifications.map((notification) => (
         <div
           key={notification.id}
           className={`${getNotificationStyles(notification.type)} animate-slide-up`}
         >
-          <div className="flex items-center">
-            <div className="flex-shrink-0 mr-3">
+          <div className="absolute inset-y-0 left-0 w-1.5 bg-current/20" aria-hidden="true" />
+          <div className="flex items-start gap-3 pr-9">
+            <div className={`mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl ${getIconWrapStyles(notification.type)}`}>
               {getIcon(notification.type)}
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium">{notification.message}</p>
+              <p className="text-[0.95rem] font-semibold leading-snug">{notification.message}</p>
             </div>
           </div>
           <button
             onClick={() => removeNotification(notification.id)}
-            className="ml-4 text-gray-500 hover:text-gray-700 transition-colors"
+            className="absolute right-2.5 top-2.5 inline-flex h-7 w-7 items-center justify-center rounded-lg text-current/65 transition hover:bg-black/10 hover:text-current dark:hover:bg-white/10"
+            aria-label="Dismiss notification"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

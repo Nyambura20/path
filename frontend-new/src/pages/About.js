@@ -41,10 +41,10 @@ const audiences = [
 function About() {
   return (
     <PublicLayout>
-      <section className="border-b border-neutral-200 bg-white">
+      <section className="border-b border-neutral-200 bg-white dark:border-[var(--bp-border)] dark:bg-[var(--bp-bg)]">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <h1 className="text-5xl font-bold text-neutral-900">About BrightPath</h1>
-          <p className="mt-5 max-w-3xl text-base text-neutral-600">
+          <h1 className="text-5xl font-bold text-neutral-900 dark:text-white">About BrightPath</h1>
+          <p className="mt-5 max-w-3xl text-base text-neutral-600 dark:text-[var(--bp-text-muted)]">
             BrightPath is an education platform focused on measurable improvement. We combine readable dashboards, structured workflows, and machine learning guidance to help institutions make faster and better decisions.
           </p>
         </div>
@@ -52,25 +52,25 @@ function About() {
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-neutral-900">Core Platform Pillars</h2>
-          <p className="mt-2 text-sm text-neutral-600">Designed for maintainability, reliability, and day-to-day usability.</p>
+          <h2 className="text-3xl font-bold text-neutral-900 dark:text-white">Core Platform Pillars</h2>
+          <p className="mt-2 text-sm text-neutral-600 dark:text-[var(--bp-text-muted)]">Designed for maintainability, reliability, and day-to-day usability.</p>
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {pillars.map((pillar) => (
-            <Card key={pillar.title} className="hover:border-primary-200">
-              <h3 className="text-lg font-semibold text-neutral-900">{pillar.title}</h3>
-              <p className="mt-2 text-sm text-neutral-600">{pillar.description}</p>
+            <Card key={pillar.title} className="hover:border-primary-200 dark:hover:border-primary-600/50">
+              <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">{pillar.title}</h3>
+              <p className="mt-2 text-sm text-neutral-600 dark:text-[var(--bp-text-muted)]">{pillar.description}</p>
             </Card>
           ))}
         </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
-        <div className="panel grid grid-cols-1 gap-5 p-6 md:grid-cols-3">
+        <div className="panel grid grid-cols-1 gap-5 p-6 md:grid-cols-3 dark:bg-[var(--bp-surface)]">
           {audiences.map((audience) => (
-            <div key={audience.role} className="rounded-xl border border-neutral-200 bg-white p-4">
-              <h3 className="text-lg font-semibold text-neutral-900">For {audience.role}</h3>
-              <ul className="mt-3 space-y-2 text-sm text-neutral-600">
+            <div key={audience.role} className="rounded-xl border border-neutral-200 bg-white p-4 dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface-soft)]">
+              <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">For {audience.role}</h3>
+              <ul className="mt-3 space-y-2 text-sm text-neutral-600 dark:text-[var(--bp-text-muted)]">
                 {audience.points.map((point) => (
                   <li key={point}>{point}</li>
                 ))}

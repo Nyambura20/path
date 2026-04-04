@@ -57,8 +57,8 @@ function Register() {
       <div className="mx-auto flex min-h-[calc(100vh-64px)] w-full max-w-2xl items-center px-4 py-10">
         <Card className="w-full">
           <div className="mb-6 text-center">
-            <h1 className="text-3xl font-bold text-neutral-900">Create Your Account</h1>
-            <p className="mt-2 text-sm text-neutral-600">Join BrightPath as a student, teacher, or admin.</p>
+            <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">Create Your Account</h1>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-[var(--bp-text-muted)]">Join BrightPath as a student, teacher, or admin.</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -133,9 +133,9 @@ function Register() {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-neutral-600">
+          <p className="mt-6 text-center text-sm text-neutral-600 dark:text-[var(--bp-text-muted)]">
             Already have an account?{' '}
-            <Link to="/login" className="font-semibold text-primary-700 hover:text-primary-800">
+            <Link to="/login" className="font-semibold text-primary-700 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300">
               Sign in
             </Link>
           </p>

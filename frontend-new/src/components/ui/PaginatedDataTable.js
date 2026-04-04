@@ -29,7 +29,7 @@ function PaginatedDataTable({
       <DataTable columns={columns} data={pagedData} emptyMessage={emptyMessage} />
 
       <div className="mt-4 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center" aria-live="polite">
-        <p className="text-sm text-neutral-600">
+        <p className="text-sm text-neutral-600 dark:text-[var(--bp-text-muted)]">
           Showing {startItem}-{endItem} of {data.length} records
         </p>
 
@@ -37,7 +37,7 @@ function PaginatedDataTable({
           <Button variant="secondary" onClick={goToPrevious} disabled={page === 1} aria-label="Go to previous page">
             Previous
           </Button>
-          <span className="rounded-lg border border-neutral-300 bg-neutral-50 px-3 py-2 text-sm text-neutral-700">
+          <span className="rounded-lg border border-neutral-300 bg-neutral-50 px-3 py-2 text-sm text-neutral-700 dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface-soft)] dark:text-[var(--bp-text-muted)]">
             Page {page} of {totalPages}
           </span>
           <Button variant="secondary" onClick={goToNext} disabled={page === totalPages} aria-label="Go to next page">

@@ -108,11 +108,11 @@ function AIPredictions() {
 
   if (!user?.is_teacher) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="page-shell py-8">
+        <div className="mx-auto max-w-7xl px-4 pl-14 sm:px-6 sm:pl-16 lg:px-8 lg:pl-20">
           <div className="text-center py-12">
-            <h2 className="text-2xl font-bold text-gray-900">Access Denied</h2>
-            <p className="text-gray-600 mt-2">AI Predictions are available to teachers only.</p>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-[var(--bp-text)]">Access Denied</h2>
+            <p className="mt-2 text-gray-600 dark:text-[var(--bp-text-muted)]">AI Predictions are available to teachers only.</p>
           </div>
         </div>
       </div>
@@ -120,19 +120,19 @@ function AIPredictions() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="page-shell py-8">
+      <div className="mx-auto max-w-7xl px-4 pl-14 sm:px-6 sm:pl-16 lg:px-8 lg:pl-20">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center space-x-3 mb-2">
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <svg className="w-8 h-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="rounded-lg bg-purple-100 p-2 dark:bg-purple-950/30">
+              <svg className="w-8 h-8 text-purple-600 dark:text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">AI Performance Predictions</h1>
-              <p className="text-gray-600">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-[var(--bp-text)]">AI Performance Predictions</h1>
+              <p className="text-gray-600 dark:text-[var(--bp-text-muted)]">
                 Powered by Google Gemini AI - Analyze student performance, attendance, and identify at-risk students
               </p>
             </div>
@@ -155,14 +155,14 @@ function AIPredictions() {
                   disabled={loading}
                   className={`text-left p-4 rounded-lg border-2 transition-all hover:shadow-md ${
                     selectedCourse === course.id
-                      ? 'border-purple-500 bg-purple-50'
-                      : 'border-gray-200 hover:border-purple-300 bg-white'
+                      ? 'border-purple-500 bg-purple-50 dark:border-purple-700/70 dark:bg-purple-950/25'
+                      : 'border-gray-200 hover:border-purple-300 bg-white dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface)] dark:hover:border-purple-600/70'
                   } ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                 >
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="font-semibold text-gray-900">{course.name}</p>
-                      <p className="text-sm text-gray-500">{course.code}</p>
+                      <p className="font-semibold text-gray-900 dark:text-[var(--bp-text)]">{course.name}</p>
+                      <p className="text-sm text-gray-500 dark:text-[var(--bp-text-subtle)]">{course.code}</p>
                     </div>
                     {selectedCourse === course.id && !loading && predictions && (
                       <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
@@ -170,7 +170,7 @@ function AIPredictions() {
                       </span>
                     )}
                   </div>
-                  <div className="mt-2 flex items-center space-x-4 text-sm text-gray-600">
+                  <div className="mt-2 flex items-center space-x-4 text-sm text-gray-600 dark:text-[var(--bp-text-muted)]">
                     <span>{course.enrolled_students_count || 0} students</span>
                     <span>{course.difficulty_level || 'N/A'}</span>
                   </div>
@@ -186,8 +186,8 @@ function AIPredictions() {
             <div className="inline-flex items-center space-x-3">
               <LoadingSpinner size="large" />
             </div>
-            <p className="text-gray-600 mt-4 text-lg">Analyzing student data with Gemini AI...</p>
-            <p className="text-gray-400 text-sm mt-2">
+            <p className="mt-4 text-lg text-gray-600 dark:text-[var(--bp-text-muted)]">Analyzing student data with Gemini AI...</p>
+            <p className="mt-2 text-sm text-gray-400 dark:text-[var(--bp-text-subtle)]">
               This may take a moment as we process performance and attendance records
             </p>
           </div>
@@ -217,6 +217,20 @@ function AIPredictions() {
         {/* Results */}
         {predictions && !loading && !error && (
           <>
+            {predictions.warning && (
+              <div className="card mb-6 border-amber-200 bg-amber-50 dark:border-amber-900/45 dark:bg-amber-950/25">
+                <div className="flex items-start gap-3">
+                  <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-600 dark:text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                  <div>
+                    <p className="text-sm font-semibold text-amber-800 dark:text-amber-200">Using fallback predictions</p>
+                    <p className="text-sm text-amber-700 dark:text-amber-300">{predictions.warning}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
               <div className="bg-white rounded-lg border p-4">

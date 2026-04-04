@@ -8,11 +8,11 @@ function Modal({ isOpen, title, onClose, children, footer }) {
       <div className="modal-overlay animate-fade-in" onClick={onClose} />
       <div className="modal-content animate-slide-up">
         <div className="mb-4 flex items-start justify-between">
-          <h3 className="text-lg font-semibold text-neutral-900">{title}</h3>
+          <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">{title}</h3>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-700"
+            className="rounded-lg p-1.5 text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-700 dark:text-[var(--bp-text-subtle)] dark:hover:bg-[var(--bp-surface)] dark:hover:text-[var(--bp-text-muted)]"
             aria-label="Close modal"
           >
             <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">

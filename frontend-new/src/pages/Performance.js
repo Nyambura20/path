@@ -63,7 +63,11 @@ function Performance() {
       header: 'Grade',
       render: (row) => {
         const grade = row.percentage || 0;
-        const color = grade >= 80 ? 'bg-primary-100 text-primary-800' : grade >= 60 ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-800';
+        const color = grade >= 80
+          ? 'bg-primary-100 text-primary-800 dark:bg-primary-950/45 dark:text-primary-300'
+          : grade >= 60
+          ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/45 dark:text-amber-300'
+          : 'bg-red-100 text-red-800 dark:bg-red-950/45 dark:text-red-300';
         return <span className={`rounded-full px-2 py-1 text-xs font-semibold ${color}`}>{grade.toFixed(1)}%</span>;
       },
     },
@@ -85,7 +89,7 @@ function Performance() {
     return (
       <DashboardLayout title="Performance" subtitle="An error occurred while loading data.">
         <Card className="max-w-xl">
-          <p className="text-sm text-red-700">{error}</p>
+          <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
           <div className="mt-4">
             <Button onClick={fetchPerformanceData}>Try Again</Button>
           </div>

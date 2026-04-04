@@ -173,10 +173,10 @@ function EnrolledStudents() {
 
   const getStatusBadge = (status) => {
     const styles = {
-      active: 'bg-primary-100 text-primary-800',
-      inactive: 'bg-red-100 text-red-800',
-      pending: 'bg-yellow-100 text-yellow-800',
-      suspended: 'bg-gray-100 text-gray-800'
+      active: 'bg-primary-100 text-primary-800 dark:bg-primary-950/40 dark:text-primary-300',
+      inactive: 'bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300',
+      pending: 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300',
+      suspended: 'bg-gray-100 text-gray-800 dark:bg-neutral-500/20 dark:text-neutral-300'
     };
     
     return (
@@ -198,8 +198,8 @@ function EnrolledStudents() {
 
   if (!user?.is_teacher) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="page-shell py-8">
+        <div className="mx-auto max-w-7xl px-4 pl-14 sm:px-6 sm:pl-16 lg:px-8 lg:pl-20">
           <div className="text-center py-12">
             <h2 className="text-2xl font-bold text-gray-900">Access Denied</h2>
             <p className="text-gray-600 mt-2">This page is only available to teachers.</p>
@@ -210,26 +210,26 @@ function EnrolledStudents() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="page-shell py-8">
+      <div className="mx-auto max-w-7xl px-4 pl-14 sm:px-6 sm:pl-16 lg:px-8 lg:pl-20">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Enrolled Students</h1>
-          <p className="text-gray-600 mt-2">View and manage students enrolled in your courses</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-[var(--bp-text)]">Enrolled Students</h1>
+          <p className="mt-2 text-gray-600 dark:text-[var(--bp-text-muted)]">View and manage students enrolled in your courses</p>
         </div>
 
         {/* Filters and Controls */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div className="mb-6 rounded-2xl border border-neutral-200/80 bg-white/90 p-6 shadow-sm backdrop-blur-sm dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface)]/95 dark:shadow-black/20">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-[var(--bp-text-muted)]">
                 Select Course
               </label>
               <select
                 value={selectedCourse}
                 onChange={(e) => setSelectedCourse(e.target.value)}
                 disabled={coursesLoading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="input-field disabled:bg-neutral-100 disabled:text-neutral-400 dark:disabled:bg-[var(--bp-surface)]"
               >
                 <option value="">
                   {coursesLoading ? 'Loading courses...' : 'Choose a course...'}
@@ -243,26 +243,33 @@ function EnrolledStudents() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-[var(--bp-text-muted)]">
                 Search Students
               </label>
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search by name, ID, or email..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search by name, ID, or email..."
+                  className="input-field pr-10"
+                />
+                <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400 dark:text-slate-500" aria-hidden="true">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m21 21-4.35-4.35m1.85-5.15a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                  </svg>
+                </span>
+              </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-[var(--bp-text-muted)]">
                 Sort By
               </label>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="input-field"
               >
                 <option value="name">Name</option>
                 <option value="student_id">Student ID</option>
@@ -274,7 +281,7 @@ function EnrolledStudents() {
             <div className="flex items-end space-x-2">
               <button
                 onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                className="px-3 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+                className="rounded-lg border border-neutral-200 bg-neutral-100 px-3 py-2 text-gray-700 transition-colors hover:bg-neutral-200 dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface-soft)] dark:text-[var(--bp-text-muted)] dark:hover:bg-[var(--bp-surface)]"
                 title={`Sort ${sortOrder === 'asc' ? 'Descending' : 'Ascending'}`}
               >
                 {sortOrder === 'asc' ? '↑' : '↓'}
@@ -282,7 +289,7 @@ function EnrolledStudents() {
               <button
                 onClick={handleRefresh}
                 disabled={loading || coursesLoading}
-                className="px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center space-x-1"
+                className="btn-secondary px-3 py-2"
                 title="Refresh"
               >
                 <span className="text-xs font-semibold uppercase tracking-wide">Refresh</span>
@@ -290,7 +297,7 @@ function EnrolledStudents() {
               <button
                 onClick={handleExportCSV}
                 disabled={!Array.isArray(filteredStudents) || filteredStudents.length === 0}
-                className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                className="btn-primary px-4 py-2 disabled:bg-neutral-400 dark:disabled:bg-neutral-600"
               >
                 Export CSV
               </button>
@@ -299,13 +306,13 @@ function EnrolledStudents() {
 
           {/* Course Statistics */}
           {selectedCourse && courseStats && (
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 mb-4">
+            <div className="mb-4 rounded-xl border border-blue-200/60 bg-gradient-to-r from-blue-50 to-indigo-50 p-4 transition-colors duration-300 dark:border-blue-900/35 dark:from-blue-950/20 dark:to-indigo-950/20">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-[var(--bp-text)]">
                     {courseStats.courseCode} - {courseStats.courseName}
                   </h3>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 dark:text-[var(--bp-text-muted)]">
                     {courseStats.totalEnrolled} student{courseStats.totalEnrolled !== 1 ? 's' : ''} enrolled
                   </p>
                 </div>
@@ -313,7 +320,7 @@ function EnrolledStudents() {
                   <div className="text-2xl font-bold text-indigo-600">
                     {courseStats.totalEnrolled}
                   </div>
-                  <div className="text-xs text-gray-500">Total Students</div>
+                  <div className="text-xs text-gray-500 dark:text-slate-400">Total Students</div>
                 </div>
               </div>
             </div>
@@ -321,7 +328,7 @@ function EnrolledStudents() {
 
           {selectedCourse && (
             <div className="flex items-center justify-between mb-4">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-[var(--bp-text-muted)]">
                 Showing {Array.isArray(filteredStudents) ? filteredStudents.length : 0} of {Array.isArray(students) ? students.length : 0} students
               </p>
             </div>
@@ -334,34 +341,34 @@ function EnrolledStudents() {
             <LoadingSpinner size="large" text="Loading students..." />
           </div>
         ) : selectedCourse && Array.isArray(filteredStudents) && filteredStudents.length > 0 ? (
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="overflow-hidden rounded-2xl border border-neutral-200/80 bg-white/95 shadow-sm transition-colors duration-300 dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface)] dark:shadow-black/20">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-neutral-200 dark:divide-[var(--bp-border)]">
+                <thead className="bg-neutral-50 dark:bg-[var(--bp-surface-soft)]">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-[var(--bp-text-muted)]">
                       Student
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-[var(--bp-text-muted)]">
                       Contact
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-[var(--bp-text-muted)]">
                       Academic Info
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-[var(--bp-text-muted)]">
                       Enrollment
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-[var(--bp-text-muted)]">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-[var(--bp-text-muted)]">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="divide-y divide-neutral-200 bg-white dark:divide-[var(--bp-border)] dark:bg-[var(--bp-surface)]">
                   {Array.isArray(filteredStudents) && filteredStudents.map(student => (
-                    <tr key={student.student_id} className="hover:bg-gray-50">
+                    <tr key={student.student_id} className="transition-colors duration-150 hover:bg-primary-50/50 dark:hover:bg-primary-950/15">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="h-10 w-10 bg-primary-600 rounded-full flex items-center justify-center">
@@ -370,25 +377,25 @@ function EnrolledStudents() {
                             </span>
                           </div>
                           <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">{student.name}</div>
-                            <div className="text-sm text-gray-600">ID: {student.student_id}</div>
+                            <div className="text-sm font-medium text-gray-900 dark:text-[var(--bp-text)]">{student.name}</div>
+                            <div className="text-sm text-gray-600 dark:text-[var(--bp-text-soft)]">ID: {student.student_id}</div>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{student.email || 'N/A'}</div>
-                        <div className="text-sm text-gray-600">{student.phone_number || 'N/A'}</div>
+                        <div className="text-sm text-gray-900 dark:text-[var(--bp-text)]">{student.email || 'N/A'}</div>
+                        <div className="text-sm text-gray-600 dark:text-[var(--bp-text-muted)]">{student.phone_number || 'N/A'}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
+                        <div className="text-sm text-gray-900 dark:text-[var(--bp-text)]">
                           {student.major || 'N/A'}
                         </div>
-                        <div className="text-sm text-gray-600">
+                        <div className="text-sm text-gray-600 dark:text-[var(--bp-text-muted)]">
                           Year {student.year_of_study || 'N/A'} • GPA: {student.gpa || 'N/A'}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
+                        <div className="text-sm text-gray-900 dark:text-[var(--bp-text)]">
                           {student.enrollment_date ? new Date(student.enrollment_date).toLocaleDateString() : 'N/A'}
                         </div>
                       </td>
@@ -399,13 +406,13 @@ function EnrolledStudents() {
                         <div className="flex justify-end space-x-2">
                           <button
                             onClick={() => handleViewProfile(student.id)}
-                            className="text-primary-600 hover:text-primary-900 transition-colors"
+                            className="text-primary-600 transition-colors hover:text-primary-900 dark:text-primary-300 dark:hover:text-primary-200"
                           >
                             View Profile
                           </button>
                           <button
                             onClick={() => handleSendMessage(student.id)}
-                            className="text-primary-600 hover:text-primary-900 transition-colors"
+                            className="text-primary-600 transition-colors hover:text-primary-900 dark:text-primary-300 dark:hover:text-primary-200"
                           >
                             Message
                           </button>
@@ -418,34 +425,34 @@ function EnrolledStudents() {
             </div>
           </div>
         ) : selectedCourse && Array.isArray(filteredStudents) && filteredStudents.length === 0 && Array.isArray(students) && students.length > 0 ? (
-          <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <div className="text-gray-400 mb-4">
+          <div className="rounded-2xl border border-neutral-200/80 bg-white/90 p-12 text-center shadow-sm dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface)] dark:shadow-black/20">
+            <div className="mb-4 text-gray-400 dark:text-[var(--bp-text-subtle)]">
               <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No Students Found</h3>
-            <p className="text-gray-600">No students match your search criteria. Try adjusting your search terms.</p>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-[var(--bp-text)] mb-2">No Students Found</h3>
+            <p className="text-gray-600 dark:text-[var(--bp-text-muted)]">No students match your search criteria. Try adjusting your search terms.</p>
           </div>
         ) : selectedCourse ? (
-          <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <div className="text-gray-400 mb-4">
+          <div className="rounded-2xl border border-neutral-200/80 bg-white/90 p-12 text-center shadow-sm dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface)] dark:shadow-black/20">
+            <div className="mb-4 text-gray-400 dark:text-[var(--bp-text-subtle)]">
               <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No Students Enrolled</h3>
-            <p className="text-gray-600">No students are currently enrolled in this course.</p>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-[var(--bp-text)] mb-2">No Students Enrolled</h3>
+            <p className="text-gray-600 dark:text-[var(--bp-text-muted)]">No students are currently enrolled in this course.</p>
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <div className="text-gray-400 mb-4">
+          <div className="rounded-2xl border border-neutral-200/80 bg-white/90 p-12 text-center shadow-sm dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface)] dark:shadow-black/20">
+            <div className="mb-4 text-gray-400 dark:text-[var(--bp-text-subtle)]">
               <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Select a Course</h3>
-            <p className="text-gray-600">Choose a course from the dropdown above to view enrolled students.</p>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-[var(--bp-text)] mb-2">Select a Course</h3>
+            <p className="text-gray-600 dark:text-[var(--bp-text-muted)]">Choose a course from the dropdown above to view enrolled students.</p>
           </div>
         )}
       </div>

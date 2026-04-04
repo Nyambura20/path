@@ -88,20 +88,20 @@ function Courses() {
   const getDifficultyColor = (difficulty) => {
     switch (difficulty?.toLowerCase()) {
       case 'beginner':
-        return 'bg-primary-100 text-primary-800';
+        return 'bg-primary-100 text-primary-800 dark:bg-primary-950/40 dark:text-primary-300';
       case 'intermediate':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300';
       case 'advanced':
-        return 'bg-red-100 text-red-800';
+        return 'bg-rose-100 text-rose-800 dark:bg-rose-950/40 dark:text-rose-300';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-neutral-100 text-neutral-700 dark:bg-neutral-500/20 dark:text-neutral-300';
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="page-shell py-8">
+        <div className="mx-auto max-w-7xl px-4 pl-14 sm:px-6 sm:pl-16 lg:px-8 lg:pl-20">
           <div className="text-center py-12">
             <LoadingSpinner size="large" text="Loading courses..." />
           </div>
@@ -112,15 +112,15 @@ function Courses() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="page-shell py-8">
+        <div className="mx-auto max-w-7xl px-4 pl-14 sm:px-6 sm:pl-16 lg:px-8 lg:pl-20">
           <div className="text-center py-12">
-            <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
-              <svg className="h-12 w-12 text-red-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="mx-auto max-w-md rounded-2xl border border-rose-200/70 bg-rose-50/80 p-6 shadow-sm backdrop-blur dark:border-rose-900/40 dark:bg-rose-950/25 dark:shadow-black/20">
+              <svg className="mx-auto mb-4 h-12 w-12 text-rose-600 dark:text-rose-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.664-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
-              <h3 className="text-lg font-semibold text-red-900 mb-2">Error Loading Courses</h3>
-              <p className="text-red-700 mb-4">{error}</p>
+              <h3 className="mb-2 text-lg font-semibold text-rose-900 dark:text-rose-100">Error Loading Courses</h3>
+              <p className="mb-4 text-rose-700 dark:text-rose-200">{error}</p>
               <button
                 onClick={fetchCourses}
                 className="btn-primary"
@@ -135,35 +135,42 @@ function Courses() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="page-shell py-8">
+      <div className="mx-auto max-w-7xl px-4 pl-14 sm:px-6 sm:pl-16 lg:px-8 lg:pl-20">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Courses</h1>
-          <p className="text-gray-600">
+          <h1 className="mb-2 text-3xl font-bold text-gray-900 dark:text-[var(--bp-text)]">Courses</h1>
+          <p className="text-gray-600 dark:text-[var(--bp-text-muted)]">
             Explore and manage your educational journey with our comprehensive course catalog.
           </p>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="mb-8 rounded-2xl border border-neutral-200/80 bg-white/90 p-6 shadow-sm backdrop-blur-sm dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface)]/95 dark:shadow-black/20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="search" className="mb-2 block text-sm font-medium text-gray-700 dark:text-[var(--bp-text-muted)]">
                 Search Courses
               </label>
-              <input
-                type="text"
-                id="search"
-                value={filters.search}
-                onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-                placeholder="Search by title or description..."
-                className="input-field"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  id="search"
+                  value={filters.search}
+                  onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+                  placeholder="Search by title or description..."
+                  className="input-field pr-10"
+                />
+                <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400 dark:text-[var(--bp-text-subtle)]" aria-hidden="true">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m21 21-4.35-4.35m1.85-5.15a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                  </svg>
+                </span>
+              </div>
             </div>
             
             <div>
-              <label htmlFor="difficulty" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="difficulty" className="mb-2 block text-sm font-medium text-gray-700 dark:text-[var(--bp-text-muted)]">
                 Difficulty Level
               </label>
               <select
@@ -181,7 +188,7 @@ function Courses() {
             
             {!user?.is_teacher && (
               <div>
-                <label htmlFor="instructor" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="instructor" className="mb-2 block text-sm font-medium text-gray-700 dark:text-[var(--bp-text-muted)]">
                   Instructor
                 </label>
                 <input
@@ -199,12 +206,12 @@ function Courses() {
 
         {/* Course Grid */}
         {visibleCourses.length === 0 ? (
-          <div className="text-center py-12">
-            <svg className="h-12 w-12 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="rounded-2xl border border-dashed border-neutral-200/80 bg-white/70 py-12 text-center shadow-sm dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface)]/85 dark:shadow-black/10">
+            <svg className="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-[var(--bp-text-subtle)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">No courses found</h3>
-            <p className="text-gray-600 mb-4">
+            <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-[var(--bp-text)]">No courses found</h3>
+            <p className="mb-4 text-gray-600 dark:text-[var(--bp-text-muted)]">
               Try adjusting your search criteria or check back later for new courses.
             </p>
             <button
@@ -217,13 +224,13 @@ function Courses() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {visibleCourses.map((course) => (
-              <div key={course.id} className="card hover:shadow-lg transition-shadow duration-300">
+              <div key={course.id} className="rounded-2xl border border-neutral-200/80 bg-white/95 p-5 shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface)] dark:hover:shadow-lg dark:hover:shadow-black/20">
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-[var(--bp-text)]">
                       {course.title}
                     </h3>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 dark:text-[var(--bp-text-muted)]">
                       Course Code: {course.course_code}
                     </p>
                   </div>
@@ -232,34 +239,34 @@ function Courses() {
                   </span>
                 </div>
 
-                <p className="text-gray-600 mb-4 line-clamp-3">
+                <p className="mb-4 line-clamp-3 text-gray-600 dark:text-[var(--bp-text-muted)]">
                   {course.description}
                 </p>
 
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Credits:</span>
-                    <span className="font-medium">{course.credits || 'N/A'}</span>
+                    <span className="text-gray-600 dark:text-[var(--bp-text-subtle)]">Credits:</span>
+                    <span className="font-medium text-gray-900 dark:text-[var(--bp-text)]">{course.credits || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Duration:</span>
-                    <span className="font-medium">{course.duration_weeks ? `${course.duration_weeks} weeks` : 'N/A'}</span>
+                    <span className="text-gray-600 dark:text-[var(--bp-text-subtle)]">Duration:</span>
+                    <span className="font-medium text-gray-900 dark:text-[var(--bp-text)]">{course.duration_weeks ? `${course.duration_weeks} weeks` : 'N/A'}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Instructor:</span>
-                    <span className="font-medium">{course.instructor_name || 'TBA'}</span>
+                    <span className="text-gray-600 dark:text-[var(--bp-text-subtle)]">Instructor:</span>
+                    <span className="font-medium text-gray-900 dark:text-[var(--bp-text)]">{course.instructor_name || 'TBA'}</span>
                   </div>
                   {course.max_capacity && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Capacity:</span>
-                      <span className="font-medium">
+                      <span className="text-gray-600 dark:text-[var(--bp-text-subtle)]">Capacity:</span>
+                      <span className="font-medium text-gray-900 dark:text-[var(--bp-text)]">
                         {course.enrolled_count || 0}/{course.max_capacity}
                       </span>
                     </div>
                   )}
                 </div>
 
-                <div className="border-t pt-4 flex space-x-2">
+                <div className="flex space-x-2 border-t border-neutral-200/80 pt-4 dark:border-[var(--bp-border)]">
                   <Link
                     to={`/courses/${course.id}`}
                     className="btn-outline flex-1 text-center"

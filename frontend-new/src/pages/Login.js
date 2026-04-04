@@ -82,22 +82,22 @@ function Login() {
       <div className="mx-auto flex min-h-[calc(100vh-64px)] w-full max-w-md items-center px-4 py-10">
         <Card className="w-full">
           <div className="mb-6 text-center">
-            <h1 className="text-3xl font-bold text-neutral-900">Welcome Back</h1>
-            <p className="mt-2 text-sm text-neutral-600">Sign in to continue to your dashboard.</p>
+            <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">Welcome Back</h1>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-[var(--bp-text-muted)]">Sign in to continue to your dashboard.</p>
           </div>
 
           {unverifiedEmail && (
-            <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4">
-              <p className="text-sm font-semibold text-amber-800">Email not verified</p>
-              <p className="mt-1 text-sm text-amber-700">Please verify your email before signing in.</p>
+            <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-900/30 dark:bg-amber-950/20">
+              <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">Email not verified</p>
+              <p className="mt-1 text-sm text-amber-700 dark:text-amber-200">Please verify your email before signing in.</p>
               {resendSent ? (
-                <p className="mt-2 text-sm font-medium text-emerald-700">Verification email sent to {unverifiedEmail}</p>
+                <p className="mt-2 text-sm font-medium text-emerald-700 dark:text-emerald-400">Verification email sent to {unverifiedEmail}</p>
               ) : (
                 <button
                   type="button"
                   onClick={handleResend}
                   disabled={resendLoading}
-                  className="mt-2 text-sm font-medium text-amber-700 underline hover:text-amber-900 disabled:opacity-60"
+                  className="mt-2 text-sm font-medium text-amber-700 underline hover:text-amber-900 disabled:opacity-60 dark:text-amber-300 dark:hover:text-amber-200"
                 >
                   {resendLoading ? 'Sending...' : 'Resend verification email'}
                 </button>
@@ -130,9 +130,9 @@ function Login() {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-neutral-600">
+          <p className="mt-6 text-center text-sm text-neutral-600 dark:text-[var(--bp-text-muted)]">
             Do not have an account?{' '}
-            <Link to="/register" className="font-semibold text-primary-700 hover:text-primary-800">
+            <Link to="/register" className="font-semibold text-primary-700 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300">
               Create one
             </Link>
           </p>

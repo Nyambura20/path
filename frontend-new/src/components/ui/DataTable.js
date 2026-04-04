@@ -2,7 +2,7 @@ import React from 'react';
 
 function DataTable({ columns, data, emptyMessage = 'No records available' }) {
   return (
-    <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white">
+    <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface)]">
       <table className="table-base">
         <thead className="table-head">
           <tr>
@@ -16,7 +16,10 @@ function DataTable({ columns, data, emptyMessage = 'No records available' }) {
         <tbody>
           {data.length > 0 ? (
             data.map((row, rowIndex) => (
-              <tr key={row.id || rowIndex} className={rowIndex % 2 ? 'table-row bg-neutral-50/60' : 'table-row'}>
+              <tr
+                key={row.id || rowIndex}
+                className={rowIndex % 2 ? 'table-row table-row-alt' : 'table-row'}
+              >
                 {columns.map((column) => (
                   <td key={column.key} className="table-cell">
                     {column.render ? column.render(row) : row[column.key]}
@@ -26,7 +29,7 @@ function DataTable({ columns, data, emptyMessage = 'No records available' }) {
             ))
           ) : (
             <tr>
-              <td colSpan={columns.length} className="px-4 py-8 text-center text-sm text-neutral-500">
+              <td colSpan={columns.length} className="px-4 py-8 text-center text-sm text-neutral-500 dark:text-[var(--bp-text-subtle)]">
                 {emptyMessage}
               </td>
             </tr>

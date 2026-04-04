@@ -105,16 +105,16 @@ function PerformanceRecording() {
 
   const getGradeColor = (grade) => {
     const colors = {
-      'A+': 'text-primary-600 bg-primary-100',
-      'A': 'text-primary-600 bg-primary-100',
-      'B+': 'text-blue-600 bg-blue-100',
-      'B': 'text-blue-600 bg-blue-100',
-      'C+': 'text-yellow-600 bg-yellow-100',
-      'C': 'text-yellow-600 bg-yellow-100',
-      'D': 'text-orange-600 bg-orange-100',
-      'F': 'text-red-600 bg-red-100'
+      'A+': 'text-primary-700 bg-primary-100 dark:text-primary-300 dark:bg-primary-950/40',
+      'A': 'text-primary-700 bg-primary-100 dark:text-primary-300 dark:bg-primary-950/40',
+      'B+': 'text-blue-700 bg-blue-100 dark:text-blue-300 dark:bg-blue-950/40',
+      'B': 'text-blue-700 bg-blue-100 dark:text-blue-300 dark:bg-blue-950/40',
+      'C+': 'text-amber-700 bg-amber-100 dark:text-amber-300 dark:bg-amber-950/40',
+      'C': 'text-amber-700 bg-amber-100 dark:text-amber-300 dark:bg-amber-950/40',
+      'D': 'text-orange-700 bg-orange-100 dark:text-orange-300 dark:bg-orange-950/40',
+      'F': 'text-red-700 bg-red-100 dark:text-red-300 dark:bg-red-950/40'
     };
-    return colors[grade] || 'text-gray-600 bg-gray-100';
+    return colors[grade] || 'text-neutral-700 bg-neutral-100 dark:text-neutral-300 dark:bg-neutral-500/20';
   };
 
   const handleSubmit = async (e) => {
@@ -198,11 +198,11 @@ function PerformanceRecording() {
 
   if (!user?.is_teacher) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="page-shell py-8">
+        <div className="mx-auto max-w-7xl px-4 pl-14 sm:px-6 sm:pl-16 lg:px-8 lg:pl-20">
           <div className="text-center py-12">
-            <h2 className="text-2xl font-bold text-gray-900">Access Denied</h2>
-            <p className="text-gray-600 mt-2">This page is only available to teachers.</p>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-[var(--bp-text)]">Access Denied</h2>
+            <p className="mt-2 text-gray-600 dark:text-[var(--bp-text-muted)]">This page is only available to teachers.</p>
           </div>
         </div>
       </div>
@@ -210,12 +210,12 @@ function PerformanceRecording() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="page-shell py-8">
+      <div className="mx-auto max-w-7xl px-4 pl-14 sm:px-6 sm:pl-16 lg:px-8 lg:pl-20">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Record Performance</h1>
-          <p className="text-gray-600 mt-2">Record student marks and grades for assignments, tests, and exams</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-[var(--bp-text)]">Record Performance</h1>
+          <p className="mt-2 text-gray-600 dark:text-[var(--bp-text-muted)]">Record student marks and grades for assignments, tests, and exams</p>
         </div>
 
         {loading ? (
@@ -225,8 +225,8 @@ function PerformanceRecording() {
         ) : (
           <div className="space-y-6">
             {/* Assessment Details */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">Assessment Details</h2>
+            <div className="rounded-2xl border border-neutral-200/80 bg-white/90 p-6 shadow-sm backdrop-blur-sm dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface)]/95 dark:shadow-black/20">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-[var(--bp-text)] mb-6">Assessment Details</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div>
@@ -236,7 +236,7 @@ function PerformanceRecording() {
                   <select
                     value={selectedCourse}
                     onChange={(e) => setSelectedCourse(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="input-field"
                     required
                   >
                     <option value="">Choose a course...</option>
@@ -257,7 +257,7 @@ function PerformanceRecording() {
                     value={assessmentDetails.name}
                     onChange={(e) => handleAssessmentDetailChange('name', e.target.value)}
                     placeholder="e.g., Assignment 1, Midterm Exam"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="input-field"
                     required
                   />
                 </div>
@@ -269,7 +269,7 @@ function PerformanceRecording() {
                   <select
                     value={assessmentDetails.assessment_type}
                     onChange={(e) => handleAssessmentDetailChange('assessment_type', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="input-field"
                   >
                     <option value="assignment">Assignment</option>
                     <option value="quiz">Quiz</option>
@@ -289,7 +289,7 @@ function PerformanceRecording() {
                     value={assessmentDetails.total_marks}
                     onChange={(e) => handleAssessmentDetailChange('total_marks', parseInt(e.target.value))}
                     min="1"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="input-field"
                     required
                   />
                 </div>
@@ -302,7 +302,7 @@ function PerformanceRecording() {
                     type="date"
                     value={assessmentDetails.due_date}
                     onChange={(e) => handleAssessmentDetailChange('due_date', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="input-field"
                     required
                   />
                 </div>
@@ -316,7 +316,7 @@ function PerformanceRecording() {
                     onChange={(e) => handleAssessmentDetailChange('description', e.target.value)}
                     rows="3"
                     placeholder="Brief description of the assessment..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="input-field min-h-[88px]"
                   />
                 </div>
               </div>
@@ -324,23 +324,23 @@ function PerformanceRecording() {
 
             {/* Student Performance */}
             {students.length > 0 && (
-              <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="rounded-2xl border border-neutral-200/80 bg-white/95 p-6 shadow-sm dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface)] dark:shadow-black/20">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold text-gray-900">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-[var(--bp-text)]">
                     Student Performance ({students.length} students)
                   </h2>
                   <div className="flex space-x-2">
                     <button
                       type="button"
                       onClick={() => handleBulkMarks(assessmentDetails.total_marks)}
-                      className="px-3 py-1 bg-primary-100 text-primary-800 rounded-md hover:bg-primary-200 transition-colors text-sm"
+                      className="rounded-lg border border-primary-200 bg-primary-50 px-3 py-1 text-sm font-medium text-primary-700 transition-colors hover:bg-primary-100 dark:border-primary-900/45 dark:bg-primary-950/30 dark:text-primary-300 dark:hover:bg-primary-900/40"
                     >
                       Full Marks All
                     </button>
                     <button
                       type="button"
                       onClick={() => handleBulkMarks(0)}
-                      className="px-3 py-1 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 transition-colors text-sm"
+                      className="rounded-lg border border-neutral-200 bg-neutral-100 px-3 py-1 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-200 dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface-soft)] dark:text-[var(--bp-text-muted)] dark:hover:bg-[var(--bp-surface)]"
                     >
                       Zero All
                     </button>
@@ -354,7 +354,7 @@ function PerformanceRecording() {
                       const grade = calculateGrade(marks, assessmentDetails.total_marks);
                       
                       return (
-                        <div key={student.student_id} className="border rounded-lg p-4">
+                        <div key={student.student_id} className="rounded-xl border border-neutral-200/80 p-4 dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface-soft)]/60">
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center space-x-3">
                               <div className="h-10 w-10 bg-primary-600 rounded-full flex items-center justify-center">
@@ -363,8 +363,8 @@ function PerformanceRecording() {
                                 </span>
                               </div>
                               <div>
-                                <p className="font-medium text-gray-900">{student.name}</p>
-                                <p className="text-sm text-gray-600">ID: {student.student_id}</p>
+                                <p className="font-medium text-gray-900 dark:text-[var(--bp-text)]">{student.name}</p>
+                                <p className="text-sm text-gray-600 dark:text-[var(--bp-text-subtle)]">ID: {student.student_id}</p>
                               </div>
                             </div>
                             
@@ -380,16 +380,16 @@ function PerformanceRecording() {
                                   )}
                                   min="0"
                                   max={assessmentDetails.total_marks}
-                                  className="w-20 px-2 py-1 border border-gray-300 rounded text-center focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                  className="w-20 rounded-md border border-gray-300 px-2 py-1 text-center focus:outline-none focus:ring-2 focus:ring-primary-500 dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface)] dark:text-[var(--bp-text)]"
                                 />
-                                <span className="text-gray-600">/ {assessmentDetails.total_marks}</span>
+                                <span className="text-gray-600 dark:text-[var(--bp-text-muted)]">/ {assessmentDetails.total_marks}</span>
                               </div>
                               
                               <div className={`px-3 py-1 rounded-full text-sm font-medium ${getGradeColor(grade)}`}>
                                 {grade}
                               </div>
                               
-                              <div className="text-sm text-gray-600">
+                              <div className="text-sm text-gray-600 dark:text-[var(--bp-text-muted)]">
                                 {((marks / assessmentDetails.total_marks) * 100).toFixed(1)}%
                               </div>
                             </div>
@@ -405,7 +405,7 @@ function PerformanceRecording() {
                               )}
                               placeholder="Comments or feedback (optional)..."
                               rows="2"
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                              className="input-field min-h-[74px]"
                             />
                           </div>
                         </div>
@@ -413,11 +413,11 @@ function PerformanceRecording() {
                     })}
                   </div>
 
-                  <div className="flex justify-end pt-6 border-t mt-6">
+                  <div className="mt-6 flex justify-end border-t border-neutral-200/80 pt-6 dark:border-[var(--bp-border)]">
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                      className="btn-primary px-6 py-3 disabled:bg-neutral-400 dark:disabled:bg-neutral-600"
                     >
                       {submitting ? 'Recording Performance...' : 'Record Performance'}
                     </button>

@@ -146,7 +146,7 @@ function Profile() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-[var(--bp-bg)] py-8 transition-colors duration-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-12">
             <LoadingSpinner size="large" text="Loading profile..." />
@@ -157,22 +157,22 @@ function Profile() {
   }
 
   return (
-  <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-100">
+  <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-300">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent mb-2">
             My Profile
           </h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-[var(--bp-text-soft)] max-w-2xl mx-auto">
             Manage your personal information, update your profile picture, and customize your account settings
           </p>
         </div>
 
         {/* Main Profile Card */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+        <div className="bg-white dark:bg-[var(--bp-surface)] rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-[var(--bp-border)] transition-colors duration-300">
           {/* Profile Header Section */}
-          <div className="relative bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 px-8 py-12">
+          <div className="relative bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 px-8 py-12 transition-colors duration-300">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-10">
               <div className="absolute inset-0" style={{
@@ -200,7 +200,7 @@ function Profile() {
                 {/* Image Upload Overlay */}
                 <div className="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
                   <label className="cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="bg-white/90 backdrop-blur-sm text-gray-700 rounded-full p-3 shadow-lg hover:bg-white transition-all duration-200 transform hover:scale-110">
+                    <div className="bg-white/90 dark:bg-slate-100 backdrop-blur-sm text-gray-700 rounded-full p-3 shadow-lg hover:bg-white dark:hover:bg-white transition-all duration-200 transform hover:scale-110">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -248,7 +248,7 @@ function Profile() {
                   {!editing ? (
                     <button
                       onClick={() => setEditing(true)}
-                      className="inline-flex items-center px-6 py-2 bg-white text-primary-600 font-medium rounded-lg hover:bg-gray-50 transition-all duration-200 transform hover:scale-105 shadow-lg"
+                      className="inline-flex items-center px-6 py-2 bg-white dark:bg-slate-100 text-primary-600 font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-white transition-all duration-200 transform hover:scale-105 shadow-lg"
                     >
                       <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -350,68 +350,68 @@ function Profile() {
               // View Mode
               <div>
                 <div className="mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900">Personal Information</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-[var(--bp-text)]">Personal Information</h3>
                 </div>
 
                                 {/* Personal Information Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-100 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+                  <div className="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-slate-900 dark:to-slate-800 border border-primary-100 dark:border-slate-700 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
                     <div className="flex items-center space-x-3 mb-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
                         <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                       </div>
-                      <label className="text-sm font-semibold text-gray-700">First Name</label>
+                      <label className="text-sm font-semibold text-gray-700 dark:text-[var(--bp-text-soft)]">First Name</label>
                     </div>
-                    <p className="text-lg font-medium text-gray-900 ml-13">
+                    <p className="text-lg font-medium text-gray-900 dark:text-[var(--bp-text)] ml-13">
                       {user.first_name}
                     </p>
                   </div>
 
-                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-slate-900 dark:to-slate-800 border border-purple-100 dark:border-slate-700 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
                     <div className="flex items-center space-x-3 mb-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
                         <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                       </div>
-                      <label className="text-sm font-semibold text-gray-700">Last Name</label>
+                      <label className="text-sm font-semibold text-gray-700 dark:text-[var(--bp-text-soft)]">Last Name</label>
                     </div>
-                    <p className="text-lg font-medium text-gray-900 ml-13">
+                    <p className="text-lg font-medium text-gray-900 dark:text-[var(--bp-text)] ml-13">
                       {user.last_name}
                     </p>
                   </div>
 
-                  <div className="bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-100 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+                  <div className="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-slate-900 dark:to-slate-800 border border-primary-100 dark:border-slate-700 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
                     <div className="flex items-center space-x-3 mb-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
                         <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
                       </div>
-                      <label className="text-sm font-semibold text-gray-700">Email</label>
+                      <label className="text-sm font-semibold text-gray-700 dark:text-[var(--bp-text-soft)]">Email</label>
                     </div>
-                    <p className="text-lg font-medium text-gray-900 ml-13 break-all">
+                    <p className="text-lg font-medium text-gray-900 dark:text-[var(--bp-text)] ml-13 break-all">
                       {user.email}
                     </p>
                   </div>
 
-                  <div className="bg-gradient-to-br from-orange-50 to-red-50 border border-orange-100 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+                  <div className="bg-gradient-to-br from-orange-50 to-red-50 dark:from-slate-900 dark:to-slate-800 border border-orange-100 dark:border-slate-700 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
                     <div className="flex items-center space-x-3 mb-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
                         <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                         </svg>
                       </div>
-                      <label className="text-sm font-semibold text-gray-700">Phone</label>
+                      <label className="text-sm font-semibold text-gray-700 dark:text-[var(--bp-text-soft)]">Phone</label>
                     </div>
-                    <p className="text-lg font-medium text-gray-900 ml-13">
+                    <p className="text-lg font-medium text-gray-900 dark:text-[var(--bp-text)] ml-13">
                       {user.phone_number || 'Not provided'}
                     </p>
                   </div>
 
-                  <div className="md:col-span-2 bg-gradient-to-br from-teal-50 to-cyan-50 border border-teal-100 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+                  <div className="md:col-span-2 bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-slate-900 dark:to-slate-800 border border-teal-100 dark:border-slate-700 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
                     <div className="flex items-center space-x-3 mb-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-lg flex items-center justify-center">
                         <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -419,9 +419,9 @@ function Profile() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                       </div>
-                      <label className="text-sm font-semibold text-gray-700">Address</label>
+                      <label className="text-sm font-semibold text-gray-700 dark:text-[var(--bp-text-soft)]">Address</label>
                     </div>
-                    <p className="text-lg font-medium text-gray-900 ml-13">
+                    <p className="text-lg font-medium text-gray-900 dark:text-[var(--bp-text)] ml-13">
                       {user.address || 'Not provided'}
                     </p>
                   </div>
@@ -430,16 +430,16 @@ function Profile() {
                 {/* Bio Section */}
                 {(user.bio || editing) && (
                   <div className="mt-8">
-                    <div className="bg-gradient-to-br from-gray-50 to-primary-50 border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+                    <div className="bg-gradient-to-br from-gray-50 to-primary-50 dark:from-slate-900 dark:to-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
                       <div className="flex items-center space-x-3 mb-4">
                         <div className="w-10 h-10 bg-gradient-to-r from-gray-500 to-primary-500 rounded-lg flex items-center justify-center">
                           <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                           </svg>
                         </div>
-                        <label className="text-lg font-semibold text-gray-800">Bio</label>
+                        <label className="text-lg font-semibold text-gray-800 dark:text-[var(--bp-text)]">Bio</label>
                       </div>
-                      <p className="text-gray-700 leading-relaxed ml-13">
+                      <p className="text-gray-700 dark:text-[var(--bp-text-soft)] leading-relaxed ml-13">
                         {user.bio || 'No bio provided'}
                       </p>
                     </div>
@@ -448,7 +448,7 @@ function Profile() {
 
                 {/* Account Information */}
                 <div className="mt-8">
-                  <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-xl p-6 mb-6">
+                  <div className="bg-gradient-to-r from-primary-600 to-primary-700 dark:from-slate-800 dark:to-slate-700 rounded-xl p-6 mb-6">
                     <h4 className="text-xl font-bold text-white flex items-center">
                       <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -459,61 +459,61 @@ function Profile() {
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="bg-gradient-to-br from-yellow-50 to-orange-50 border border-yellow-100 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+                    <div className="bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-slate-900 dark:to-slate-800 border border-yellow-100 dark:border-slate-700 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
                       <div className="flex items-center space-x-3 mb-3">
                         <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center">
                           <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                           </svg>
                         </div>
-                        <label className="text-sm font-semibold text-gray-700">Role</label>
+                        <label className="text-sm font-semibold text-gray-700 dark:text-[var(--bp-text-soft)]">Role</label>
                       </div>
-                      <p className="text-lg font-medium text-gray-900 ml-13 capitalize">
+                      <p className="text-lg font-medium text-gray-900 dark:text-[var(--bp-text)] ml-13 capitalize">
                         {user.role}
                       </p>
                     </div>
 
-                    <div className="bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-100 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+                    <div className="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-slate-900 dark:to-slate-800 border border-primary-100 dark:border-slate-700 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
                       <div className="flex items-center space-x-3 mb-3">
                         <div className="w-10 h-10 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
                           <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-8 5h8m-8 5h8m-8-5h8" />
                           </svg>
                         </div>
-                        <label className="text-sm font-semibold text-gray-700">Member Since</label>
+                        <label className="text-sm font-semibold text-gray-700 dark:text-[var(--bp-text-soft)]">Member Since</label>
                       </div>
-                      <p className="text-lg font-medium text-gray-900 ml-13">
+                      <p className="text-lg font-medium text-gray-900 dark:text-[var(--bp-text)] ml-13">
                         {user.date_joined ? new Date(user.date_joined).toLocaleDateString() : 'Unknown'}
                       </p>
                     </div>
 
                     {user.student_id && (
-                      <div className="bg-gradient-to-br from-pink-50 to-rose-50 border border-pink-100 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+                      <div className="bg-gradient-to-br from-pink-50 to-rose-50 dark:from-slate-900 dark:to-slate-800 border border-pink-100 dark:border-slate-700 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
                         <div className="flex items-center space-x-3 mb-3">
                           <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-rose-500 rounded-lg flex items-center justify-center">
                             <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                             </svg>
                           </div>
-                          <label className="text-sm font-semibold text-gray-700">Student ID</label>
+                          <label className="text-sm font-semibold text-gray-700 dark:text-[var(--bp-text-soft)]">Student ID</label>
                         </div>
-                        <p className="text-lg font-medium text-gray-900 ml-13">
+                        <p className="text-lg font-medium text-gray-900 dark:text-[var(--bp-text)] ml-13">
                           {user.student_id}
                         </p>
                       </div>
                     )}
 
                     {user.employee_id && (
-                      <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+                      <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-slate-900 dark:to-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
                         <div className="flex items-center space-x-3 mb-3">
                           <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-lg flex items-center justify-center">
                             <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m8 0H8m8 0v6a2 2 0 01-2 2H10a2 2 0 01-2-2V6m8 0V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" />
                             </svg>
                           </div>
-                          <label className="text-sm font-semibold text-gray-700">Employee ID</label>
+                          <label className="text-sm font-semibold text-gray-700 dark:text-[var(--bp-text-soft)]">Employee ID</label>
                         </div>
-                        <p className="text-lg font-medium text-gray-900 ml-13">
+                        <p className="text-lg font-medium text-gray-900 dark:text-[var(--bp-text)] ml-13">
                           {user.employee_id}
                         </p>
                       </div>
@@ -525,7 +525,7 @@ function Profile() {
               // Edit Mode
               <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Header */}
-                <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6">
+                <div className="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-slate-800 dark:to-slate-700 rounded-xl p-6">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
@@ -558,7 +558,7 @@ function Profile() {
                 {/* Form Fields */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="group">
-                    <label htmlFor="first_name" className="flex items-center space-x-2 text-sm font-semibold text-gray-700 mb-3">
+                    <label htmlFor="first_name" className="flex items-center space-x-2 text-sm font-semibold text-gray-700 dark:text-[var(--bp-text-soft)] mb-3">
                       <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-md flex items-center justify-center">
                         <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -572,13 +572,13 @@ function Profile() {
                       name="first_name"
                       value={formData.first_name}
                       onChange={handleInputChange}
-                      className="w-full p-4 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 bg-gradient-to-br from-gray-50 to-blue-50"
+                      className="w-full p-4 rounded-xl border-2 border-gray-200 dark:border-[var(--bp-border)] focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-500/20 transition-all duration-200 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 text-gray-900 dark:text-[var(--bp-text)]"
                       required
                     />
                   </div>
 
                   <div className="group">
-                    <label htmlFor="last_name" className="flex items-center space-x-2 text-sm font-semibold text-gray-700 mb-3">
+                    <label htmlFor="last_name" className="flex items-center space-x-2 text-sm font-semibold text-gray-700 dark:text-[var(--bp-text-soft)] mb-3">
                       <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-md flex items-center justify-center">
                         <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -592,13 +592,13 @@ function Profile() {
                       name="last_name"
                       value={formData.last_name}
                       onChange={handleInputChange}
-                      className="w-full p-4 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all duration-200 bg-gradient-to-br from-gray-50 to-purple-50"
+                      className="w-full p-4 rounded-xl border-2 border-gray-200 dark:border-[var(--bp-border)] focus:border-purple-500 focus:ring-4 focus:ring-purple-100 dark:focus:ring-purple-500/20 transition-all duration-200 bg-gradient-to-br from-gray-50 to-purple-50 dark:from-slate-900 dark:to-slate-800 text-gray-900 dark:text-[var(--bp-text)]"
                       required
                     />
                   </div>
 
                   <div className="group">
-                    <label htmlFor="email" className="flex items-center space-x-2 text-sm font-semibold text-gray-700 mb-3">
+                    <label htmlFor="email" className="flex items-center space-x-2 text-sm font-semibold text-gray-700 dark:text-[var(--bp-text-soft)] mb-3">
                       <div className="w-6 h-6 bg-gradient-to-r from-primary-500 to-primary-600 rounded-md flex items-center justify-center">
                         <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -612,13 +612,13 @@ function Profile() {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full p-4 rounded-xl border-2 border-gray-200 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 transition-all duration-200 bg-gradient-to-br from-gray-50 to-primary-50"
+                      className="w-full p-4 rounded-xl border-2 border-gray-200 dark:border-[var(--bp-border)] focus:border-primary-500 focus:ring-4 focus:ring-primary-100 dark:focus:ring-primary-500/20 transition-all duration-200 bg-gradient-to-br from-gray-50 to-primary-50 dark:from-slate-900 dark:to-slate-800 text-gray-900 dark:text-[var(--bp-text)]"
                       required
                     />
                   </div>
 
                   <div className="group">
-                    <label htmlFor="phone_number" className="flex items-center space-x-2 text-sm font-semibold text-gray-700 mb-3">
+                    <label htmlFor="phone_number" className="flex items-center space-x-2 text-sm font-semibold text-gray-700 dark:text-[var(--bp-text-soft)] mb-3">
                       <div className="w-6 h-6 bg-gradient-to-r from-orange-500 to-red-500 rounded-md flex items-center justify-center">
                         <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -632,13 +632,13 @@ function Profile() {
                       name="phone_number"
                       value={formData.phone_number}
                       onChange={handleInputChange}
-                      className="w-full p-4 rounded-xl border-2 border-gray-200 focus:border-orange-500 focus:ring-4 focus:ring-orange-100 transition-all duration-200 bg-gradient-to-br from-gray-50 to-orange-50"
+                      className="w-full p-4 rounded-xl border-2 border-gray-200 dark:border-[var(--bp-border)] focus:border-orange-500 focus:ring-4 focus:ring-orange-100 dark:focus:ring-orange-500/20 transition-all duration-200 bg-gradient-to-br from-gray-50 to-orange-50 dark:from-slate-900 dark:to-slate-800 text-gray-900 dark:text-[var(--bp-text)] placeholder:text-gray-400 dark:placeholder:text-slate-500"
                       placeholder="+1 (555) 123-4567"
                     />
                   </div>
 
                   <div className="md:col-span-2 group">
-                    <label htmlFor="address" className="flex items-center space-x-2 text-sm font-semibold text-gray-700 mb-3">
+                    <label htmlFor="address" className="flex items-center space-x-2 text-sm font-semibold text-gray-700 dark:text-[var(--bp-text-soft)] mb-3">
                       <div className="w-6 h-6 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-md flex items-center justify-center">
                         <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -653,15 +653,15 @@ function Profile() {
                       name="address"
                       value={formData.address}
                       onChange={handleInputChange}
-                      className="w-full p-4 rounded-xl border-2 border-gray-200 focus:border-teal-500 focus:ring-4 focus:ring-teal-100 transition-all duration-200 bg-gradient-to-br from-gray-50 to-teal-50"
+                      className="w-full p-4 rounded-xl border-2 border-gray-200 dark:border-[var(--bp-border)] focus:border-teal-500 focus:ring-4 focus:ring-teal-100 dark:focus:ring-teal-500/20 transition-all duration-200 bg-gradient-to-br from-gray-50 to-teal-50 dark:from-slate-900 dark:to-slate-800 text-gray-900 dark:text-[var(--bp-text)] placeholder:text-gray-400 dark:placeholder:text-slate-500"
                       placeholder="Enter your full address..."
                     />
                   </div>
                 </div>
 
                 {/* Bio Section */}
-                <div className="bg-gradient-to-br from-gray-50 to-blue-50 border border-gray-200 rounded-xl p-6">
-                  <label htmlFor="bio" className="flex items-center space-x-2 text-sm font-semibold text-gray-700 mb-4">
+                <div className="bg-gradient-to-br from-gray-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-6">
+                  <label htmlFor="bio" className="flex items-center space-x-2 text-sm font-semibold text-gray-700 dark:text-[var(--bp-text-soft)] mb-4">
                     <div className="w-6 h-6 bg-gradient-to-r from-gray-500 to-blue-500 rounded-md flex items-center justify-center">
                       <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -675,7 +675,7 @@ function Profile() {
                     rows={4}
                     value={formData.bio}
                     onChange={handleInputChange}
-                    className="w-full p-4 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 bg-white resize-none"
+                    className="w-full p-4 rounded-xl border-2 border-gray-200 dark:border-[var(--bp-border)] focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-500/20 transition-all duration-200 bg-white dark:bg-slate-900 text-gray-900 dark:text-[var(--bp-text)] placeholder:text-gray-400 dark:placeholder:text-slate-500 resize-none"
                     placeholder={user.role === 'teacher' ? 'Tell us about your teaching experience and specializations...' : 'Tell us a bit about yourself...'}
                   />
                 </div>

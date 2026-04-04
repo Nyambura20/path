@@ -6,7 +6,7 @@ function Select({ label, error, className = '', id, children, ...props }) {
   return (
     <div>
       {label && (
-        <label htmlFor={selectId} className="mb-2 block text-sm font-medium text-neutral-700">
+        <label htmlFor={selectId} className="mb-2 block text-sm font-medium text-neutral-700 dark:text-[var(--bp-text-muted)]">
           {label}
         </label>
       )}
@@ -17,7 +17,7 @@ function Select({ label, error, className = '', id, children, ...props }) {
       >
         {children}
       </select>
-      {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
+      {error && <p className="mt-1 text-xs text-red-600 dark:text-red-500">{error}</p>}
     </div>
   );
 }

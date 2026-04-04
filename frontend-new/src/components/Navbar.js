@@ -44,7 +44,7 @@ function Navbar() {
             <button
               type="button"
               onClick={toggleTheme}
-              className="inline-flex items-center gap-2 rounded-xl border border-neutral-300 bg-neutral-50 px-3 py-2 text-sm font-medium text-neutral-700 transition hover:border-primary-300 hover:text-primary-700"
+              className="inline-flex items-center gap-2 rounded-xl border border-neutral-300 bg-neutral-50 px-3 py-2 text-sm font-medium text-neutral-700 transition hover:border-primary-300 hover:text-primary-700 dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface-soft)] dark:text-[var(--bp-text-muted)] dark:hover:border-primary-400/50 dark:hover:text-primary-400"
               aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             >
               {theme === 'dark' ? (
@@ -70,7 +70,7 @@ function Navbar() {
             <button
               type="button"
               onClick={toggleTheme}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-neutral-300 bg-neutral-50 text-neutral-700 transition hover:border-primary-300 hover:text-primary-700"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-neutral-300 bg-neutral-50 text-neutral-700 transition hover:border-primary-300 hover:text-primary-700 dark:border-[var(--bp-border)] dark:bg-[var(--bp-surface-soft)] dark:text-[var(--bp-text-muted)] dark:hover:border-primary-400/50 dark:hover:text-primary-400"
               aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             >
               {theme === 'dark' ? (
@@ -85,7 +85,7 @@ function Navbar() {
             </button>
             <div className="hidden text-right md:block">
               <p className="text-sm font-semibold text-[var(--bp-text)]">{user?.first_name || user?.username}</p>
-              <p className="text-xs capitalize text-neutral-500">{user?.role}</p>
+              <p className="text-xs capitalize text-neutral-500 dark:text-[var(--bp-text-subtle)]">{user?.role}</p>
             </div>
             <Dropdown
               trigger={
