@@ -45,6 +45,7 @@ html.dark {
       radial-gradient(circle at 95% 0%, rgba(109, 24, 46, 0.035), transparent 20%),
       var(--bp-bg);
     color: var(--bp-text);
+    overflow-x: hidden;
     @apply antialiased transition-colors duration-300;
   }
 

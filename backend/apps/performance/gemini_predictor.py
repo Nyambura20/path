@@ -4,6 +4,7 @@ Uses Google's Gemini API to analyze student data and predict performance risks.
 """
 import json
 import os
+import re
 import time
 from google import genai
 from django.db.models import Avg, Count, Q
@@ -19,7 +20,7 @@ def _get_gemini_client():
     """Initialize and return the Gemini client."""
     api_key = os.environ.get('GEMINI_API_KEY', '')
     if not api_key:
-        raise ValueError('GEMINI_API_KEY is not set. Add it to backend/.env')
+        raise ValueError('GEMINI_API_KEY is not set. Add it to project-root .env')
     return genai.Client(api_key=api_key)
 
 
@@ -611,7 +612,19 @@ def _collect_all_student_data(student):
     return data
 
 
-def _build_fallback_chat_response(student_data, message):
+def _extract_focus_terms(message):
+    """Extract meaningful focus terms from a student's question."""
+    tokens = re.findall(r"[a-zA-Z0-9_]+", message.lower())
+    stop_words = {
+        'the', 'and', 'for', 'with', 'from', 'that', 'this', 'what', 'when', 'where', 'which',
+        'about', 'into', 'your', 'you', 'are', 'can', 'could', 'would', 'should', 'have', 'has',
+        'had', 'why', 'how', 'my', 'me', 'i', 'it', 'its', 'please', 'tell', 'give', 'show',
+        'on', 'in', 'to', 'of', 'a', 'an', 'is', 'am', 'be', 'do', 'did', 'does'
+    }
+    return [token for token in tokens if len(token) > 2 and token not in stop_words][:4]
+
+
+def _build_fallback_chat_response(student_data, message, conversation_history=None):
     """Generate a lightweight student-specific response when Gemini is unavailable."""
     lower_message = message.lower()
     strengths = []
@@ -662,13 +675,37 @@ def _build_fallback_chat_response(student_data, message):
         course_lines.append('Suggested next move: prioritize the lowest two topics from this course this week.')
         return '\n'.join([opening] + course_lines)
 
-    is_prediction_intent = (
-        'predict' in lower_message or 'predicted grade' in lower_message or 'improve my grade' in lower_message
-    )
-    is_attendance_intent = 'attendance' in lower_message
-    is_grade_intent = ('grade' in lower_message or 'score' in lower_message or 'assessment' in lower_message)
-    is_strength_intent = ('strength' in lower_message or 'strong' in lower_message)
-    is_improve_intent = ('improve' in lower_message or 'weak' in lower_message or 'fix' in lower_message)
+    # Intent scoring improves variation when students ask differently-worded questions.
+    intent_keywords = {
+        'prediction': ['predict', 'predicted', 'forecast', 'future', 'next grade', 'improve my grade'],
+        'attendance': ['attendance', 'absent', 'late', 'class presence', 'missed class'],
+        'grades': ['grade', 'score', 'assessment', 'exam', 'quiz', 'marks'],
+        'strengths': ['strength', 'strong', 'best', 'good at', 'doing well'],
+        'improvement': ['improve', 'weak', 'fix', 'struggling', 'behind', 'low performance'],
+    }
+
+    intent_scores = {intent: 0 for intent in intent_keywords}
+    for intent, keywords in intent_keywords.items():
+        for keyword in keywords:
+            if keyword in lower_message:
+                intent_scores[intent] += 1
+
+    inferred_intent = max(intent_scores, key=intent_scores.get) if any(intent_scores.values()) else 'summary'
+    is_prediction_intent = inferred_intent == 'prediction'
+    is_attendance_intent = inferred_intent == 'attendance'
+    is_grade_intent = inferred_intent == 'grades'
+    is_strength_intent = inferred_intent == 'strengths'
+    is_improve_intent = inferred_intent == 'improvement'
+    focus_terms = _extract_focus_terms(message)
+
+    previous_user_question = None
+    if conversation_history:
+        for entry in reversed(conversation_history):
+            if entry.get('role') == 'user' and entry.get('content'):
+                previous_user_question = entry['content'].strip().lower()
+                break
+
+    has_new_angle = bool(previous_user_question and previous_user_question != lower_message)
 
     if is_prediction_intent:
         lines = ['To improve your predicted grade, use this 2-week plan:']
@@ -735,6 +772,10 @@ def _build_fallback_chat_response(student_data, message):
     # Generic improvement / summary response
     opening = 'The clearest areas to improve are:' if is_improve_intent else 'Here is a quick performance summary:'
     lines = [opening]
+    if focus_terms:
+        lines.append(f"I focused this answer on: {', '.join(focus_terms)}.")
+    elif has_new_angle:
+        lines.append('I will answer this from a different angle than your previous question.')
     if strengths:
         lines.append('Strengths: ' + '; '.join(strengths))
     if concerns:
@@ -857,15 +898,15 @@ GUIDELINES:
         error_msg = str(e)
         if '429' in error_msg or 'RESOURCE_EXHAUSTED' in error_msg:
             return {
-                'response': _build_fallback_chat_response(student_data, message),
+                'response': _build_fallback_chat_response(student_data, message, conversation_history),
                 'error': None,
             }
         if '503' in error_msg or 'UNAVAILABLE' in error_msg:
             return {
-                'response': _build_fallback_chat_response(student_data, message),
+                'response': _build_fallback_chat_response(student_data, message, conversation_history),
                 'error': None,
             }
         return {
-            'response': _build_fallback_chat_response(student_data, message),
+            'response': _build_fallback_chat_response(student_data, message, conversation_history),
             'error': None,
         }

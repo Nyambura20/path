@@ -32,6 +32,7 @@ echo "✅ npm $(npm -v) detected"
 
 # Navigate to frontend directory
 cd "$(dirname "$0")"
+ROOT_ENV_FILE="../.env"
 
 echo ""
 echo "📦 Installing dependencies..."
@@ -51,19 +52,35 @@ echo "✅ Dependencies installed successfully"
 echo ""
 echo "🔧 Checking configuration..."
 
-# Check if .env file exists
-if [ ! -f .env ]; then
-    echo "⚠️  No .env file found. Creating default configuration..."
-    cat > .env << EOL
-# BrightPath Frontend Environment Configuration
-REACT_APP_API_BASE_URL=http://localhost:8000
+# Check if root .env file exists
+if [ ! -f "$ROOT_ENV_FILE" ]; then
+    echo "⚠️  No root .env file found. Creating ../.env with default settings..."
+    cat > "$ROOT_ENV_FILE" << EOL
+# BrightPath Environment Configuration
+POSTGRES_DB=brightpath
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_HOST=127.0.0.1
+POSTGRES_PORT=5432
+REACT_APP_API_BASE_URL=http://127.0.0.1:8000/api
 REACT_APP_ENV=development
 GENERATE_SOURCEMAP=true
-BROWSER=none
+GEMINI_API_KEY=
 EOL
-    echo "✅ Created .env file with default settings"
+    echo "✅ Created root .env file"
 else
-    echo "✅ .env file exists"
+    echo "✅ Root .env file exists"
+fi
+
+# Export REACT_APP_* variables so npm start/build reads centralized config.
+set -a
+source "$ROOT_ENV_FILE"
+set +a
+
+if [ -n "${REACT_APP_API_BASE_URL:-}" ]; then
+    echo "✅ Using REACT_APP_API_BASE_URL=$REACT_APP_API_BASE_URL"
+else
+    echo "⚠️  REACT_APP_API_BASE_URL is not set in $ROOT_ENV_FILE"
 fi
 
 echo ""

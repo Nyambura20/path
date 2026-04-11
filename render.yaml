@@ -1,0 +1,80 @@
+databases:
+  - name: brightpath-db
+    databaseName: brightpath
+    user: brightpath_user
+
+services:
+  - type: web
+    name: brightpath-backend
+    runtime: python
+    rootDir: backend
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: sh -c "python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 3 --timeout 120"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_ALLOWED_HOSTS
+        value: brightpath-backend.onrender.com
+      - key: DATABASE_URL
+        fromDatabase:
+          name: brightpath-db
+          property: connectionString
+      - key: DB_CONN_MAX_AGE
+        value: "120"
+      - key: CORS_ALLOW_ALL_ORIGINS
+        value: "False"
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://brightpath-frontend.onrender.com
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://brightpath-frontend.onrender.com
+      - key: SESSION_COOKIE_SECURE
+        value: "True"
+      - key: CSRF_COOKIE_SECURE
+        value: "True"
+      - key: SECURE_SSL_REDIRECT
+        value: "False"
+      - key: SECURE_HSTS_SECONDS
+        value: "31536000"
+      - key: SECURE_HSTS_INCLUDE_SUBDOMAINS
+        value: "True"
+      - key: SECURE_HSTS_PRELOAD
+        value: "True"
+      - key: FRONTEND_URL
+        value: https://brightpath-frontend.onrender.com
+      - key: EMAIL_BACKEND
+        value: django.core.mail.backends.smtp.EmailBackend
+      - key: EMAIL_HOST
+        value: smtp.gmail.com
+      - key: EMAIL_PORT
+        value: "587"
+      - key: EMAIL_USE_TLS
+        value: "True"
+      - key: EMAIL_HOST_USER
+        sync: false
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+      - key: DEFAULT_FROM_EMAIL
+        value: BrightPath <noreply@brightpath.edu>
+      - key: GEMINI_API_KEY
+        sync: false
+
+  - type: static
+    name: brightpath-frontend
+    rootDir: frontend-new
+    plan: free
+    buildCommand: npm ci && npm run build
+    staticPublishPath: build
+    envVars:
+      - key: REACT_APP_API_BASE_URL
+        value: https://brightpath-backend.onrender.com/api
+      - key: GENERATE_SOURCEMAP
+        value: "false"
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

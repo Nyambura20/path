@@ -7,6 +7,8 @@ import django
 from datetime import datetime, timedelta, date, time
 from decimal import Decimal
 import random
+from django.utils import timezone
+from django.db import connection, transaction
 
 # Setup Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
@@ -14,24 +16,45 @@ django.setup()
 
 from apps.users.models import User
 from apps.students.models import StudentProfile, ParentGuardian, EmergencyContact
-from apps.courses.models import Course, Enrollment
-from apps.performance.models import Assessment, Grade
-from apps.attendance.models import AttendanceSession, AttendanceRecord
+from apps.courses.models import Course, Enrollment, CourseSchedule, Prerequisite
+from apps.performance.models import Assessment, Grade, PerformancePrediction, StudyGoal
+from apps.attendance.models import AttendanceSession, AttendanceRecord, AttendanceSummary, AttendanceAlert
+
+
+APP_MODELS_TO_RESET = [
+    User,
+    StudentProfile,
+    ParentGuardian,
+    EmergencyContact,
+    Course,
+    Enrollment,
+    CourseSchedule,
+    Prerequisite,
+    Assessment,
+    Grade,
+    PerformancePrediction,
+    StudyGoal,
+    AttendanceSession,
+    AttendanceRecord,
+    AttendanceSummary,
+    AttendanceAlert,
+]
+
+
+def reset_app_data():
+    """Remove all existing app data and reset identities before seeding."""
+    table_names = [model._meta.db_table for model in APP_MODELS_TO_RESET]
+    quoted_tables = ', '.join(connection.ops.quote_name(table_name) for table_name in table_names)
+
+    with transaction.atomic():
+        with connection.cursor() as cursor:
+            cursor.execute(f'TRUNCATE {quoted_tables} RESTART IDENTITY CASCADE;')
 
 def create_dummy_data():
     print("Creating dummy data...")
-    
-        # Clear existing data
-    User.objects.all().delete()
-    StudentProfile.objects.all().delete()
-    ParentGuardian.objects.all().delete()
-    EmergencyContact.objects.all().delete()
-    Course.objects.all().delete()
-    Enrollment.objects.all().delete()
-    Assessment.objects.all().delete()
-    Grade.objects.all().delete()
-    AttendanceSession.objects.all().delete()
-    AttendanceRecord.objects.all().delete()
+
+    # Reset the database state so reruns do not collide with existing rows.
+    reset_app_data()
     
     # Create Teachers
     print("Creating teachers...")
@@ -69,6 +92,9 @@ def create_dummy_data():
             last_name=data['last_name'],
             role=data['role']
         )
+        teacher.email_verified = True
+        teacher.is_active = True
+        teacher.save(update_fields=['email_verified', 'is_active'])
         teachers.append(teacher)
     
     # Create Students
@@ -122,17 +148,19 @@ def create_dummy_data():
             last_name=data['last_name'],
             role=data['role']
         )
+        user.email_verified = True
+        user.is_active = True
+        user.save(update_fields=['email_verified', 'is_active'])
         students.append(user)
-        
-        # Create Student profile
-        student_profile = StudentProfile.objects.create(
-            user=user,
-            student_id=f"ST{user.id:04d}",
-            year_of_study=str(random.randint(1, 4)),
-            major=random.choice(['Computer Science', 'Mathematics', 'Physics', 'Chemistry', 'Biology']),
-            gpa=Decimal(str(round(random.uniform(2.5, 4.0), 2))),
-            admission_date=datetime.now().date() - timedelta(days=random.randint(365, 1460))
-        )
+
+        # The student signal creates the profile automatically; populate it with richer dummy data.
+        student_profile = user.student_profile
+        student_profile.student_id = f"ST{user.id:04d}"
+        student_profile.year_of_study = str(random.randint(1, 4))
+        student_profile.major = random.choice(['Computer Science', 'Mathematics', 'Physics', 'Chemistry', 'Biology'])
+        student_profile.gpa = Decimal(str(round(random.uniform(2.5, 4.0), 2)))
+        student_profile.admission_date = datetime.now().date() - timedelta(days=random.randint(365, 1460))
+        student_profile.save()
         student_profiles.append(student_profile)
         
         # Create Parent/Guardian
@@ -238,7 +266,7 @@ def create_dummy_data():
                 assessment_type=random.choice(assessment_types),
                 total_marks=Decimal(str(random.choice([50, 75, 100]))),
                 weight_percentage=Decimal(str(random.randint(10, 30))),
-                due_date=datetime.now() + timedelta(days=random.randint(1, 60)),
+                due_date=timezone.now() + timedelta(days=random.randint(1, 60)),
                 is_published=True
             )
             assessments.append(assessment)
