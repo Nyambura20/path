@@ -53,7 +53,7 @@ function AIPredictions() {
       const data = await apiClient.getAIPredictions(courseId);
       setPredictions(data);
     } catch (err) {
-      setError(err.message || 'Failed to generate predictions. Please ensure the Gemini API key is configured.');
+      setError(err.message || 'Failed to generate predictions. Please check your AI service configuration.');
     } finally {
       setLoading(false);
     }
@@ -133,7 +133,7 @@ function AIPredictions() {
             <div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-[var(--bp-text)]">AI Performance Predictions</h1>
               <p className="text-gray-600 dark:text-[var(--bp-text-muted)]">
-                Powered by Google Gemini AI - Analyze student performance, attendance, and identify at-risk students
+                AI-powered analysis of student performance, attendance, and at-risk patterns
               </p>
             </div>
           </div>
@@ -186,7 +186,7 @@ function AIPredictions() {
             <div className="inline-flex items-center space-x-3">
               <LoadingSpinner size="large" />
             </div>
-            <p className="mt-4 text-lg text-gray-600 dark:text-[var(--bp-text-muted)]">Analyzing student data with Gemini AI...</p>
+            <p className="mt-4 text-lg text-gray-600 dark:text-[var(--bp-text-muted)]">Analyzing student data...</p>
             <p className="mt-2 text-sm text-gray-400 dark:text-[var(--bp-text-subtle)]">
               This may take a moment as we process performance and attendance records
             </p>
@@ -217,20 +217,6 @@ function AIPredictions() {
         {/* Results */}
         {predictions && !loading && !error && (
           <>
-            {predictions.warning && (
-              <div className="card mb-6 border-amber-200 bg-amber-50 dark:border-amber-900/45 dark:bg-amber-950/25">
-                <div className="flex items-start gap-3">
-                  <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-600 dark:text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                  </svg>
-                  <div>
-                    <p className="text-sm font-semibold text-amber-800 dark:text-amber-200">Using fallback predictions</p>
-                    <p className="text-sm text-amber-700 dark:text-amber-300">{predictions.warning}</p>
-                  </div>
-                </div>
-              </div>
-            )}
-
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
               <div className="bg-white rounded-lg border p-4">
@@ -696,7 +682,7 @@ function AIPredictions() {
             {predictions.generated_at && (
               <div className="mt-8 text-center text-sm text-gray-400">
                 <p>
-                  Generated on {new Date(predictions.generated_at).toLocaleString()} using {predictions.model || 'Gemini AI'}
+                  Generated on {new Date(predictions.generated_at).toLocaleString()}
                 </p>
                 <p className="mt-1">
                   Predictions are AI-generated estimates and should be used as guidance alongside professional judgment.

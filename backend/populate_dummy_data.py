@@ -40,6 +40,10 @@ APP_MODELS_TO_RESET = [
     AttendanceAlert,
 ]
 
+HIGH_RISK_EMAIL = 'student1@brightpath.edu'
+MEDIUM_RISK_EMAIL = 'student2@brightpath.edu'
+TARGET_TEACHER1_COURSE_CODE = 'MATH101'
+
 
 def reset_app_data():
     """Remove all existing app data and reset identities before seeding."""
@@ -251,6 +255,19 @@ def create_dummy_data():
                 enrollment_date=datetime.now().date() - timedelta(days=random.randint(1, 30)),
                 status='enrolled'
             )
+
+    # Ensure teacher1 has stable prediction examples in MATH101.
+    target_course = next((c for c in courses if c.code == TARGET_TEACHER1_COURSE_CODE), None)
+    if target_course:
+        for profile in student_profiles[:3]:
+            Enrollment.objects.get_or_create(
+                student=profile,
+                course=target_course,
+                defaults={
+                    'enrollment_date': datetime.now().date() - timedelta(days=14),
+                    'status': 'enrolled',
+                },
+            )
     
     # Create Assessments
     print("Creating assessments...")
@@ -283,6 +300,16 @@ def create_dummy_data():
         for student in enrolled_students:
             # Create grade with some randomness (70-95% performance)
             percentage = random.uniform(0.7, 0.95)
+
+            if assessment.course.code == TARGET_TEACHER1_COURSE_CODE:
+                email = student.user.email
+                if email == HIGH_RISK_EMAIL:
+                    # Keep this student consistently low to trigger high-risk predictions.
+                    percentage = random.uniform(0.40, 0.52)
+                elif email == MEDIUM_RISK_EMAIL:
+                    # Keep this student borderline to trigger medium-risk predictions.
+                    percentage = random.uniform(0.60, 0.69)
+
             marks_obtained = assessment.total_marks * Decimal(str(percentage))
             
             Grade.objects.create(
@@ -319,6 +346,15 @@ def create_dummy_data():
             for student in enrolled_students:
                 # 85% chance of being present
                 status = 'present' if random.random() < 0.85 else random.choice(['absent', 'late'])
+
+                if course.code == TARGET_TEACHER1_COURSE_CODE:
+                    email = student.user.email
+                    if email == HIGH_RISK_EMAIL:
+                        # Approximately 40% attendance in this course.
+                        status = 'present' if i in (0, 4, 8, 12) else 'absent'
+                    elif email == MEDIUM_RISK_EMAIL:
+                        # Approximately 80% attendance in this course.
+                        status = 'present' if i in (0, 1, 2, 4, 5, 6, 8, 10, 12, 14, 3, 7) else 'late'
                 
                 AttendanceRecord.objects.create(
                     student=student,

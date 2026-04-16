@@ -217,7 +217,7 @@ def _compute_fallback_predicted_grade(student_data):
     return round(max(0.0, min(100.0, weighted)), 1)
 
 
-def _build_fallback_course_predictions(course, students_data, reason='Gemini unavailable'):
+def _build_fallback_course_predictions(course, students_data, reason='provider unavailable'):
     """Generate course predictions without Gemini so teachers still get usable insights."""
     results = []
     high_risk = 0
@@ -314,7 +314,7 @@ def _build_fallback_course_predictions(course, students_data, reason='Gemini una
         },
         'generated_at': timezone.now().isoformat(),
         'model': 'fallback-heuristic',
-        'warning': f'Gemini unavailable ({reason}). Showing deterministic fallback predictions.',
+        'warning': f'AI service unavailable ({reason}). Showing deterministic fallback predictions.',
         'error': None,
     }
 

@@ -27,8 +27,14 @@ function TeacherDashboard() {
       const attendanceResponse = await apiClient.getTeacherAttendanceDashboard();
       const performanceResponse = await apiClient.getTeacherPerformanceDashboard();
 
+      const normalizedCourses = Array.isArray(coursesResponse)
+        ? coursesResponse
+        : Array.isArray(coursesResponse?.courses)
+        ? coursesResponse.courses
+        : [];
+
       setDashboardData({
-        courses: coursesResponse,
+        courses: normalizedCourses,
         attendance: attendanceResponse,
         performance: performanceResponse
       });
@@ -245,7 +251,7 @@ function TeacherDashboard() {
                   </svg>
                   <div>
                     <p className="font-medium text-gray-900 dark:text-white">AI Predictions</p>
-                    <p className="text-sm text-gray-600 dark:text-[var(--bp-text-muted)]">Identify at-risk students with Gemini AI</p>
+                    <p className="text-sm text-gray-600 dark:text-[var(--bp-text-muted)]">Identify at-risk students with AI insights</p>
                   </div>
                 </a>
               </div>
