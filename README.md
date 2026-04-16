@@ -24,7 +24,7 @@ If you prefer Docker for the database, make sure Docker Desktop or Docker Engine
 ### 2. Clone the repository
 
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/Nyambura20/path.git
 cd brightpath2/path
 ```
 
@@ -32,28 +32,7 @@ cd brightpath2/path
 
 Use the project root `.env` file for both backend and frontend settings.
 
-Example values for local development:
 
-```env
-DJANGO_SECRET_KEY=replace-with-a-secure-secret-key
-DJANGO_DEBUG=True
-
-POSTGRES_DB=brightpath
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_HOST=127.0.0.1
-POSTGRES_PORT=5432
-
-REACT_APP_API_BASE_URL=http://127.0.0.1:8000/api
-REACT_APP_ENV=development
-GENERATE_SOURCEMAP=true
-
-GEMINI_API_KEY=
-EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
-FRONTEND_URL=http://localhost:3000
-```
-
-Keep real secrets out of version control.
 
 ### 4. Start PostgreSQL
 
@@ -76,7 +55,6 @@ docker run -d --name brightpath-postgres \
 	postgres:16-alpine
 ```
 
-If your database is on another host or port, update `POSTGRES_HOST` and `POSTGRES_PORT` in `.env`.
 
 ### 5. Set up the backend
 
@@ -89,7 +67,30 @@ python manage.py migrate
 python manage.py runserver 0.0.0.0:8000
 ```
 
-### 6. Set up the frontend
+### 6. Load dummy data (optional, recommended for first run)
+
+Open another terminal and run:
+
+```bash
+cd backend
+source venv/bin/activate
+python populate_dummy_data.py
+```
+
+Demo credentials created by the script:
+
+- Teacher: `teacher1@brightpath.edu` / `password123`
+- Teacher: `teacher2@brightpath.edu` / `password123`
+- Teacher: `teacher3@brightpath.edu` / `password123`
+- Student: `student1@brightpath.edu` / `password123`
+- Student: `student2@brightpath.edu` / `password123`
+- Student: `student3@brightpath.edu` / `password123`
+- Student: `student4@brightpath.edu` / `password123`
+- Student: `student5@brightpath.edu` / `password123`
+
+These dummy users are already marked as verified, so login works immediately.
+
+### 7. Set up the frontend
 
 Open a second terminal:
 
@@ -108,7 +109,7 @@ npm start
 
 The frontend expects the backend API at `http://127.0.0.1:8000/api` by default.
 
-### 7. Open the app
+### 8. Open the app
 
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:8000/api/
@@ -120,9 +121,3 @@ The frontend expects the backend API at `http://127.0.0.1:8000/api` by default.
 - `.env` centralized environment file for backend + frontend values
 - `Dockerfile` root container file
 - `README.md` this single project-level README
-
-## Notes
-
-- AI chat for students uses Gemini when available and a data-aware fallback when unavailable.
-- Keep secrets in `.env` and never commit real credentials.
-
