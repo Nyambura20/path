@@ -121,3 +121,70 @@ The frontend expects the backend API at `http://127.0.0.1:8000/api` by default.
 - `.env` centralized environment file for backend + frontend values
 - `Dockerfile` root container file
 - `README.md` this single project-level README
+
+## Free Deploy Topology (Vercel + Railway + Supabase)
+
+- Frontend: Vercel (free)
+- Backend API: Railway (free tier availability depends on account limits)
+- Database: Supabase PostgreSQL
+
+Current frontend production URL:
+
+- https://path-liart.vercel.app/
+
+## Railway Backend Only (Monorepo Safe)
+
+Use these exact steps so Railway deploys only `backend/` and ignores frontend Docker targets.
+
+### 1. Create backend service only
+
+1. In Railway, create an Empty Project.
+2. Inside the project, click New Service and choose GitHub Repo.
+3. Pick this repository.
+4. Immediately set Root Directory to `backend` in service settings.
+
+### 2. Force backend-specific build config
+
+This repo includes both:
+
+- `backend/railway.json` (Railway deploy config)
+- `backend/Dockerfile` (backend-only Dockerfile)
+
+In Railway service settings:
+
+1. Builder: Dockerfile
+2. Dockerfile path: `backend/Dockerfile` (or `Dockerfile` if Root Directory is already `backend`)
+3. Health check path: `/api/`
+
+### 3. Configure backend environment variables
+
+Set these in Railway:
+
+- `DJANGO_DEBUG=False`
+- `DJANGO_SECRET_KEY=<your-strong-secret>`
+- `DJANGO_ALLOWED_HOSTS=<your-railway-backend-domain>`
+- `DATABASE_URL=<your-supabase-pooler-url>?sslmode=require`
+- `DB_CONN_MAX_AGE=120`
+- `CORS_ALLOW_ALL_ORIGINS=False`
+- `CORS_ALLOWED_ORIGINS=https://path-liart.vercel.app`
+- `CSRF_TRUSTED_ORIGINS=https://path-liart.vercel.app`
+- `FRONTEND_URL=https://path-liart.vercel.app`
+- `EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend`
+- `EMAIL_HOST=smtp.gmail.com`
+- `EMAIL_PORT=587`
+- `EMAIL_USE_TLS=True`
+- `EMAIL_HOST_USER=<your-email-user>`
+- `EMAIL_HOST_PASSWORD=<your-email-app-password>`
+- `DEFAULT_FROM_EMAIL=BrightPath <noreply@brightpath.edu>`
+- `GEMINI_API_KEY=<your-gemini-key>`
+
+### 4. Deploy and verify
+
+1. Deploy the Railway backend service.
+2. Confirm health endpoint: `https://<your-railway-backend-domain>/api/`
+3. In Vercel, set `REACT_APP_API_BASE_URL=https://<your-railway-backend-domain>/api`
+4. Redeploy Vercel frontend.
+
+## Netlify Backend Note
+
+Netlify free tier is ideal for static frontend hosting, but this Django backend is a long-running WSGI service and is not a good fit for Netlify Functions.
