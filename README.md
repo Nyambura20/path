@@ -158,12 +158,14 @@ In Railway service settings:
 
 ### 3. Configure backend environment variables
 
-Set these in Railway:
+**CRITICAL:** Set these env vars **before** deploying. If DATABASE_URL is missing, the app will crash during startup.
 
+Set these in Railway service settings:
+
+- `DATABASE_URL=postgresql://postgres.PROJECT_REF:PASSWORD@aws-0-eu-west-1.pooler.supabase.com:6543/postgres?sslmode=require` (from Supabase, with %23 for # in password)
 - `DJANGO_DEBUG=False`
 - `DJANGO_SECRET_KEY=<your-strong-secret>`
 - `DJANGO_ALLOWED_HOSTS=<your-railway-backend-domain>`
-- `DATABASE_URL=<your-supabase-pooler-url>?sslmode=require`
 - `DB_CONN_MAX_AGE=120`
 - `CORS_ALLOW_ALL_ORIGINS=False`
 - `CORS_ALLOWED_ORIGINS=https://path-liart.vercel.app`
