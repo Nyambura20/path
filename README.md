@@ -122,49 +122,46 @@ The frontend expects the backend API at `http://127.0.0.1:8000/api` by default.
 - `Dockerfile` root container file
 - `README.md` this single project-level README
 
-## Free Deploy Topology (Vercel + Railway + Supabase)
+## Railway Monorepo Deploy (Backend + Frontend)
 
-- Frontend: Vercel (free)
-- Backend API: Railway (free tier availability depends on account limits)
-- Database: Supabase PostgreSQL
+If Railway is not showing the service you expect, it is usually because one service was created at repo root and picked the wrong Dockerfile. This repo now includes service-specific files so Railway can detect both apps clearly.
 
 Current frontend production URL:
 
 - https://path-liart.vercel.app/
 
-## Railway Backend Only (Monorepo Safe)
+### Files used by Railway
 
-Use these exact steps so Railway deploys only `backend/` and ignores frontend Docker targets.
+- `backend/Dockerfile` and `backend/railway.json` for Django API
+- `frontend-new/Dockerfile` and `frontend-new/railway.json` for React frontend
 
-### 1. Create backend service only
+### 1. Create backend service in Railway
 
-1. In Railway, create an Empty Project.
-2. Inside the project, click New Service and choose GitHub Repo.
-3. Pick this repository.
-4. Immediately set Root Directory to `backend` in service settings.
+1. In Railway, open your project and click New Service.
+2. Choose GitHub Repo and select this repository.
+3. Open service settings and set Root Directory to `backend`.
+4. Build config:
+	- Builder: Dockerfile
+	- Dockerfile path: `Dockerfile` (because root is already `backend`)
+5. Health check path: `/api/`
 
-### 2. Force backend-specific build config
+### 2. Create frontend service in Railway
 
-This repo includes both:
+1. In the same Railway project, click New Service again.
+2. Choose the same GitHub repository.
+3. Set Root Directory to `frontend-new`.
+4. Build config:
+	- Builder: Dockerfile
+	- Dockerfile path: `Dockerfile` (because root is already `frontend-new`)
+5. Health check path: `/`
 
-- `backend/railway.json` (Railway deploy config)
-- `backend/Dockerfile` (backend-only Dockerfile)
+### 3. Required backend environment variables
 
-In Railway service settings:
+Set these before backend deploy:
 
-1. Builder: Dockerfile
-2. Dockerfile path: `backend/Dockerfile` (or `Dockerfile` if Root Directory is already `backend`)
-3. Health check path: `/api/`
-
-### 3. Configure backend environment variables
-
-**CRITICAL:** Set these env vars **before** deploying. If DATABASE_URL is missing, the app will crash during startup.
-
-Set these in Railway service settings:
-
-- `DATABASE_URL=postgresql://postgres.PROJECT_REF:PASSWORD@aws-0-eu-west-1.pooler.supabase.com:6543/postgres?sslmode=require` (from Supabase, with %23 for # in password)
+- `DATABASE_URL=postgresql://postgres.PROJECT_REF:PASSWORD@aws-0-eu-west-1.pooler.supabase.com:6543/postgres?sslmode=require` (replace `#` in password with `%23`)
 - `DJANGO_DEBUG=False`
-- `DJANGO_SECRET_KEY=<your-strong-secret>`
+- `DJANGO_SECRET_KEY=<strong-random-secret>`
 - `DJANGO_ALLOWED_HOSTS=<your-railway-backend-domain>`
 - `DB_CONN_MAX_AGE=120`
 - `CORS_ALLOW_ALL_ORIGINS=False`
@@ -180,13 +177,14 @@ Set these in Railway service settings:
 - `DEFAULT_FROM_EMAIL=BrightPath <noreply@brightpath.edu>`
 - `GEMINI_API_KEY=<your-gemini-key>`
 
-### 4. Deploy and verify
+### 4. Required frontend environment variable
 
-1. Deploy the Railway backend service.
-2. Confirm health endpoint: `https://<your-railway-backend-domain>/api/`
-3. In Vercel, set `REACT_APP_API_BASE_URL=https://<your-railway-backend-domain>/api`
-4. Redeploy Vercel frontend.
+Set this in the Railway frontend service:
 
-## Netlify Backend Note
+- `REACT_APP_API_BASE_URL=https://<your-railway-backend-domain>/api`
 
-Netlify free tier is ideal for static frontend hosting, but this Django backend is a long-running WSGI service and is not a good fit for Netlify Functions.
+### 5. Deploy order
+
+1. Deploy backend first and verify `https://<your-railway-backend-domain>/api/`.
+2. Deploy frontend second.
+3. Open frontend URL and confirm API calls succeed.
