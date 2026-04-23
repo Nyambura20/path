@@ -38,6 +38,18 @@ class Course(models.Model):
         return f"{self.code} - {self.name}"
 
     @property
+    def duration_weeks(self):
+        """Course duration rounded up to whole weeks."""
+        if not self.start_date or not self.end_date:
+            return None
+
+        if self.end_date < self.start_date:
+            return None
+
+        duration_days = (self.end_date - self.start_date).days
+        return max(1, (duration_days + 6) // 7)
+
+    @property
     def enrolled_count(self):
         return self.enrollments.filter(is_active=True).count()
 

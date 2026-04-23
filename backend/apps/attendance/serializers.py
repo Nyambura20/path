@@ -5,12 +5,13 @@ from .models import AttendanceRecord, AttendanceSession, AttendanceSummary, Atte
 class AttendanceRecordSerializer(serializers.ModelSerializer):
     student_name = serializers.SerializerMethodField()
     course_name = serializers.SerializerMethodField()
+    session_name = serializers.SerializerMethodField()
     marked_by_name = serializers.SerializerMethodField()
     
     class Meta:
         model = AttendanceRecord
         fields = ['id', 'student', 'student_name', 'course', 'course_name',
-                 'date', 'status', 'notes', 'marked_by', 'marked_by_name',
+                 'date', 'session_name', 'status', 'notes', 'marked_by', 'marked_by_name',
                  'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
 
@@ -19,6 +20,17 @@ class AttendanceRecordSerializer(serializers.ModelSerializer):
 
     def get_course_name(self, obj):
         return f"{obj.course.code} - {obj.course.name}"
+
+    def get_session_name(self, obj):
+        session = AttendanceSession.objects.filter(
+            course=obj.course,
+            date=obj.date,
+        ).order_by('start_time').first()
+
+        if not session:
+            return None
+
+        return session.topic or f"Session {session.id}"
 
     def get_marked_by_name(self, obj):
         return obj.marked_by.get_full_name() if obj.marked_by else None

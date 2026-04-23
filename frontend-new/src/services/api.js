@@ -13,10 +13,22 @@ const api = axios.create({
 // Token management
 let authToken = localStorage.getItem('access_token');
 
+const PUBLIC_AUTH_PATHS = [
+  '/users/login/',
+  '/users/register/',
+  '/users/verify-email/',
+  '/users/resend-verification/',
+  '/users/token/refresh/',
+];
+
 // Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
-    if (authToken) {
+    const isPublicAuthRequest = PUBLIC_AUTH_PATHS.some((path) =>
+      config.url?.includes(path)
+    );
+
+    if (authToken && !isPublicAuthRequest) {
       config.headers.Authorization = `Bearer ${authToken}`;
     }
     return config;

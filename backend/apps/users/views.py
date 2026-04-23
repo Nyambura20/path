@@ -1,5 +1,5 @@
 from rest_framework import generics, status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
@@ -59,6 +59,7 @@ class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserRegistrationSerializer
     permission_classes = [AllowAny]
+    authentication_classes = []
 
     @extend_schema(
         tags=['Authentication'],
@@ -175,6 +176,7 @@ class RegisterView(generics.CreateAPIView):
 )
 @csrf_exempt
 @api_view(['POST'])
+@authentication_classes([])
 @permission_classes([AllowAny])
 def login_view(request):
     print(f"Login request data: {request.data}")
@@ -251,6 +253,7 @@ def logout_view(request):
 
 @csrf_exempt
 @api_view(['POST'])
+@authentication_classes([])
 @permission_classes([AllowAny])
 def verify_email_view(request):
     """Verify a user's email address using the token from their verification email."""
@@ -287,6 +290,7 @@ def verify_email_view(request):
 
 @csrf_exempt
 @api_view(['POST'])
+@authentication_classes([])
 @permission_classes([AllowAny])
 def resend_verification_view(request):
     """Resend the email verification link for a given email address."""

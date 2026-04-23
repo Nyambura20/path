@@ -11,7 +11,7 @@ class CourseSerializer(serializers.ModelSerializer):
         model = Course
         fields = ['id', 'code', 'name', 'description', 'credits', 'difficulty_level',
                  'instructor', 'instructor_name', 'max_students', 'enrolled_count',
-                 'available_slots', 'start_date', 'end_date', 'is_active',
+                 'available_slots', 'start_date', 'end_date', 'duration_weeks', 'is_active',
                  'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
 
@@ -50,7 +50,7 @@ class CourseDetailSerializer(serializers.ModelSerializer):
         model = Course
         fields = ['id', 'code', 'name', 'description', 'credits', 'difficulty_level',
                  'instructor', 'instructor_name', 'max_students', 'enrolled_count',
-                 'available_slots', 'start_date', 'end_date', 'is_active',
+                 'available_slots', 'start_date', 'end_date', 'duration_weeks', 'is_active',
                  'schedules', 'prerequisites', 'enrolled_students', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
 
